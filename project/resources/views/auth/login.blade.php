@@ -4,7 +4,7 @@
 <!--begin::Head-->
 <head>
     <meta charset="utf-8" />
-    <title>تسجيل الدخول | {{config('app.name')}}</title>
+    <title>تسجيل الدخول | {{config('app.name')}} </title>
     <!--begin::Fonts-->
     <!--end::Fonts-->
     <link href="{{asset('assets/plugins/global/plugins.bundle.rtl.css')}}" rel="stylesheet" type="text/css" />
