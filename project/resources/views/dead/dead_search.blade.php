@@ -258,7 +258,7 @@
                 <div class="row mb-6">
                     <div class="col-lg-6">
                         <div class="input-group">
-                            <label class="control-label col-md-2">ت.الوفاة من</label>
+                            <label class="control-label col-md-2" style="margin-top: 20px;">ت.الوفاة من</label>
                             <div class="col-lg-4">
 
                                 <input type="text" class="form-control text-center form-control-lg mb-3"
@@ -271,6 +271,24 @@
                             <div class="col-lg-4">
                                 <input type="text" class="form-control text-center form-control-lg mb-3"
                                     id="P_DATE_TO" name="P_DATE_TO">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="input-group">
+                            <label class="control-label col-md-2" style="margin-top: 20px;">ت.الادخال من</label>
+                            <div class="col-lg-4">
+
+                                <input type="text" class="form-control text-center form-control-lg mb-3"
+                                    id="P_ENTER_FROM" name="P_DATE_FROM">
+                            </div>
+                            <div class="input-group-prepend">
+
+                                <span class="input-group-text">إلى</span>
+                            </div>
+                            <div class="col-lg-4">
+                                <input type="text" class="form-control text-center form-control-lg mb-3"
+                                    id="P_ENTER_TO" name="P_DATE_TO">
                             </div>
                         </div>
                     </div>
@@ -391,12 +409,23 @@
 
         $("#P_DATE_FROM").flatpickr({
             dateFormat: "d/m/Y",
+            maxDate: new Date(),
         });
 
         $("#P_DATE_TO").flatpickr({
             dateFormat: "d/m/Y",
+            maxDate: new Date(),
         });
 
+        $("#P_ENTER_FROM").flatpickr({
+            dateFormat: "d/m/Y",
+            maxDate: new Date(),
+        });
+
+        $("#P_ENTER_TO").flatpickr({
+            dateFormat: "d/m/Y",
+            maxDate: new Date(),
+        });
 
         $(document).ready(function() {
 
@@ -461,6 +490,12 @@
                     '') && ($(
                         '#P_Entry_point').val() == null || $('#P_Entry_point').val() == undefined || $('#P_Entry_point')
                     .val() ==
+                    '') && ($(
+                        '#P_ENTER_FROM').val() == null || $('#P_ENTER_FROM').val() == undefined || $('#P_ENTER_FROM')
+                    .val() ==
+                    '') && ($(
+                        '#P_ENTER_TO').val() == null || $('#P_ENTER_TO').val() == undefined || $('#P_ENTER_TO')
+                    .val() ==
                     '')
             ) {
 
@@ -498,7 +533,13 @@
                         '') && ($(
                             '#P_Entry_point').val() == null || $('#P_Entry_point').val() == undefined || $('#P_Entry_point')
                         .val() ==
-                        '')
+                        '') && ($(
+                        '#P_ENTER_FROM').val() == null || $('#P_ENTER_FROM').val() == undefined || $('#P_ENTER_FROM')
+                    .val() ==
+                    '') && ($(
+                        '#P_ENTER_TO').val() == null || $('#P_ENTER_TO').val() == undefined || $('#P_ENTER_TO')
+                    .val() ==
+                    '')
 
                 )
 
@@ -533,6 +574,8 @@
                 var DIAG4_NAME = $('#DIAG4_NAME').val();
                 var P_DEATH_PLACE = $('#P_Death_Place').val();
                 var P_ENTRY_POINT = $('#P_Entry_point').val();
+                var P_ENTER_FROM = $('#P_ENTER_FROM').val();
+                var P_ENTER_TO = $('#P_ENTER_TO').val();
 
 
 
@@ -560,6 +603,8 @@
                             P_LAST_NAME: P_LAST_NAME,
                             P_DATE_FROM: P_DATE_FROM,
                             P_DATE_TO: P_DATE_TO,
+                            P_ENTER_FROM:P_ENTER_FROM,
+                            P_ENTER_TO:P_ENTER_TO,
                             P_SEX_NO: P_SEX_NO,
                             P_REGION_NO: P_REGION_NO,
                             P_CITY_NO: P_CITY_NO,
@@ -787,6 +832,7 @@
                         }
                         var base_url = "{{ URL::to('dead/file_pdf') }}?" + $.param(query);
                         console.log(base_url);
+                     //   window.title=P_DEAD_ID;
                        window.open(base_url, true, "width=900,height=700 ,left=450,top=200");
 
                     }

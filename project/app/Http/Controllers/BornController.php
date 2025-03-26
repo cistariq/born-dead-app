@@ -153,24 +153,26 @@ class BornController extends Controller
         );
         echo json_encode($json_data);
     }
-    public function export_excel(Request $request)
-    {
-        $request->merge(["start" => null]);
-        $request->merge(["limit" => null]);
-        ini_set('max_execution_time', -1);
-        ini_set('memory_limit', -1);
-        $data_res = BORNS_INFO_TB::GET_BORN_DATA_BY_ID($request->P_BORN_CODE, $request->P_FATHER_ID, $request->P_MOTHER_ID, $request->P_FIRST_NAME, $request->P_SECOND_NAME, $request->P_THIRD_NAME, $request->P_LAST_NAME, $request->P_DATE_FROM, $request->P_DATE_TO, $request->P_SEX_NO, $request->P_REGION_NO, $request->P_CITY_NO, $request->P_HOS_NO, $request->start, $request->limit);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'BORN_DETAILS_TB';
-        $data1['column_name'] = 'e';
-        $data['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
-        $result = Excel::download(new BornExport($data_res), 'born_excel.csv');
-        return $result;
-    }
+    // public function export_excel(Request $request)
+    // {
+
+    //     ini_set('max_execution_time', -1);
+    //     ini_set('memory_limit', -1);
+    //     $data_res = BORNS_INFO_TB::GET_BORN_DATA_BY_ID($request->P_BORN_CODE, $request->P_FATHER_ID, $request->P_MOTHER_ID, $request->P_FIRST_NAME, $request->P_SECOND_NAME, $request->P_THIRD_NAME, $request->P_LAST_NAME, $request->P_DATE_FROM, $request->P_DATE_TO, $request->P_SEX_NO, $request->P_REGION_NO, $request->P_CITY_NO, $request->P_HOS_NO);
+    // dd($data_res);
+    //     $data1['user_id'] = Auth()->id();
+    //     $data1['ip'] = request()->ip();
+    //     $data1['id_no'] = Auth()->id();
+    //     $data1['table_name'] = 'BORN_DETAILS_TB';
+    //     $data1['column_name'] = 'e';
+    //     $data['old_record'] = $request->all();
+    //     $data1['type_action'] = 'DL';
+    //     Log::create($data1);
+    //     $result = Excel::download(new BornExport($data_res), 'born_excel.csv');
+    //     ob_end_clean();
+
+    //     return $result;
+    // }
 
     function save_born_info(Request $request)
     {
@@ -208,6 +210,7 @@ class BornController extends Controller
         //dd($request->all());
         try {
             $query = BORNS_INFO_TB::ADD_BORN_DATA($request->all());
+
             $data1['user_id'] = Auth()->id();
             $data1['ip'] = request()->ip();
             $data1['id_no'] = Auth()->id();
@@ -451,7 +454,7 @@ class BornController extends Controller
             'MOTHER_DOB' => 'required|date_format:d/m/Y',
             'MOTHER_BIRTH_PLACE' => 'string|required',
             'MOTHER_FATHER_BIRTH_PLACE' => 'string|required',
-            'MOTHER_JOB' => 'string|required',
+            'MOTHER_JOB' => 'numeric|required',
             'MOTHER_MARTIAL_STATUS_CD' => 'numeric|nullable',
             'MOTHER_YEAR_OF_EDUCATION' => 'numeric|required',
             'MOTHER_REGION_CD' => 'numeric|nullable',
@@ -602,7 +605,8 @@ class BornController extends Controller
     function save_born_details_info(Request $request)
     {
         $role = [
-
+           // 'F_ID' =>'numeric|digits:9|required',
+            //'M_ID' =>'numeric|digits:9|required',
             'BORN_DETAILS_REASON_CD' => 'numeric|nullable',
             'BORN_DETAILS_GRAVID' => 'numeric|nullable',
             'BORN_DETAILS_PARITY' => 'numeric|nullable',
@@ -646,9 +650,11 @@ class BornController extends Controller
 
             )); // 400 being the HTTP code for an invalid request.
         }
-        //$request->merge(["P_MOTHER_CREATED_BY" => Auth()->id()]);
+
         try {
             $query = BORNS_INFO_TB::ADD_BORN_DETAILS_DATA($request->all());
+            $result['B_CODE']=$query['BI_NUMBER'];
+           // dd($result['B_CODE']);
             $data1['user_id'] = Auth()->id();
             $data1['ip'] = request()->ip();
             $data1['id_no'] = Auth()->id();
@@ -657,14 +663,16 @@ class BornController extends Controller
             $data['old_record'] = $request->all();
             $data1['type_action'] = 'I';
             Log::create($data1);
-        } catch (\Exception $exception) {
-            //DB::rollBack();
 
-            //dd($exception->getMessage().$message->toString());
-            return Response::json(array('success' => false, 'results' => ['message' => $exception->getMessage(), 400]));
+
+        } catch (\Exception $exception) {
+
+            //DB::rollBack();
+                       return Response::json(array('success' => false, 'results' => ['message' => $exception->getMessage(), 400]));
             //$exception->getTraceAsString()
         }
-        return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية الإدخال بنجاح']));
+        return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية الإدخال بنجاح'],$result));
+
     }
 
     public function GET_BORNS_DATE(Request $request)
@@ -692,7 +700,7 @@ class BornController extends Controller
                 if (IsPermissionBtn(33)) {
 
                     $action = '<button type="button" class="btn btn-icon btn-bg-light btn-active-color-warning btn-sm me-3"
-            onclick="Upborn_data(' . $value['FATHER_ID'] . ',' . $value['MOTHER_ID'] . ');"  title="تعديل بيانات المولود">
+            onclick="Upborn_data(' . $value['BORN_DETAILS_CODE'] . ');"  title="تعديل بيانات المولود">
              <i class="fa-solid fa-pen-to-square fs-3"></i>
         </button>';
                 }
@@ -802,7 +810,7 @@ class BornController extends Controller
         ];
         $data = $request->validate($role);
 
-        $query = BORNS_INFO_TB::GET_BORN_DATA($request->all());
+        $query = BORNS_INFO_TB::GET_BORN_DATA2($request->all());
         $data1['user_id'] = Auth()->id();
         $data1['ip'] = request()->ip();
         $data1['id_no'] = Auth()->id();
@@ -856,20 +864,22 @@ class BornController extends Controller
     }
     public function born_export_excel(Request $request)
     {
-        $request->merge(["start" => null]);
-        $request->merge(["limit" => null]);
         ini_set('max_execution_time', -1);
         ini_set('memory_limit', -1);
-        $data_res = BORNS_INFO_TB::GET_BORN_DATA($request->P_BORN_CODE, $request->P_FATHER_ID, $request->P_MOTHER_ID, $request->P_FIRST_NAME, $request->P_SECOND_NAME, $request->P_THIRD_NAME, $request->P_LAST_NAME, $request->P_DATE_FROM, $request->P_DATE_TO, $request->P_SEX_NO, $request->P_REGION_NO, $request->P_CITY_NO, $request->P_HOS_NO, $request->start, $request->limit);
+        $request->merge(["start" => null]);
+        $request->merge(["limit" => null]);
+        $data_res = BORNS_INFO_TB::GET_BORN_DATA($request->all());
+      //  dd($data_res);
         $data1['user_id'] = Auth()->id();
         $data1['ip'] = request()->ip();
         $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'BORN_DETAILS_TB';
-        $data1['column_name'] = 'e';
+        $data1['table_name'] = 'BORNS_INFO_TB';
+        $data1['column_name'] = ' ';
         $data['old_record'] = $request->all();
         $data1['type_action'] = 'DL';
         Log::create($data1);
-        $result = Excel::download(new BornsExport($data_res), 'borns_excel.csv');
+        $result = Excel::download(new BornsExport($data_res), 'borns_excel.xlsx');
+        ob_end_clean();
         return $result;
     }
     public function getBornInfoByCode(Request $request)
@@ -978,5 +988,83 @@ class BornController extends Controller
             //$exception->getTraceAsString()
         }
         return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية التعديل بنجاح']));
+    }
+
+    public function check_born_id(Request $request)
+    {
+        $role = [
+            'P_BI_ID' => 'numeric|required|digits:9',
+        ];
+        $validator = Validator::make($request->all(), $role);
+
+        if ($validator->fails()) {
+            return Response::json(array(
+                'success' => false,
+                'results' => implode('-', $validator->errors()->all())
+
+            )); // 400 being the HTTP code for an invalid request.
+        }
+        $data = BORNS_INFO_TB::CHECK_BORN_ID($request->all());
+        $result['FLAG'] = $data['BORN'];
+        if ($result['FLAG'] == 0) {
+
+            return Response::json(array('success' => true, 'results' => $result));
+        } else {
+            return Response::json(array('success' => false, 'results' =>  "رقم الهوية مسجل مسبقاً في النظام!!!"));
+        }
+    }
+
+    public function check_born_date(Request $request)
+    {
+        $role = [
+            'F_ID' => 'numeric|required|digits:9',
+            'M_ID' => 'numeric|required|digits:9',
+            'BIRTH_DATE' => 'string|required',
+
+
+        ];
+        $validator = Validator::make($request->all(), $role);
+
+        if ($validator->fails()) {
+            return Response::json(array(
+                'success' => false,
+                'results' => implode('-', $validator->errors()->all())
+
+            )); // 400 being the HTTP code for an invalid request.
+        }
+        $request->merge(["USER_ID" => Auth()->id()]);
+        $data = BORNS_INFO_TB::CHECK_BIRTH_DATE($request->all());
+        $result['CHECK_CODE'] = $data['CHECK_CODE'];
+        if ($result['CHECK_CODE'] == 1) {
+
+            return Response::json(array('success' => true, 'results' => $result));
+        } else {
+            return Response::json(array('success' => false, 'results' =>  "لا يمكن إدخال اشعار ولادة جديد للوالدين!!!"));
+        }
+    }
+
+
+    public function check_born_count(Request $request)
+    {
+        $role = [
+            'P_BI_ADMISSION_CD' => 'numeric|required',
+        ];
+        $validator = Validator::make($request->all(), $role);
+
+        if ($validator->fails()) {
+            return Response::json(array(
+                'success' => false,
+                'results' => implode('-', $validator->errors()->all())
+
+            )); // 400 being the HTTP code for an invalid request.
+        }
+        $data = BORNS_INFO_TB::CHECK_BORN_COUNT($request->all());
+        $result['FLAG'] = $data['BORN'];
+        if ($result['FLAG'] == 1) {
+
+            return Response::json(array('success' => true, 'results' => $result));
+        } else {
+            return Response::json(array('success' => false, 'results' =>  "تم الانتهاء من ادخال المواليد للولادة الحالية!!!"));
+        }
     }
 }

@@ -43,7 +43,6 @@ class DeadExport implements FromCollection, WithHeadings, WithMapping, WithChunk
     }
     public function map($data): array
     {
-
         return [
             $data['DEAD_CODE'],
             $data['DEAD_ID'],

@@ -4,8 +4,6 @@ namespace App\Http\Controllers\user;
 
 use App\Http\Controllers\Controller;
 use App\Models\Constant;
-use App\Models\C_DETAILS_REFERRAL_TB;
-
 use App\Models\Log;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -19,16 +17,14 @@ class UserController extends Controller
     public function index()
     {
         $data['users'] = User::get();
-        //$data['hospitals'] = Constant::where('parent_id',7)->get();
-        $data['hospitals'] = C_DETAILS_REFERRAL_TB::get();
-
+        $data['hospitals'] = Constant::where('parent_id',7)->get();
         return view('user.index',$data);
     }
     public function insert_user(Request $request)
     {
         $role = [
             'user_name' => 'required|unique:users|max:255',
-            'hospital_id' => 'nullable|exists:C_DETAILS_REFERRAL_TB,DREF_CODE',
+            'hospital_id' => 'nullable|exists:constants,id',
             'password' => 'required|min:6|confirmed', // password_confirmation
             'id_no' => 'required|numeric|digits:9',
         ];
@@ -59,7 +55,7 @@ class UserController extends Controller
         $role = [
             'id_user' => 'required|numeric|exists:users,id',
             'user_name' => 'required|unique:users|max:255',
-            'hospital_id' => 'nullable|exists:C_DETAILS_REFERRAL_TB,DREF_CODE',
+            'hospital_id' => 'nullable|exists:constants,id',
             'status' => 'required|numeric|',Rule::in([1,2]),
             'id_no' => 'required|numeric|digits:9',
         ];

@@ -1088,10 +1088,10 @@
                 var MOTHER_FATHER_NAME_AR = $('#M_SECOND_NAME').val();
                 var MOTHER_GRANDFATHER_NAME_AR = $('#M_THIRD_NAME').val();
                 var MOTHER_LAST_NAME_AR = $('#M_LAST_NAME').val();
-                var MOTHER_DOB = $('#P_MOTHER_BIRTH_DATE').val();
+                var MOTHER_DOB = $('#M_BIRTH_DATE').val();
                 var MOTHER_BIRTH_PLACE = $('#m_birth_state').val();
                 var MOTHER_FATHER_BIRTH_PLACE = $('#mf_birth_state').val();
-                var MOTHER_JOB = $('#P_MOTHER_JOB_NAME').val();
+                var MOTHER_JOB = $('#P_MOTHER_JOB_CD').val();
                 var MOTHER_MARTIAL_STATUS_CD = $('#m_social_status_id').val();
                 var MOTHER_YEAR_OF_EDUCATION = $('#m_Year_Edu').val();
                 var MOTHER_REGION_CD = $('#m_region_id').val();
@@ -1253,7 +1253,7 @@
                 var MOTHER_FATHER_NAME_AR = $('#M_SECOND_NAME').val();
                 var MOTHER_GRANDFATHER_NAME_AR = $('#M_THIRD_NAME').val();
                 var MOTHER_LAST_NAME_AR = $('#M_LAST_NAME').val();
-                var MOTHER_DOB = $('#P_MOTHER_BIRTH_DATE').val();
+                var MOTHER_DOB = $('#M_BIRTH_DATE').val();
                 var MOTHER_BIRTH_PLACE = $('#m_birth_state').val();
                 var MOTHER_FATHER_BIRTH_PLACE = $('#mf_birth_state').val();
                 var MOTHER_JOB = $('#P_MOTHER_JOB_NAME').val();

@@ -50,6 +50,44 @@ class BORNS_INFO_TB extends Model
             return $result;
         });
     }
+    public static function GET_BORN_DATA2($data)
+    {
+
+        $sql = "begin BORN_INFO_PKG.GET_BORNS_INFO_PR (:P_BORN_CODE,:P_FATHER_ID,:P_MOTHER_ID, :P_FIRST_NAME, :P_SECOND_NAME,:P_THIRD_NAME,:P_LAST_NAME,:P_DATE_FROM,:P_DATE_TO,:P_SEX_NO, :P_REGION_NO, :P_CITY_NO,:P_HOS_NO,:P_START,:P_LIMIT,:RESULT_COUNT,:BORNS); end;";
+
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $RESULT_COUNT=0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':P_BORN_CODE', $data['P_BORN_CODE']);
+            $stmt->bindParam(':P_FATHER_ID', $data['P_FATHER_ID']);
+            $stmt->bindParam(':P_MOTHER_ID', $data['P_MOTHER_ID']);
+            $stmt->bindParam(':P_FIRST_NAME', $data['P_FIRST_NAME']);
+            $stmt->bindParam(':P_SECOND_NAME', $data['P_SECOND_NAME']);
+            $stmt->bindParam(':P_THIRD_NAME', $data['P_THIRD_NAME']);
+            $stmt->bindParam(':P_LAST_NAME', $data['P_LAST_NAME']);
+            $stmt->bindParam(':P_DATE_FROM', $data['P_DATE_FROM']);
+            $stmt->bindParam(':P_DATE_TO', $data['P_DATE_TO']);
+            $stmt->bindParam(':P_SEX_NO', $data['P_SEX_NO']);
+            $stmt->bindParam(':P_REGION_NO', $data['P_REGION_NO']);
+            $stmt->bindParam(':P_CITY_NO', $data['P_CITY_NO']);
+            $stmt->bindParam(':P_HOS_NO', $data['P_HOS_NO']);
+            $stmt->bindParam(':P_START', $data['start']);
+            $stmt->bindParam(':P_LIMIT', $data['length']);
+            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT,11);
+
+            $stmt->bindParam(':BORNS', $lista, PDO::PARAM_STMT);
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+
+            $result['data'] = $array;
+            $result['RESULT_COUNT'] = $RESULT_COUNT;
+            return $result;
+        });
+    }
     public static function GET_BORN_DATA($data)
     {
 
@@ -82,9 +120,11 @@ class BORNS_INFO_TB extends Model
             oci_execute($lista, OCI_DEFAULT);
             oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
             oci_free_cursor($lista);
-            $result['data'] = $array;
-            $result['RESULT_COUNT'] = $RESULT_COUNT;
-            return $result;
+            return $array;
+
+            // $result['data'] = $array;
+            // $result['RESULT_COUNT'] = $RESULT_COUNT;
+            // return $result;
         });
     }
     //add born data
@@ -1012,6 +1052,64 @@ public static function UPDATE_BORN_DATA($data)
             $result['data'] = $array;
             $result['RESULT_COUNT'] = $RESULT_COUNT;
             return $result;
+        });
+    }
+    public static function CHECK_BORN_ID($data)
+    {
+        //لفحص هذا رقم الهوية موجود أم لا
+        $sql_check = "begin BORN_INFO_PKG.CHECK_BORN_ID(:P_BI_ID,:BORN); end;";
+
+        return DB::transaction(function ($conn) use ($sql_check, $data) {
+
+            $BORN = 0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql_check);
+            $stmt->bindParam(':P_BI_ID', $data['P_BI_ID']);
+            $stmt->bindParam(':BORN', $BORN, PDO::PARAM_INT, 1);
+
+            $stmt->execute();
+            $data['BORN'] = $BORN;
+            return $data;
+        });
+    }
+
+    public static function CHECK_BIRTH_DATE($data)
+    {
+
+        $sql_check = "begin BORN_INFO_PKG.CHECK_BIRTH_DATE (:F_ID,:M_ID,:BIRTH_DATE, :USER_ID,:CHECK_CODE); end;";
+
+        return DB::transaction(function ($conn) use ($sql_check, $data) {
+            $CHECK_CODE = 0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql_check);
+            $stmt->bindParam(':F_ID', $data['F_ID']);
+            $stmt->bindParam(':M_ID', $data['M_ID']);
+            $stmt->bindParam(':BIRTH_DATE', $data['BIRTH_DATE']);
+            $stmt->bindParam(':USER_ID', $data['USER_ID']);
+
+            $stmt->bindParam(':CHECK_CODE', $CHECK_CODE, PDO::PARAM_INT, 1);
+
+            $stmt->execute();
+            $data['CHECK_CODE'] = $CHECK_CODE;
+            return $data;
+        });
+    }
+    public static function CHECK_BORN_COUNT($data)
+    {
+        //لفحص هذا رقم الهوية موجود أم لا
+        $sql_check = "begin BORN_INFO_PKG.CHECK_BORN_COUNT(:P_BI_ADMISSION_CD,:BORN); end;";
+
+        return DB::transaction(function ($conn) use ($sql_check, $data) {
+
+            $BORN = 0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql_check);
+            $stmt->bindParam(':P_BI_ADMISSION_CD', $data['P_BI_ADMISSION_CD']);
+            $stmt->bindParam(':BORN', $BORN, PDO::PARAM_INT, 1);
+
+            $stmt->execute();
+            $data['BORN'] = $BORN;
+            return $data;
         });
     }
 }

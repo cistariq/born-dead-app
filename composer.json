@@ -1,6 +1,0 @@
-{
-    "require": {
-        "giauphan/laravel-qr-code": "^1.0",
-        "simplesoftwareio/simple-qrcode": "4.2"
-    }
-}

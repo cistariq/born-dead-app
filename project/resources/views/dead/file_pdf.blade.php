@@ -1,7 +1,4 @@
 <html>
-    <title>
-        {{$Dead_ID}}
-    </title>
 	<head>
 		<title>إشعار الوفاة</title>
 		<!-- Provide proper viewport information so that the layout works on mobile devices. -->

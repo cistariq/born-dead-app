@@ -90,6 +90,6 @@ class User extends Authenticatable
     }
     public function hospital()
     {
-        return $this->belongsTo(C_DETAILS_REFERRAL_TB::class,'DREF_CODE');
+        return $this->belongsTo(Constant::class,'hospital_id');
     }
 }

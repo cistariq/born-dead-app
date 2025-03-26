@@ -24,7 +24,9 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\DB;
 
+use App\Http\Controllers\ICDCodeController;
 
 Route::get('/test',function(){
     $UNIX_DATE = (45293 - 25569) * 86400;
@@ -33,9 +35,17 @@ Route::get('/test',function(){
 //
 });
 
+// Route::get('/test-db', function () {
+//     try {
+//         DB::connection()->getPdo();
+//         return "تم الاتصال بقاعدة البيانات بنجاح!";
+//     } catch (\Exception $e) {
+//         return "خطأ في الاتصال بقاعدة البيانات: " . $e->getMessage();
+//     }
+// });
 
 Route::get('/login',[LoginController::class, 'index'])->name('login');
-Route::post('/submit',[LoginController::class, 'login'])->name('login.check');
+Route::post('/login',[LoginController::class, 'login'])->name('login.check');
 Route::group(['middleware' => [Authenticate::class]],function(){
     Route::get('/profile',[ProfileController::class, 'index'])->name('profile.index');
     Route::post('/update-password',[ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
@@ -76,8 +86,7 @@ Route::group(['middleware' => [Authenticate::class]],function(){
         Route::post('/Get_dead_name', [DeadController::class, 'Get_dead_name'])->name('Get_dead_name');
         Route::post('/open_crt_dead', [DeadController::class, 'open_crt_dead'])->name('open_crt_dead');
         Route::get('/file_pdf', [DeadController::class, 'file_pdf'])->name('file_pdf');
-
-
+        Route::post('/get_helth_center', [DeadController::class, 'get_helth_center'])->name('get_helth_center');
 
 
     });
@@ -213,6 +222,10 @@ Route::group(['middleware' => [Authenticate::class]],function(){
             Route::get('/getBorn_Code', [BornController::class, 'getBorn_Code'])->name('getBorn_Code');
             Route::get('/update_born/{ID_NO}', [BornController::class, 'update_born'])->name('update_born');
             Route::get('/Daily_Form', [BornController::class, 'Daily_Form'])->name('Daily_Form');
+            Route::post('/check_born_id', [BornController::class,'check_born_id'])->name('check_born_id');
+            Route::post('/check_born_date', [BornController::class,'check_born_date'])->name('check_born_date');
+            Route::post('/check_born_count', [BornController::class,'check_born_count'])->name('check_born_count');
+
 
 
 
@@ -229,6 +242,9 @@ Route::group(['middleware' => [Authenticate::class]],function(){
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+
+Route::get('/icd-codes', [ICDCodeController::class, 'index'])->name('icd.index');
+Route::get('/icd-codes/children/{id}', [ICDCodeController::class, 'fetchChildren'])->name('icd.fetchChildren');
 
 
 

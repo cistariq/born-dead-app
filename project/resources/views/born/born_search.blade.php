@@ -444,6 +444,7 @@
             }
             var base_url = "{{ URL::to('born/born_export_excel') }}?" + $.param(query)
 
+
             window.location = base_url;
         }
 

@@ -113,8 +113,10 @@ class DeadController extends Controller
             'P_SECOND_NAME' => 'string|nullable',
             'P_THIRD_NAME' => 'string|nullable',
             'P_LAST_NAME' => 'string|nullable',
-            'P_DATE_FROM' => 'nullable|date_format:d/m/Y|before:' . date('d/m/Y'),
-            'P_DATE_TO' => 'nullable|date_format:d/m/Y|before:' . date('d/m/Y'),
+            'P_DATE_FROM' => 'nullable|date_format:d/m/Y',
+            'P_DATE_TO' => 'nullable|date_format:d/m/Y' ,
+            'P_ENTER_FROM' => 'nullable|date_format:d/m/Y',
+            'P_ENTER_TO' => 'nullable|date_format:d/m/Y' ,
             'P_SEX_NO' => 'numeric|nullable',
             'P_REGION_NO' => 'numeric|nullable',
             'P_CITY_NO' => 'numeric|nullable',
@@ -236,7 +238,8 @@ class DeadController extends Controller
             'P_FATHER_NAME' => 'required',
             'P_GRAND_FATHER_NAME' => 'required',
             'P_FAMILY_NAME' => 'required',
-            'P_BIRTH_DATE' => 'required|before:P_DATE_DEATH||date_format:d/m/Y|before_or_equal:' . date('d/m/Y'),
+            'P_BIRTH_DATE' => 'required|date_format:d/m/Y|before_or_equal:' . date('d/m/Y'),
+            'P_BIRTH_DATE'.' '.'00:00' => 'before:P_DATE_DEATH|date_format:d/m/Y',
             'P_BIRTH_PLACE' => 'nullable',
             'P_JOB_CD' => 'nullable',
             'P_SEX_CD' => 'required|digits:1',
@@ -285,8 +288,7 @@ class DeadController extends Controller
             'P_RELATIONSHIP' => 'nullable',
             'P_REPORTER_ADDRESS' => 'nullable',
             'P_REPORTER_MOBILE' => ['nullable', 'numeric', 'digits:10', new StartWith('059', '056')],
-            'P_DATE_OF_REPORT' => 'required|date_format:d/m/Y H:i|before_or_equal:P_DATE_DEATH',
-            'P_RECEIVE_DATE' => 'nullable',
+            'P_DATE_OF_REPORT' => 'required|date_format:d/m/Y H:i|after_or_equal:P_DATE_DEATH',            'P_RECEIVE_DATE' => 'nullable',
             'P_RECEIVER_NAME' => 'nullable',
             'P_REGISTER_DATE' => 'nullable',
             'P_REGISTER_NAME' => 'nullable',
@@ -378,7 +380,8 @@ class DeadController extends Controller
             'P_FATHER_NAME' => 'required',
             'P_GRAND_FATHER_NAME' => 'required',
             'P_FAMILY_NAME' => 'required',
-            'P_BIRTH_DATE' => 'required|date|before:P_DATE_DEATH||date_format:d/m/Y|before_or_equal:' . date('d/m/Y'),
+            'P_BIRTH_DATE' => 'required|date_format:d/m/Y|before_or_equal:' . date('d/m/Y'),
+            'P_BIRTH_DATE'.' '.'00:00' => 'before:P_DATE_DEATH|date_format:d/m/Y',
             'P_BIRTH_PLACE' => 'nullable',
             'P_JOB_CD' => 'nullable',
             'P_SEX_CD' => 'required|digits:1',
@@ -427,7 +430,7 @@ class DeadController extends Controller
             'P_RELATIONSHIP' => 'nullable',
             'P_REPORTER_ADDRESS' => 'nullable',
             'P_REPORTER_MOBILE' => ['nullable', 'numeric', 'digits:10', new StartWith('059', '056')],
-            'P_DATE_OF_REPORT' => 'required|date_format:d/m/Y H:i|before_or_equal:P_DATE_DEATH',
+            'P_DATE_OF_REPORT' => 'required|date_format:d/m/Y H:i|after_or_equal:P_DATE_DEATH',
             'P_RECEIVE_DATE' => 'nullable',
             'P_RECEIVER_NAME' => 'nullable',
             'P_REGISTER_DATE' => 'nullable',
@@ -741,4 +744,17 @@ class DeadController extends Controller
 
 
     }
+    public function get_helth_center(Request $request)
+    {
+      //  C_DETAILS_REFERRAL_TB::whereIn('DREF_M_CD', [2, 3])->orwhereIn('DREF_CODE', [134, 125, 146])->get();
+        //$query = DEADS_TB::GET_CITY($request->all());
+        $query =C_DETAILS_REFERRAL_TB::where('DREF_CITY_CD',$request->city_cd)->get();
+        // return json_encode($query);
+
+        return Response::json($query);
+    }
+
+
+    //$data['HEALTH_CENTER'] =
+
 }

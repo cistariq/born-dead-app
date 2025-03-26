@@ -93,7 +93,9 @@
                 <!--begin::Form-->
                 <form class="form fv-plugins-bootstrap5 fv-plugins-framework mx-auto" novalidate="novalidate"
                     id="kt_stepper_example_basic_form">
-                    <input type="hidden" value="{{ @$P_BI_CODE }}" id="P_BI_CODE" name="P_BI_CODE">
+                    {{-- <input type="hidden" value="{{ @$P_BI_CODE }}" id="P_BI_CODE" name="P_BI_CODE"> --}}
+                    <input type="hidden" value="" name="P_BI_ADMISSION_CD" id="P_BI_ADMISSION_CD" />
+                    <input type="hidden" value="" id="P_BI_CODE" name="P_BI_CODE">
 
                     <!--begin::Group-->
                     <div class="mb-6">
@@ -152,13 +154,13 @@
                                         </div>
                                         <div class="col-lg-3">
                                             <input type="text" id="IN_THIRD_NAME"
-                                                class="form-control text-center form-control-lg mb-3"
-                                                placeholder="اسم الجد" disabled>
+                                                class="form-control text-center form-control-lg mb-3" placeholder="اسم الجد"
+                                                disabled>
                                         </div>
                                         <div class="col-lg-3">
                                             <input type="text" id="IN_LAST_NAME"
-                                                class="form-control text-center form-control-lg mb-3"
-                                                placeholder="العائلة" disabled>
+                                                class="form-control text-center form-control-lg mb-3" placeholder="العائلة"
+                                                disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -253,10 +255,10 @@
                                             <select id="f_city_id" data-control="select2" data-placeholder="المدينة"
                                                 class="form-select form-select-lg fw-bold">
                                                 <option></option>
-                                                @foreach ($city as $item)
+                                                {{-- @foreach ($city as $item)
                                                     <option value="{{ $item->c_code }}">{{ $item->c_name_ar }}
                                                     </option>
-                                                @endforeach
+                                                @endforeach --}}
 
                                             </select>
                                         </div>
@@ -439,10 +441,10 @@
                                             <select id="m_city_id" data-control="select2" data-placeholder="المدينة"
                                                 class="form-select form-select-lg fw-bold">
                                                 <option></option>
-                                                @foreach ($city as $item)
+                                                {{-- @foreach ($city as $item)
                                                     <option value="{{ $item->c_code }}">{{ $item->c_name_ar }}
                                                     </option>
-                                                @endforeach
+                                                @endforeach --}}
                                             </select>
                                         </div>
                                         <!--begin::Label-->
@@ -492,7 +494,7 @@
                             <input type="hidden" name="BORN_DETAILS_GRAVID"
                                 style="background-color:#F0F0F0;border-top-width:thin; border-style:groove"
                                 id="BORN_DETAILS_GRAVID" value="" />
-                            <input type="hidden" value="" name="B_CODE" id="B_CODE" />
+                            {{-- <input type="hidden" value="" name="B_CODE" id="B_CODE" /> --}}
 
 
                             <div class="row mb-6">
@@ -533,7 +535,11 @@
 
                                     <select id="BORN_DETAILS_REGION_CD" data-control="select2" data-placeholder="المدينة"
                                         class="form-select form-select-lg fw-bold">
-                                        <option value="0" selected="selected">غير معرف</option>
+                                        @foreach ($region as $item)
+                                            <option value="{{ $item->r_code }}">{{ $item->r_name_ar }}
+                                            </option>
+                                        @endforeach
+                                        {{-- <option value="0" selected="selected">غير معرف</option>
                                         <option value="1">غزة</option>
                                         <option value="2">جباليا</option>
                                         <option value="3">دير البلح</option>
@@ -552,7 +558,7 @@
                                         <option value="16">دورا</option>
                                         <option value="17">سلفيت</option>
                                         <option value="18">أبو ديس</option>
-                                        <option value="19">الشعراوية</option>
+                                        <option value="19">الشعراوية</option> --}}
 
                                     </select>
                                 </div>
@@ -564,10 +570,10 @@
                                     <select id="BORN_DETAILS_CITY_CD" data-control="select2" data-placeholder="الحي"
                                         class="form-select form-select-lg fw-bold">
                                         <option></option>
-                                        @foreach ($city as $item)
+                                        {{-- @foreach ($city as $item)
                                             <option value="{{ $item->c_code }}">{{ $item->c_name_ar }}
                                             </option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">المركز الصحي</label>
@@ -575,11 +581,11 @@
 
                                     <select id="BORN_DETAILS_HEALTH_CENTER_CD" data-control="select2"
                                         data-placeholder="المركز الصحي" class="form-select form-select-lg fw-bold">
-                                        <option></option>
+                                        {{-- <option></option>
                                         @foreach ($HEALTH_CENTER as $item)
                                             <option value="{{ $item->dref_code }}">{{ $item->dref_name_ar }}
                                             </option>
-                                        @endforeach
+                                        @endforeach --}}
                                     </select>
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">رقم منزل الوالدين</label>
@@ -598,7 +604,8 @@
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">رقم زواج الأم </label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_MARRIAGE_NUMBER" value="1">
+                                    <input class="form-control text-center" id="BORN_DETAILS_MARRIAGE_NUMBER"
+                                        value="1">
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">رقم تليفون الوالدين </label>
                                 <!--end::Label-->
@@ -613,7 +620,11 @@
                                     الحالية</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_PLURALITY" value="1">
+                                    <input type="number" name="BORN_DETAILS_PLURALITY" id="BORN_DETAILS_PLURALITY"
+                                        maxLength="9" oninput="this.value=this.value.slice(0,this.maxLength)"
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0" value="1"
+                                        onchange="get_twins();">
+
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">توأم</label>
                                 <div class="col-lg-2 fv-row mt-n1">
@@ -647,22 +658,24 @@
                                     السابق</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_PRE_MARRIAGE_LIVE" value="0">
+                                    <input class="form-control text-center" id="BORN_DETAILS_PRE_MARRIAGE_LIVE"
+                                        value="0">
                                 </div>
                                 <label class="col-lg-3 col-form-label required fw-bold fs-6">عدد المواليد الموتى من الزواج
                                     السابق</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_PRE_MARRIAGE_DEAD" value="0">
+                                    <input class="form-control text-center" id="BORN_DETAILS_PRE_MARRIAGE_DEAD"
+                                        value="0">
                                 </div>
                             </div>
                         </div>
                         <!--end::Input group-->
                         <!--begin::Step 4-->
-                        <div class="flex-column" data-kt-stepper-element="content">
+                        {{-- <div class="flex-column" data-kt-stepper-element="content">
                             <input type="hidden" value="" name="BI_PARTOGRAM_CD" id="BI_PARTOGRAM_CD" />
                             <input type="hidden" value="" name="BI_PRESENTATION_CD" id="BI_PRESENTATION_CD" />
-                            <input type="hidden"  name="BI_OUT_COME_CD" id="BI_OUT_COME_CD" />
+                            <input type="hidden" name="BI_OUT_COME_CD" id="BI_OUT_COME_CD" />
                             <input name="BI_APAGAR_5"
                                 style="background-color:#FFFFFF;border-top-width:thin; border-style:groove" type="hidden"
                                 id="BI_APAGAR_5" tabindex="15" value="" dir="rtl"
@@ -673,10 +686,10 @@
                                 onblur="check_digits(1,this.value,this.id)" />
                             <input type="hidden" value="" name="BI_CONGENITAL_ANOMALIES_CD"
                                 id="BI_CONGENITAL_ANOMALIES_CD" />
-                            <input type="hidden"  name="BI_EXAM_OUT_COME_CD" id="BI_EXAM_OUT_COME_CD" />
-                            <input type="hidden"  name="BI_EXAM_BEFORE_CD" id="BI_EXAM_BEFORE_CD" />
-                            <input type="hidden"  name="BI_ADMITTED_NICU_CD" id="BI_ADMITTED_NICU_CD" />
-                            <input type="hidden"  name="BI_ADMISSION_CD" id="BI_ADMISSION_CD" />
+                            <input type="hidden" name="BI_EXAM_OUT_COME_CD" id="BI_EXAM_OUT_COME_CD" />
+                            <input type="hidden" name="BI_EXAM_BEFORE_CD" id="BI_EXAM_BEFORE_CD" />
+                            <input type="hidden" name="BI_ADMITTED_NICU_CD" id="BI_ADMITTED_NICU_CD" />
+                            <input type="hidden" name="BI_ADMISSION_CD" id="BI_ADMISSION_CD" />
                             <div class="row mb-6">
 
                                 <!--begin::Label-->
@@ -741,7 +754,7 @@
                             </div>
 
 
-                        </div>
+                        </div> --}}
                     </div>
                     <!--end::Group-->
 
@@ -759,17 +772,16 @@
                         <!--begin::Wrapper-->
                         <div class="card-footer d-flex justify-content-end py-6 px-9">
                             @if (IsPermissionBtn(30))
-
-                            <button type="button" class="btn btn-primary" data-kt-stepper-action="submit"
-                                id="save_btn" onclick="save_born_details_info();">
-                                <span class="indicator-label">
-                                    حفظ البيانات
-                                </span>
-                                <span class="indicator-progress">
-                                    انتظر من فضلك... <span
-                                        class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                </span>
-                            </button>
+                                <button type="button" class="btn btn-primary" data-kt-stepper-action="submit"
+                                    id="save_btn" onclick="check_born_date();">
+                                    <span class="indicator-label">
+                                        حفظ البيانات
+                                    </span>
+                                    <span class="indicator-progress">
+                                        انتظر من فضلك... <span
+                                            class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                                    </span>
+                                </button>
                             @endif
 
                             <button type="button" class="btn btn-primary" data-kt-stepper-action="next">
@@ -788,6 +800,98 @@
         <!--begin::Card header-->
 
     </div>
+
+    <div class="modal fade" tabindex="-1" id="BornModal">
+        <input type="hidden" value="" name="BI_PARTOGRAM_CD" id="BI_PARTOGRAM_CD" />
+        <input type="hidden" value="" name="BI_PRESENTATION_CD" id="BI_PRESENTATION_CD" />
+        <input type="hidden" name="BI_OUT_COME_CD" id="BI_OUT_COME_CD" />
+        <input name="BI_APAGAR_5" style="background-color:#FFFFFF;border-top-width:thin; border-style:groove"
+            type="hidden" id="BI_APAGAR_5" tabindex="15" value="" dir="rtl"
+            onblur="check_digits(1,this.value,this.id)" />
+        <input name="BI_APAGAR_1" style="background-color:#FFFFFF;border-top-width:thin; border-style:groove"
+            type="hidden" id="BI_APAGAR_1" tabindex="14" dir="rtl" value=""
+            onblur="check_digits(1,this.value,this.id)" />
+        <input type="hidden" value="" name="BI_CONGENITAL_ANOMALIES_CD" id="BI_CONGENITAL_ANOMALIES_CD" />
+        <input type="hidden" value="" name="BI_EXAM_OUT_COME_CD" id="BI_EXAM_OUT_COME_CD" />
+        <input type="hidden" value="" name="BI_EXAM_BEFORE_CD" id="BI_EXAM_BEFORE_CD" />
+        <input type="hidden" value="" name="BI_ADMITTED_NICU_CD" id="BI_ADMITTED_NICU_CD" />
+
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">إضافة مولود</h5>
+                    <!--begin::Close-->
+                    <div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal"
+                        aria-label="Close">
+                        <span class="svg-icon svg-icon-2x"></span>
+                    </div>
+                    <!--end::Close-->
+                </div>
+                <div class="modal-body">
+                    <div class="row mb-4">
+                        <label class="col-form-label fw-bold col-lg-4">هوية رقم</label>
+                        <div class="col-lg-8">
+                            <input id="P_BI_ID" type="text" value=""
+                                class="form-control form-control-solid ps-10" />
+                        </div>
+                    </div>
+                    <div class="row mb-6">
+                        <label class="col-form-label fw-bold col-lg-4">ترتيب المولود</label>
+                        <div class="col-lg-8">
+                            <input id="BI_ORDER" type="text" value=""
+                                class="form-control form-control-solid ps-10" />
+                        </div>
+                    </div>
+                    <div class="row mb-6">
+                        <label class="col-form-label fw-bold col-lg-4">وزن المولود بالجرام</label>
+                        <div class="col-lg-8">
+                            <input id="BI_WEIGHT_GM" type="text" value=""
+                                class="form-control form-control-solid ps-10" />
+                        </div>
+                    </div>
+                    <div class="row mb-6">
+                        <label class="col-form-label fw-bold col-lg-4">اسم المولود الاول</label>
+                        <div class="col-lg-8">
+                            <input id="BI_FIRST_NAME" type="text" value=""
+                                class="form-control form-control-solid ps-10" />
+                        </div>
+                    </div>
+                    <div class="row mb-6">
+                        <label class="col-form-label fw-bold col-lg-4">جنس المولود</label>
+                        <div class="col-lg-8">
+                            <select id="BI_SEX_CD" data-control="select2" data-placeholder="اختر ..."
+                                class="form-select form-select-lg fw-bold">
+                                <option value="">اختر...</option>
+                                <option value="1">ذكر</option>
+                                <option value="2">أنثى</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-6">
+                        <label class="col-form-label fw-bold col-lg-4">ديانة المولود</label>
+                        <div class="col-lg-8">
+                            <select id="BI_RELEGION_CD" data-control="select2" data-placeholder="اختر ..."
+                                class="form-select form-select-lg fw-bold">
+                                <option value="">اختر...</option>
+                                @foreach ($religion as $item)
+                                    <option value="{{ $item->re_code }}">{{ $item->re_name_ar }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">إغلاق</button>
+                    @if (IsPermissionBtn(34))
+                        <button type="button" class="btn btn-primary" onclick="check_born_count();">حفظ التعديل</button>
+                    @endif
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 @endsection
 @push('scripts')
     <script src="assets/js/scripts.bundle.js"></script>
@@ -810,17 +914,20 @@
 
         $(document).ready(function() {
 
+            // var btn_save = document.getElementById("save_btn");
+            // var btn_update= document.getElementById("update_btn");
+
             if ($("#P_BI_CODE").val() != 0 || $("#P_BI_CODE").val() != '') {
                 getDataBornInfoBy($("#P_BI_CODE").val());
-                document.getElementById('save_btn').style.visibility = 'hidden';
-                document.getElementById('update_btn').style.visibility = 'visible';
 
+                // btn_save.style.display = "none";
+                // btn_update.style.display = "block";
 
 
             } else {
-                document.getElementById('save_btn').style.visibility = 'visible';
-                document.getElementById('update_btn').style.visibility = 'hidden';
 
+                // btn_update.style.display = "none";
+                // btn_save.style.display = "block";
             }
 
         });
@@ -854,10 +961,49 @@
         });
 
         // add born info
+function check_born_date(){
+    var F_ID  = $("#P_FATHER_ID").val();
+    var M_ID  = $("#P_MOTHER_ID").val();
+    var BIRTH_DATE=$("#BORN_DETAILS_DELIVERY_DATE").val();
+    var url = "{{ route('born.check_born_date') }}";
+    $.ajax({
+                    url: url,
+                    type: 'json',
+                    method: 'post',
+                    data: {
+                        'F_ID': F_ID,
+                        'M_ID':M_ID,
+                        'BIRTH_DATE':BIRTH_DATE
 
+                    },
+                }).done(function(response) {
+                    console.log(response);
+                    if (response.success) {
+                        save_born_details_info();
+                    }
+                    else {
+                        console.log(response);
+                        $message = "";
+                        $.each(response.errors, function(key, value) {
+                            console.log(value);
+                            console.log(key);
+                            $message += value.join('-') + "\r\n";
+                        });
+                        Swal.fire({
+                            title: 'يوجد خطأ في عملية الإدخال !',
+                            text: 'لا يمكن إدخال إشعار ولادة جديد للوالدين قبل مرور عام على الولادة السابقة!',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
+
+                    }
+                });
+        }
         function save_born_details_info() {
+
             if (($("#FATHER_NUMBER").val() != 0 || $("#FATHER_NUMBER").val() != '') && ($("#MOTHER_NUMBER").val() != 0 || $(
                     "#MOTHER_NUMBER").val() != '')) {
+
                 var BORN_DETAILS_REASON_CD = $("#BORN_DETAILS_REASON_CD").val();
                 var BORN_DETAILS_GRAVID = $("#BORN_DETAILS_GRAVID").val();
                 var BORN_DETAILS_PARITY = $("#BORN_DETAILS_PARITY").val();
@@ -897,6 +1043,7 @@
                     type: 'json',
                     method: 'post',
                     data: {
+
                         'BORN_DETAILS_REASON_CD': BORN_DETAILS_REASON_CD,
                         'BORN_DETAILS_GRAVID': BORN_DETAILS_GRAVID,
                         'BORN_DETAILS_PARITY': BORN_DETAILS_PARITY,
@@ -932,7 +1079,7 @@
 
                     },
                 }).done(function(response) {
-                    console.log(response);
+                    console.log(response[0]['B_CODE']);
                     if (response.success) {
                         if (response.success == 1) {
                             Swal.fire({
@@ -940,20 +1087,32 @@
                                 text: response.results.message,
                                 icon: "success",
                                 confirmButtonText: 'موافق'
+                            }).then((result) => {
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                   // alert(response[0]['B_CODE']);
+                                    var F_ID = $('#P_FATHER_ID').val();
+                                    var M_ID = $('#P_MOTHER_ID').val();
+                                    $('#P_BI_CODE').val(response[0]['B_CODE']);
+                                    $('#P_BI_ADMISSION_CD').val(response[0]['B_CODE']);
+                                    Upborn_data($('#P_BI_ADMISSION_CD').val());
+
+                                }
                             });
-                            clear_form();
-                            // $('#B_CODE').val(response.results.B_CODE);
+
+
+
 
                         } else {
 
                             toastr["error"](response.results.message);
                         }
                     } else {
-                        console.log(response);
+                       // console.log(response);
                         $message = "";
                         $.each(response.errors, function(key, value) {
-                            console.log(value);
-                            console.log(key);
+                          //  console.log(value);
+                            //console.log(key);
                             $message += value.join('-') + "\r\n";
                         });
                         Swal.fire({
@@ -991,7 +1150,7 @@
                 var F_CITY_CD = $('#f_city_id').val();
                 var F_DATA_FRM_MOI = $('#FATHER_DATA_FRM_MOI').val();
                 var F_ID_TYPE = $('#f_type_id').val();
-                var B_CODE = $('#B_CODE').val();
+                var B_CODE = $('#P_BI_CODE').val();
 
 
                 var url = "{{ route('born.update_father_info') }}";
@@ -1077,7 +1236,7 @@
                 var MOTHER_FAMILY_NAME = $('#P_mother_family').val();
                 var MOTHER_DATA_FRM_MOI = $('#MOTHER_DATA_FRM_MOI').val();
                 var MOTHER_ID_TYPE = $('#m_type_id').val();
-                var B_CODE = $('#B_CODE').val();
+                var B_CODE = $('#P_BI_CODE').val();
 
 
                 var url = "{{ route('born.update_mother_info') }}";
@@ -1334,9 +1493,9 @@
                                 $('#P_FATHER_BIRTH_DATE').val(response.results.birth_date.replace("00:00:00", ""));
                                 $('#P_birth_state').val(response.results.birth_place);
                                 $('#f_birth_state').val(response.results.father_birth_place);
-                                $('#P_social_status_id').val(response.results.MARTIAL_STATUS_CD);
+                                $('#P_social_status_id').val(response.results.MARTIAL_STATUS_CD).change();
                                 $('#P_social_status_name').val(response.results.MS_NAME);
-                                $('#P_FATHER_JOB_CD').val(response.results.JOB_CD);
+                                $('#P_FATHER_JOB_CD').val(response.results.JOB_CD).change();
                                 $('#P_FATHER_JOB_NAME').val(response.results.JOB_NAME);
                                 $('#f_Year_Edu').val(response.results.YEAR_OF_EDUCATION);
                                 $("#f_region_id").val(response.results.REGION_CD).change();
@@ -1396,9 +1555,9 @@
                                 $('#M_BIRTH_DATE').val(response.results.birth_date.replace("00:00:00", ""));
                                 $('#m_birth_state').val(response.results.birth_place);
                                 $('#mf_birth_state').val(response.results.father_birth_place);
-                                $('#m_social_status_id').val(response.results.MARTIAL_STATUS_CD);
+                                $('#m_social_status_id').val(response.results.MARTIAL_STATUS_CD).change();
                                 $('#m_social_status_name').val(response.results.MS_NAME);
-                                $('#P_MOTHER_JOB_CD').val(response.results.JOB_CD);
+                                $('#P_MOTHER_JOB_CD').val(response.results.JOB_CD).change();
                                 $('#P_MOTHER_JOB_NAME').val(response.results.JOB_NAME);
                                 $('#m_Year_Edu').val(response.results.YEAR_OF_EDUCATION);
                                 $('#P_mother_phone').val(response.results.TEL);
@@ -1524,12 +1683,416 @@
 
         }
 
-  /**************************************************************************************************************************************************************************************************/
-  function clear_form() {
+        /**************************************************************************************************************************************************************************************************/
+        function clear_form() {
             $('#kt_stepper_example_basic_form')[0].reset();
             $('#kt_stepper_example_basic_form .form-select').val(' ').trigger('change');
         }
 
+
+
+
+
+        $('#BORN_DETAILS_REGION_CD').change(function() {
+            var region_cd = $(this).val();
+            var url = "{{ route('dead.get_city') }}";
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                async: false,
+                data: {
+                    region_cd: region_cd
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#BORN_DETAILS_CITY_CD').empty();
+                    console.log(3);
+                    $('#BORN_DETAILS_CITY_CD').append('<option >  </option>');
+                    $.each(data, function(key, value) {
+                        // console.log(value.C_NAME_AR);
+
+                        $('#BORN_DETAILS_CITY_CD').append('<option value="' + value.C_CODE +
+                            '" >' + value.C_NAME_AR + '</option>');
+                    });
+
+                }
+            });
+        });
+
+
+
+        $('#BORN_DETAILS_CITY_CD').change(function() {
+            var city_cd = $(this).val();
+            var url = "{{ route('dead.get_helth_center') }}";
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                async: false,
+                data: {
+                    city_cd: city_cd
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#BORN_DETAILS_HEALTH_CENTER_CD').empty();
+                    console.log(3);
+                    $('#BORN_DETAILS_HEALTH_CENTER_CD').append('<option >  </option>');
+                    $.each(data, function(key, value) {
+                        // console.log(value.C_NAME_AR);
+
+                        $('#BORN_DETAILS_HEALTH_CENTER_CD').append('<option value="' + value
+                            .dref_code +
+                            '" >' + value.dref_name_ar + '</option>');
+                    });
+
+                }
+            });
+        });
+
+        function get_twins() {
+            if ($('#BORN_DETAILS_PLURALITY').val() > 1) {
+                $('#weekRadio2').prop('checked', true);
+
+                //alert(1);
+
+            } else {
+                $('#weekRadio1').prop('checked', true);
+
+            }
+
+        }
+
+        function Upborn_data(P_BI_ADMISSION_CD) {
+
+                        var url = "{{ route('born.is_born_found') }}";
+                        $.ajax({
+                            url: url,
+                            type: 'json',
+                            method: 'post',
+                            data: {
+                                'P_BI_ADMISSION_CD': P_BI_ADMISSION_CD
+                            },
+                        }).done(function(response) {
+                            console.log(response);
+                            if (response.success) {
+                                if (response.success == 1) {
+
+                                    if (response.results.FLAG == 1) {
+
+                                        var url = "{{ route('born.getBornInfoByNo') }}";
+                                        $.ajax({
+                                            url: url,
+                                            type: 'json',
+                                            method: 'post',
+                                            data: {
+                                                'P_BI_ADMISSION_CD': P_BI_ADMISSION_CD
+                                            },
+                                        }).done(function(response) {
+                                            console.log(response);
+                                            if (response.success) {
+                                                if (response.success == 1) {
+
+                                                    $('#P_BI_ID').val(response.results.BI_ID);
+                                                    $('#BI_ORDER').val(response.results.BI_ORDER);
+                                                    $('#BI_WEIGHT_GM').val(response.results
+                                                        .BI_WEIGHT_GM);
+                                                    $('#BI_FIRST_NAME').val(response.results
+                                                        .BI_FIRST_NAME);
+                                                    $('#BI_SEX_CD').val(response.results.BI_SEX_CD)
+                                                        .change();
+                                                    $('#BI_RELEGION_CD').val(response.results
+                                                        .BI_RELEGION_CD).change();
+                                                    $('#BI_PARTOGRAM_CD').val(response.results
+                                                        .BI_PARTOGRAM_CD);
+                                                    $('#BI_PRESENTATION_CD').val(response.results
+                                                        .BI_PRESENTATION_CD);
+                                                    $('#BI_OUT_COME_CD').val(response.results
+                                                        .BI_OUT_COME_CD);
+                                                    $('#BI_APAGAR_5').val(response.results
+                                                        .BI_APAGAR_5);
+                                                    $('#BI_APAGAR_1').val(response.results
+                                                        .BI_APAGAR_1);
+                                                    $('#BI_CONGENITAL_ANOMALIES_CD').val(response
+                                                        .results.BI_CONGENITAL_ANOMALIES_CD);
+                                                    $('#BI_EXAM_OUT_COME_CD').val(response.results
+                                                        .BI_EXAM_OUT_COME_CD);
+                                                    $('#BI_EXAM_BEFORE_CD').val(response.results
+                                                        .BI_EXAM_BEFORE_CD);
+                                                    $('#BI_ADMITTED_NICU_CD').val(response.results
+                                                        .BI_ADMITTED_NICU_CD);
+
+                                                }
+                                            } else {
+                                                console.log(response);
+                                                $message = "";
+                                                $.each(response.errors, function(key, value) {
+                                                    console.log(value);
+                                                    console.log(key);
+                                                    $message += value.join('-') + "\r\n";
+                                                });
+                                                Swal.fire({
+                                                    title: 'خطأ !',
+                                                    text: $message,
+                                                    icon: 'error',
+                                                    confirmButtonText: 'Ok'
+                                                });
+                                            }
+                                        });
+                                    }
+
+
+                                }
+                            } else {
+                                console.log(response);
+                                $message = "";
+                                $.each(response.errors, function(key, value) {
+                                    console.log(value);
+                                    console.log(key);
+                                    $message += value.join('-') + "\r\n";
+                                });
+                                Swal.fire({
+                                    title: 'خطأ !',
+                                    text: $message,
+                                    icon: 'error',
+                                    confirmButtonText: 'Ok'
+                                });
+                            }
+                        });
+
+
+                    $('#BornModal').modal('show');
+
+
+        }
+
+
+        function edit_born_data() {
+            //dead data
+            var P_BI_ADMISSION_CD = $('#P_BI_ADMISSION_CD').val();
+            var P_BI_ID = $('#P_BI_ID').val();
+            var P_BI_ORDER = $('#BI_ORDER').val();
+            var P_BI_WEIGHT_GM = $('#BI_WEIGHT_GM').val();
+            var P_BI_FIRST_NAME = $('#BI_FIRST_NAME').val();
+            var P_BI_SEX_CD = $('#BI_SEX_CD').val();
+            var P_BI_RELEGION_CD = $('#BI_RELEGION_CD').val();
+            var P_BI_PARTOGRAM_CD = $('#BI_PARTOGRAM_CD').val();
+            var P_BI_PRESENTATION_CD = $('#BI_PRESENTATION_CD').val();
+            var P_BI_OUT_COME_CD = $('#BI_OUT_COME_CD').val();
+            var P_BI_APAGAR_5 = $('#BI_APAGAR_5').val();
+            var P_BI_APAGAR_1 = $('#BI_APAGAR_1').val();
+            var P_BI_CONGENITAL_ANOMALIES_CD = $('#BI_CONGENITAL_ANOMALIES_CD').val();
+            var P_BI_EXAM_OUT_COME_CD = $('#BI_EXAM_OUT_COME_CD').val();
+            var P_BI_EXAM_BEFORE_CD = $('#BI_EXAM_BEFORE_CD').val();
+            var P_BI_ADMITTED_NICU_CD = $('#BI_ADMITTED_NICU_CD').val();
+
+            var url = "{{ route('born.save_born_info') }}";
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                data: {
+                    'P_BI_ID': P_BI_ID,
+                    'P_BI_ADMISSION_CD': P_BI_ADMISSION_CD,
+                    'P_BI_ORDER': P_BI_ORDER,
+                    'P_BI_WEIGHT_GM': P_BI_WEIGHT_GM,
+                    'P_BI_FIRST_NAME': P_BI_FIRST_NAME,
+                    'P_BI_SEX_CD': P_BI_SEX_CD,
+                    'P_BI_RELEGION_CD': P_BI_RELEGION_CD,
+                    'P_BI_PARTOGRAM_CD': P_BI_PARTOGRAM_CD,
+                    'P_BI_PRESENTATION_CD': P_BI_PRESENTATION_CD,
+                    'P_BI_OUT_COME_CD': P_BI_OUT_COME_CD,
+                    'P_BI_APAGAR_5': P_BI_APAGAR_5,
+                    'P_BI_APAGAR_1': P_BI_APAGAR_1,
+                    'P_BI_CONGENITAL_ANOMALIES_CD': P_BI_CONGENITAL_ANOMALIES_CD,
+                    'P_BI_EXAM_OUT_COME_CD': P_BI_EXAM_OUT_COME_CD,
+                    'P_BI_EXAM_BEFORE_CD': P_BI_EXAM_BEFORE_CD,
+                    'P_BI_ADMITTED_NICU_CD': P_BI_ADMITTED_NICU_CD,
+
+                },
+            }).done(function(response) {
+                console.log(response);
+                if (response.success) {
+                    if (response.success == 1) {
+                        Swal.fire({
+                            title: 'تمت عملية تعديل بيانات المولود  بنجاح !',
+                            text: response.results.message,
+                            icon: "success",
+                            confirmButtonText: 'موافق'
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                             //   clear_form();
+                             $('#P_BI_ID').val('');
+                            $('#BI_ORDER').val('');
+                            $('#BI_WEIGHT_GM').val('');
+                            $('#BI_FIRST_NAME').val('');
+                            $('#BI_SEX_CD').val('').change();
+                            $('#BI_RELEGION_CD').val('').change();
+                             //   $('#BornModal').modal('hide');
+
+
+                            }
+                        });
+
+
+                    } else {
+
+                        toastr["error"](response.results.message);
+                    }
+                } else {
+                    console.log(response);
+                    $message = "";
+                    $.each(response.errors, function(key, value) {
+                        console.log(value);
+                        console.log(key);
+                        $message += value.join('-') + "\r\n";
+                    });
+                    Swal.fire({
+                        title: 'يوجد خطأ في عملية الإدخال !',
+                        text: 'تأكد من البيانات المولود المدخلة!',
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+                }
+            });
+
+        }
+
+
+        $('#f_region_id').change(function() {
+            var region_cd = $(this).val();
+            var url = "{{ route('dead.get_city') }}";
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                async: false,
+                data: {
+                    region_cd: region_cd
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#f_city_id').empty();
+                    console.log(3);
+                    $('#f_city_id').append('<option >  </option>');
+                    $.each(data, function(key, value) {
+                        // console.log(value.C_NAME_AR);
+
+                        $('#f_city_id').append('<option value="' + value.C_CODE +
+                            '" >' + value.C_NAME_AR + '</option>');
+                    });
+
+                }
+            });
+        });
+
+        $('#m_region_id').change(function() {
+            var region_cd = $(this).val();
+            var url = "{{ route('dead.get_city') }}";
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                async: false,
+                data: {
+                    region_cd: region_cd
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#m_city_id').empty();
+                    console.log(3);
+                    $('#m_city_id').append('<option >  </option>');
+                    $.each(data, function(key, value) {
+                        // console.log(value.C_NAME_AR);
+
+                        $('#m_city_id').append('<option value="' + value.C_CODE +
+                            '" >' + value.C_NAME_AR + '</option>');
+                    });
+
+                }
+            });
+        });
+
+        function check_born_id(){
+            var P_BI_ID = $('#P_BI_ID').val();
+            var url = "{{ route('born.check_born_id') }}";
+                $.ajax({
+                    url: url,
+                    type: 'json',
+                    method: 'post',
+                    data: {
+                        'P_BI_ID': P_BI_ID,
+                    },
+                }).done(function(response) {
+                    console.log(response);
+                    if (response.success) {
+
+                    }
+                    else {
+                        console.log(response);
+                        $message = "";
+                        $.each(response.errors, function(key, value) {
+                            console.log(value);
+                            console.log(key);
+                            $message += value.join('-') + "\r\n";
+                        });
+                        Swal.fire({
+                            title: 'يوجد خطأ في عملية الإدخال !',
+                            text: 'رقم الهوية مدخل مسبقاً يرجى اختيار رقم آخر!',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        $('#P_BI_ID').val('');
+                        document.getElementById("P_BI_ID").focus();
+
+                    }
+                });
+
+                    }
+                });
+        }
+
+        function check_born_count(){
+            var P_BI_ADMISSION_CD = $('#P_BI_ADMISSION_CD').val();
+            var url = "{{ route('born.check_born_count') }}";
+                $.ajax({
+                    url: url,
+                    type: 'json',
+                    method: 'post',
+                    data: {
+                        'P_BI_ADMISSION_CD': P_BI_ADMISSION_CD,
+                    },
+                }).done(function(response) {
+                    console.log(response);
+                    if (response.success) {
+                        edit_born_data();
+                    }
+                    else {
+                        console.log(response);
+                        $message = "";
+                        $.each(response.errors, function(key, value) {
+                            $message += value.join('-') + "\r\n";
+                        });
+                        Swal.fire({
+                            title: 'يوجد خطأ في عملية الإدخال !',
+                            text: 'تم إدخال جميع المواليد لهذه الولادة!',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        }).then((result) => {
+                    /* Read more about isConfirmed, isDenied below */
+                    if (result.isConfirmed) {
+                        $('#BornModal').modal('hide');
+                        clear_form();
+                    }
+                });
+
+                    }
+                });
+
+        }
 
     </script>
 @endpush
