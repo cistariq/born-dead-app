@@ -112,10 +112,10 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <select id="p_hospital_id" name="p_hospital_id" data-control="select2" data-placeholder="اختر ..." data-allow-clear="true"
-                                            class="form-select form-select-solid form-select-lg fw-bold"     data-dropdown-parent="#add_user_form" >
+                                            class="form-select form-select-solid form-select-lg fw-bold">
                                             <option></option>
                                             @foreach ($hospitals as $hospital)
-                                                <option value="{{$hospital->dref_code}}">{{$hospital->dref_name_ar}}</option>
+                                                <option value="{{$hospital->id}}">{{$hospital->name}}</option>
                                             @endforeach
                                         </select>
                                         <!--end::Input-->
@@ -230,10 +230,10 @@
                                         <!--end::Label-->
                                         <!--begin::Input-->
                                         <select id="u_hospital_id" name="u_hospital_id" data-control="select2" data-placeholder="اختر ..." data-allow-clear="true"
-                                            class="form-select form-select-solid form-select-lg fw-bold"  data-dropdown-parent="#update_user_form">
+                                            class="form-select form-select-solid form-select-lg fw-bold">
                                             <option></option>
                                             @foreach ($hospitals as $hospital)
-                                            <option value="{{$hospital->dref_code}}">{{$hospital->dref_name_ar}}</option>
+                                                <option value="{{$hospital->id}}">{{$hospital->name}}</option>
                                             @endforeach
                                         </select>
                                         <!--end::Input-->

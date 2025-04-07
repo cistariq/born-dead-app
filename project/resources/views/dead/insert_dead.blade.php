@@ -432,7 +432,7 @@
                                     </div>
                                     <label class="col-lg-2 col-form-label required fw-bold fs-6">تاريخ الوفاة</label>
                                     <div class="col-lg-4 fv-row">
-                                        <input class="form-control" id="P_Date_dead" />
+                                        <input class="form-control" id="P_Date_dead" onchange="check_date();"/>
                                     </div>
                                 </div>
                                 <!--end::Input group-->
@@ -945,7 +945,30 @@
         //   var iArray = [1,2,3,4];
 
 
+        function check_date(){
+            var P_DEAD_DATE = $("#P_Date_dead").val();
+            var P_BIRTH_DATE = $("#P_BIRTH_DATE").val();
+            var date1 = new Date(P_BIRTH_DATE, 'd/m/Y H:i');
+            var date2 = new Date(P_DEAD_DATE, 'd/m/Y H:i');
+            // Calculating the time difference
+            // of two dates
+            var Difference_In_Time =
+                date2.getTime() - date1.getTime();
+            // Calculating the no. of days between
+            // two dates
+            var Difference_In_Days = Math.round(Difference_In_Time / (1000 * 3600));
+            // To display the final no. of days (result)
+            if (Difference_In_Days < 24) {
+                Swal.fire({
+                    title: 'يوجد خطأ في عملية الإدخال !',
+                    text: 'يرجى اختيار تاريخ بعد تاريخ الميلاد!!!',
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
 
+            }
+
+        }
 
         function getDeadIcdToSelect_Byname(select_id) {
             select_id.select2({
