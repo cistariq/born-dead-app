@@ -510,7 +510,7 @@
                                         <div class="col-lg-3 fv-row">
                                             <select id="DEAD_ICD2_CD" data-control="select2" data-placeholder="اختر ..."
                                                 class="form-select form-select-lg fw-bold">
-                                                <option></option>
+                                                <option value="">اختر</option>
 
                                             </select>
                                         </div>

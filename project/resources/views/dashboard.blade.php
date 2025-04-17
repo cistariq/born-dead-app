@@ -11,7 +11,7 @@
                         <div class="mr-6">
                             <span class="svg-icon svg-icon-4x">
                                 <!--begin::Svg Icon | path:assets/media/svg/icons/General/User.svg-->
-                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                <svg
                                     width="24px" height="24px" viewBox="0 0 24 24" version="1.1">
                                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
                                         <polygon points="0 0 24 0 24 24 0 24"></polygon>
@@ -48,8 +48,7 @@
                         <div class="mr-6">
                             <span class="svg-icon svg-icon-4x">
                                 <!--begin::Svg Icon | path:assets/media/svg/icons/General/User.svg-->
-                                <svg fill="#FFFFFF" width="800px" height="800px" viewBox="-10.5 0 32 32" version="1.1"
-                                    xmlns="http://www.w3.org/2000/svg">
+                                <svg fill="#FFFFFF" width="800px" height="800px" viewBox="-10.5 0 32 32" version="1.1">
                                     <title>female</title>
                                     <path
                                         d="M7.656 7.344c0-1.313-1.063-2.375-2.375-2.375-1.281 0-2.344 1.063-2.344 2.375s1.063 2.375 2.344 2.375c1.313 0 2.375-1.063 2.375-2.375zM8.969 11.219l1.563 4.906c0.156 0.406-0.094 0.844-0.5 0.969-0.406 0.156-0.844-0.094-1-0.5l-0.844-2.594c-0.125-0.406-0.5-0.75-0.844-0.75-0.313 0-0.469 0.344-0.344 0.75l1.813 5.594c0.125 0.406-0.125 0.75-0.563 0.75h-0.781v6.344c0 0.438-0.375 0.781-0.781 0.781-0.438 0-0.813-0.344-0.813-0.781v-6.344h-1.188v6.344c0 0.438-0.344 0.781-0.781 0.781s-0.781-0.344-0.781-0.781v-6.344h-0.781c-0.438 0-0.688-0.344-0.563-0.75l1.813-5.594c0.125-0.406-0.031-0.75-0.375-0.75-0.313 0-0.688 0.344-0.844 0.75l-0.844 2.594c-0.125 0.406-0.563 0.656-0.969 0.5-0.438-0.125-0.656-0.563-0.531-0.969l1.594-4.906c0.125-0.406 0.594-0.75 1.031-0.75h5.281c0.438 0 0.875 0.344 1.031 0.75z">
@@ -80,7 +79,7 @@
                         <div class="mr-6">
                             <span class="svg-icon svg-icon-4x">
                                 <!--begin::Svg Icon | path:assets/media/svg/icons/General/User.svg-->
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF" width="800px" height="800px"
+                                <svg  fill="#FFFFFF" width="800px" height="800px"
                                     viewBox="0 0 24 24">
                                     <path
                                         d="M9.5,7H15a1,1,0,0,1,.949.684l2,6a1,1,0,0,1-1.9.632L14.5,9.662V22a1,1,0,0,1-2,0V16h-1v6a1,1,0,0,1-2,0V9.662L7.949,14.316a1,1,0,0,1-1.9-.632l2-6A1,1,0,0,1,9,7Zm0-3.5A2.5,2.5,0,1,0,12,1,2.5,2.5,0,0,0,9.5,3.5Z" />
@@ -113,7 +112,7 @@
                         <div class="mr-6">
                             <span class="svg-icon svg-icon-4x">
                                 <!--begin::Svg Icon | path:assets/media/svg/icons/General/User.svg-->
-                                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                                <svg version="1.1" id="Layer_1"  x="0px" y="0px"
                                 viewBox="0 0 500 500" style="enable-background:new 0 0 500 500;" xml:space="preserve">
                            <style type="text/css">
                                .st0{fill:#83E1E5;}
@@ -267,9 +266,8 @@
                         <div class="mr-6">
                             <span class="svg-icon svg-icon-4x">
                                 <!--begin::Svg Icon | path:assets/media/svg/icons/General/User.svg-->
-                                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="2048px" height="2048px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-                                viewBox="0 0 2048 2048"
-                                 xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <svg  xml:space="preserve" width="2048px" height="2048px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+                                viewBox="0 0 2048 2048">
                                  <defs>
                                   <style type="text/css">
                                    <![CDATA[
@@ -321,9 +319,8 @@
                         <div class="mr-6">
                             <span class="svg-icon svg-icon-4x">
                                 <!--begin::Svg Icon | path:assets/media/svg/icons/General/User.svg-->
-                                <svg xmlns="http://www.w3.org/2000/svg" xml:space="preserve" width="2048px" height="2048px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
-viewBox="0 0 2048 2048"
- xmlns:xlink="http://www.w3.org/1999/xlink">
+                                <svg  xml:space="preserve" width="2048px" height="2048px" style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd"
+viewBox="0 0 2048 2048">
  <defs>
   <style type="text/css">
    <![CDATA[

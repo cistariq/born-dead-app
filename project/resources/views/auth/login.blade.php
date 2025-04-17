@@ -7,19 +7,6 @@
     <title>تسجيل الدخول | {{ config('app.name') }} </title>
     <!--begin::Fonts-->
     <!--end::Fonts-->
-    <meta charset="utf-8" />
-    <meta name="description"
-        content="The most advanced Bootstrap Admin Theme on Themeforest trusted by 100,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue, Asp.Net Core, Blazor, Django, Flask & Laravel versions. Grab your copy now and get life-time updates for free." />
-    <meta name="keywords"
-        content="metronic, bootstrap, bootstrap 5, angular, VueJs, React, Asp.Net Core, Blazor, Django, Flask & Laravel starter kits, admin themes, web design, figma, web development, free templates, free admin themes, bootstrap theme, bootstrap template, bootstrap dashboard, bootstrap dak mode, bootstrap button, bootstrap datepicker, bootstrap timepicker, fullcalendar, datatables, flaticon" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta property="og:locale" content="en_US" />
-    <meta property="og:type" content="article" />
-    <meta property="og:title"
-        content="Metronic | Bootstrap HTML, VueJS, React, Angular, Asp.Net Core, Blazor, Django, Flask & Laravel Admin Dashboard Theme" />
-    <!--begin::Fonts-->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
-    <!--end::Fonts-->
 
     <link href="{{asset('assets/plugins/global/plugins.bundle.rtl.css')}}" rel="stylesheet" type="text/css" />
     <link href="{{asset('assets/css/style.bundle.rtl.css')}}" rel="stylesheet" type="text/css" />
@@ -164,15 +151,12 @@
         </div>
         <!--end::Root-->
         <!--end::Main-->
-        <!--begin::Javascript-->
+
         <!--begin::Global Javascript Bundle(used by all pages)-->
         <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
         <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
         <!--end::Global Javascript Bundle-->
-        <!--begin::Page Custom Javascript(used by this page)-->
-        {{-- <script src="{{ asset('assets/js/custom/authentication/sign-in/general1.js') }}"></script> --}}
-        <!--end::Page Custom Javascript-->
-        <!--end::Javascript-->
+
 </body>
 <!--end::Body-->
 
