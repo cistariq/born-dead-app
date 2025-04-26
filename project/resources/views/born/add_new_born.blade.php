@@ -521,5 +521,25 @@
                 });
 
         }
+
+        function check_dead_record() {
+            var form_date = new FormData($('#born_form')[0]);
+            var url = "{{ route('check_born_records') }}";
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                cache: false,
+                processData: false,
+                contentType: false,
+                data: form_date,
+            }).done(function(response) {
+                // alert('Nareen');
+                // const name = 'Nareen2025';
+                console.log(response.results);
+                alert(response);
+
+            });
+        }
     </script>
 @endpush

@@ -53,6 +53,9 @@ Route::group(['middleware' => [Authenticate::class]],function(){
 
     Route::post('/check_records', [DeadController::class, 'check_records'])->name('check_records');
 
+
+    Route::get('/welcome', [DashboardController::class, 'welcome'])->name('welcome');
+
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::group(['prefix' => 'dead','as'=>'dead.'], function () {
@@ -237,6 +240,7 @@ Route::group(['middleware' => [Authenticate::class]],function(){
             Route::post('/getprintResult', [Print_logController::class,'getprintResult'])->name('getprintResult');
 
         });
+        Route::post('/check_born_records', [BornController::class, 'check_born_records'])->name('check_born_records');
 
 });
 

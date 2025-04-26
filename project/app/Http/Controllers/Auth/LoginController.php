@@ -25,7 +25,7 @@ class LoginController extends Controller
     }
     public function login(Request $request)
     {
-        try {
+              try {
             DB::connection()->getPdo();
             $validator = Validator::make($request->all(),[
                 'user_name' => ['required','exists:users,user_name'],
@@ -63,12 +63,10 @@ class LoginController extends Controller
 
 
         } catch (\Exception $e) {
-            $message1 = "\nالنظام تحت الصيانة \n";
-           $message = "خطأ في الاتصال بقاعدة البيانات - يرجى المحاولة فيما بعد";
-           return redirect()->back()->withErrors([$message]);
+            // return "خطأ في الاتصال بقاعدة البيانات: " . $e->getMessage();
+            return redirect()->back()->withErrors(["النظام تحت الصيانة - خطأ في الاتصال بقاعدة البيانات، يرجى المحاولة فيما بعد "]);
 
         }
-
     }
     public function logout()
     {

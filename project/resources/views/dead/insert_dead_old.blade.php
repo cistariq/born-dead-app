@@ -2,7 +2,7 @@
 @section('title', 'تسجيل اشعار وفاة')
 @section('content')
 
-
+ 
     <div class="card mb-5 mb-xl-10">
         <!--begin::Card header-->
         <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse"
@@ -320,7 +320,7 @@
                                     <div class="col-lg-4 fv-row">
                                         <select id="P_DEATH_PLACE_CD" data-control="select2" data-placeholder="اختر..."
                                             class="form-select form-select-lg fw-bold">
-                                            {{-- <option value="0">غير معروف</option> --}}
+                                             {{-- <option value="0">غير معروف</option> --}}
                                             <option value="">اختر</option>
                                             <option value="1">غزة</option>
                                             <option value="5">شمال غزة</option>
@@ -399,7 +399,7 @@
                                     <div class="col-lg-4 fv-row">
                                         <select id="P_DEATH_CITY_PLACE" data-control="select2"
                                             data-placeholder="اختر ..." class="form-select form-select-lg fw-bold">
-                                            <option value="">اختر</option>
+                                        <option value="">اختر</option>
                                             {{-- <option value="1">غزة</option>
                                             <option value="2">جباليا</option>
                                             <option value="3">دير البلح</option>
@@ -425,11 +425,10 @@
                                             @endforeach --}}
                                         </select>
                                     </div>
-
+ 
                                     <label class="col-lg-2 col-form-label required fw-bold fs-6">تاريخ الوفاة</label>
                                     <div class="col-lg-4 fv-row">
-                                        <input class="form-control text-center" id="P_Date_dead"
-                                            onchange="check_date();" />
+                                        <input class="form-control text-center"  id="P_Date_dead" onchange="check_date();"/>
                                     </div>
                                     <span class="text-danger error-text P_Date_dead_error"></span>
 
@@ -522,7 +521,7 @@
 
                                         <div class="col-lg-3 fv-row">
                                             <select id="DEAD_ICD2_CD" data-control="select2" data-placeholder="اختر ..."
-                                                class="form-select form-select-lg fw-bold" data-allow-clear="true">
+                                                class="form-select form-select-lg fw-bold" data-allow-clear="true"  >
                                                 <option></option>
 
                                             </select>
@@ -639,171 +638,170 @@
                                     <input type="checkbox" id="source" name="source" value="">
                                     <label for="source"> متوفي لجنة</label>
                                 </label> --}}
-                                <div class="row mb-8">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-3 col-form-label fw-bold fs-6">اسم الطبيب</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-3">
-                                        <input type="text" name="P_Doctor_Name" id="P_Doctor_Name"
-                                            class="form-control form-control-lg mb-3 mb-lg-0">
-                                    </div>
-                                    <!--begin::Label-->
-                                    <label class="col-lg-2 col-form-label fw-bold fs-6">التخصص</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-4">
-                                        <input type="text" name="P_Special" id="P_Special"
-                                            class="form-control form-control-lg mb-3 mb-lg-0">
-                                    </div>
+                            <div class="row mb-8">
+                                <!--begin::Label-->
+                                <label class="col-lg-3 col-form-label fw-bold fs-6">اسم الطبيب</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-3">
+                                    <input type="text" name="P_Doctor_Name" id="P_Doctor_Name"
+                                        class="form-control form-control-lg mb-3 mb-lg-0">
                                 </div>
-                                <!--begin::Input group-->
-                                <div class="row mb-8">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-3 col-form-label  fw-bold fs-6">عنوان الطبيب</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-9">
-                                        <input type="text" name="P_Doctor_Address" id="P_Doctor_Address"
-                                            class="form-control form-control-lg mb-3 mb-lg-0">
-                                    </div>
-
+                                <!--begin::Label-->
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">التخصص</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-4">
+                                    <input type="text" name="P_Special" id="P_Special"
+                                        class="form-control form-control-lg mb-3 mb-lg-0">
                                 </div>
-                                <div class="row mb-8">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-3 col-form-label  fw-bold fs-6">تاريخ بداية العلاج</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-3">
-                                        <input type="text" name="P_Begin_Treatment" id="P_Begin_Treatment"
-                                            class="form-control form-control-lg mb-3 mb-lg-0">
-                                    </div>
-                                    <!--begin::Label-->
-                                    <label class="col-lg-3 col-form-label  fw-bold fs-6">تاريخ رؤية المتوفي آخر مرة
-                                    </label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-3">
-                                        <input type="text" name="P_Show_dead_Date" id="P_Show_dead_Date"
-                                            class="form-control form-control-lg mb-3 mb-lg-0">
-                                    </div>
+                            </div>
+                            <!--begin::Input group-->
+                            <div class="row mb-8">
+                                <!--begin::Label-->
+                                <label class="col-lg-3 col-form-label  fw-bold fs-6">عنوان الطبيب</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-9">
+                                    <input type="text" name="P_Doctor_Address" id="P_Doctor_Address"
+                                        class="form-control form-control-lg mb-3 mb-lg-0">
                                 </div>
 
-                                <div class="row mb-8">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-3 col-form-label  fw-bold fs-6">تاريخ رؤية الطبيب للجثة
-                                    </label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-3">
-                                        <input type="text" name="P_Show_Corpse_Date" id="P_Show_Corpse_Date"
-                                            class="form-control form-control-lg mb-3 mb-lg-0">
+                            </div>
+                            <div class="row mb-8">
+                                <!--begin::Label-->
+                                <label class="col-lg-3 col-form-label  fw-bold fs-6">تاريخ بداية العلاج</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-3">
+                                    <input type="text" name="P_Begin_Treatment" id="P_Begin_Treatment"
+                                        class="form-control form-control-lg mb-3 mb-lg-0">
+                                </div>
+                                <!--begin::Label-->
+                                <label class="col-lg-3 col-form-label  fw-bold fs-6">تاريخ رؤية المتوفي آخر مرة
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-3">
+                                    <input type="text" name="P_Show_dead_Date" id="P_Show_dead_Date"
+                                        class="form-control form-control-lg mb-3 mb-lg-0">
+                                </div>
+                            </div>
+
+                            <div class="row mb-8">
+                                <!--begin::Label-->
+                                <label class="col-lg-3 col-form-label  fw-bold fs-6">تاريخ رؤية الطبيب للجثة
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-3">
+                                    <input type="text" name="P_Show_Corpse_Date" id="P_Show_Corpse_Date"
+                                        class="form-control form-control-lg mb-3 mb-lg-0">
+                                </div>
+                                <label class="col-lg-3 col-form-label  fw-bold fs-6">تشريح الجثة</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-3" style="margin-top: 10px;">
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="fav_Anatomy"
+                                            id="No_Anatomy" value="0" checked>
+                                        <label class="form-check-label" for="لا">لا</label>
                                     </div>
-                                    <label class="col-lg-3 col-form-label  fw-bold fs-6">تشريح الجثة</label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-3" style="margin-top: 10px;">
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="fav_Anatomy"
-                                                id="No_Anatomy" value="0" checked>
-                                            <label class="form-check-label" for="لا">لا</label>
-                                        </div>
 
-                                        <div class="form-check form-check-inline">
-                                            <input class="form-check-input" type="radio" name="fav_Anatomy"
-                                                id="Yes_Anatomy" value="1">
-                                            <label class="form-check-label" for="نعم">نعم</label>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="fav_Anatomy"
+                                            id="Yes_Anatomy" value="1">
+                                        <label class="form-check-label" for="نعم">نعم</label>
 
-                                        </div>
                                     </div>
                                 </div>
-                                <div class="row mb-8">
-                                    <!--begin::Label-->
+                            </div>
+                            <div class="row mb-8">
+                                <!--begin::Label-->
 
-                                    <label class="col-lg-3 col-form-label  fw-bold fs-6">تاريخ تشريح الجثة
-                                    </label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-3">
-                                        <input type="text" name="P_Anatomy_Corpse_Date" id="P_Anatomy_Corpse_Date"
-                                            class="form-control form-control-lg mb-3 mb-lg-0">
-                                    </div>
+                                <label class="col-lg-3 col-form-label  fw-bold fs-6">تاريخ تشريح الجثة
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-3">
+                                    <input type="text" name="P_Anatomy_Corpse_Date" id="P_Anatomy_Corpse_Date"
+                                        class="form-control form-control-lg mb-3 mb-lg-0">
                                 </div>
+                            </div>
                             </div>
                         </div>
                         <div class="flex-column" data-kt-stepper-element="content">
                             <div class="fv-row mb-7">
 
-                                <div class="row mb-8">
-                                    <!--begin::Label-->
-                                    <label class="col-lg-3 col-form-label required fw-bold fs-6">رقم هوية المبلغ/ة</label>
-                                    <!--end::Label-->
+                            <div class="row mb-8">
+                                <!--begin::Label-->
+                                <label class="col-lg-3 col-form-label required fw-bold fs-6">رقم هوية المبلغ/ة</label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-3">
                                     <!--begin::Col-->
-                                    <div class="col-lg-3">
-                                        <!--begin::Col-->
-                                        <input type="number" name="P_advertiser_ID_NO" id="P_advertiser_ID_NO"
-                                            maxLength="9" oninput="this.value=this.value.slice(0,this.maxLength)"
-                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center"
-                                            onchange="get_submitted_dead();">
-                                        <!--end::Col-->
-                                    </div>
-                                    <label class="col-lg-2 col-form-label fw-bold fs-6">الإسم</label>
-                                    <div class="col-lg-4">
-                                        <input type="text" name="P_advertiser_Name" id="P_advertiser_Name"
-                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center" disabled
-                                            readonly>
-                                    </div>
+                                    <input type="number" name="P_advertiser_ID_NO" id="P_advertiser_ID_NO"
+                                        maxLength="9" oninput="this.value=this.value.slice(0,this.maxLength)"
+                                        class="form-control form-control-lg mb-3 mb-lg-0 text-center"
+                                        onchange="get_submitted_dead();">
+                                    <!--end::Col-->
                                 </div>
-                                <div class="row mb-8">
-                                    <label class="col-lg-3 col-form-label fw-bold fs-6">الجنس</label>
-                                    <div class="col-lg-3 fv-row">
-                                        <select id="P_advertiser_gender" data-control="select2"
-                                            data-placeholder="اختر الجنس..." class="form-select form-select-lg fw-bold">
-                                            <option value="">اختر...</option>
-                                            <option value="1">ذكر</option>
-                                            <option value="2">أنثى</option>
-                                        </select>
-                                    </div>
-                                    <label class="col-lg-2 col-form-label fw-bold fs-6">الجنسية</label>
-                                    <div class="col-lg-4 fv-row">
-                                        <select id="P_advertiser_nationality_id" data-control="select2"
-                                            data-placeholder="اختر ..." class="form-select form-select-lg fw-bold">
-                                            <option></option>
-                                            @foreach ($nationality as $item)
-                                                <option value="{{ $item->nat_code }}">{{ $item->nat_name_ar }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">الإسم</label>
+                                <div class="col-lg-4">
+                                    <input type="text" name="P_advertiser_Name" id="P_advertiser_Name"
+                                        class="form-control form-control-lg mb-3 mb-lg-0 text-center" disabled readonly>
                                 </div>
-                                <div class="row mb-8">
-                                    <label class="col-lg-3 col-form-label required fw-bold fs-6">صلة القرابة</label>
-                                    <div class="col-lg-3">
-                                        <input type="text" name="P_advertiser_Rel" id="P_advertiser_Rel"
-                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center">
-                                    </div>
-                                    <label class="col-lg-2 col-form-label fw-bold fs-6">العنوان</label>
-                                    <div class="col-lg-4">
-                                        <input type="text" name="P_advertiser_Address" id="P_advertiser_Address"
-                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center">
-                                    </div>
+                            </div>
+                            <div class="row mb-8">
+                                <label class="col-lg-3 col-form-label fw-bold fs-6">الجنس</label>
+                                <div class="col-lg-3 fv-row">
+                                    <select id="P_advertiser_gender" data-control="select2"
+                                        data-placeholder="اختر الجنس..." class="form-select form-select-lg fw-bold">
+                                        <option value="">اختر...</option>
+                                        <option value="1">ذكر</option>
+                                        <option value="2">أنثى</option>
+                                    </select>
                                 </div>
-                                <div class="row mb-8">
-                                    <label class="col-lg-3 col-form-label  fw-bold fs-6">رقم التليفون</label>
-                                    <div class="col-lg-3">
-                                        <input type="text" name="P_advertiser_Phone" id="P_advertiser_Phone"
-                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center">
-                                    </div>
-                                    <label class="col-lg-2 col-form-label  fw-bold fs-6">تاريخ التبليغ
-                                    </label>
-                                    <!--end::Label-->
-                                    <!--begin::Col-->
-                                    <div class="col-lg-4">
-                                        <input type="text" name="P_advertise_Date" id="P_advertise_Date"
-                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center">
-                                    </div>
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">الجنسية</label>
+                                <div class="col-lg-4 fv-row">
+                                    <select id="P_advertiser_nationality_id" data-control="select2"
+                                        data-placeholder="اختر ..." class="form-select form-select-lg fw-bold">
+                                        <option></option>
+                                        @foreach ($nationality as $item)
+                                            <option value="{{ $item->nat_code }}">{{ $item->nat_name_ar }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <div class="row mb-8">
+                            </div>
+                            <div class="row mb-8">
+                                <label class="col-lg-3 col-form-label required fw-bold fs-6">صلة القرابة</label>
+                                <div class="col-lg-3">
+                                    <input type="text" name="P_advertiser_Rel" id="P_advertiser_Rel"
+                                        class="form-control form-control-lg mb-3 mb-lg-0 text-center">
+                                </div>
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">العنوان</label>
+                                <div class="col-lg-4">
+                                    <input type="text" name="P_advertiser_Address" id="P_advertiser_Address"
+                                        class="form-control form-control-lg mb-3 mb-lg-0 text-center">
+                                </div>
+                            </div>
+                            <div class="row mb-8">
+                                <label class="col-lg-3 col-form-label  fw-bold fs-6">رقم التليفون</label>
+                                <div class="col-lg-3">
+                                    <input type="text" name="P_advertiser_Phone" id="P_advertiser_Phone"
+                                        class="form-control form-control-lg mb-3 mb-lg-0 text-center">
+                                </div>
+                                <label class="col-lg-2 col-form-label  fw-bold fs-6">تاريخ التبليغ
+                                </label>
+                                <!--end::Label-->
+                                <!--begin::Col-->
+                                <div class="col-lg-4">
+                                    <input type="text" name="P_advertise_Date" id="P_advertise_Date"
+                                        class="form-control form-control-lg mb-3 mb-lg-0 text-center">
+                                </div>
+                            </div>
+                            <div class="row mb-8">
 
                                     <label class="col-lg-3 col-form-label required fw-bold fs-6">مكان اصدار الاشعار</label>
                                     <div class="col-lg-5 fv-row">
@@ -817,7 +815,7 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
+                            </div>
                             </div>
                         </div>
                         {{-- <div class="flex-column" data-kt-stepper-element="content">
@@ -932,13 +930,13 @@
     <script>
         $(document).ready(function() {
 
-            /*  $("select").select2({
-                  tags: "true",
-                  placeholder: "Select an option",
-                  allowClear: true
-              });*/
+$("select").select2({
+  tags: "true",
+  placeholder: "Select an option",
+  allowClear: true
+});
 
-            //السبب المباشر
+           //السبب المباشر
             getDeadIcdToSelect_Byid($("#DEAD_ICD1_CD"));
             getDeadIcdToSelect_Byname($("#DIAG1_NAME"));
             getDeadIcdToSelect_Byid($("#DEAD_ICD2_CD"));
@@ -966,29 +964,28 @@
         });
         //   var iArray = [1,2,3,4];
 
-        function parseDMY(dateStr) {
-            var [day, month, year] = dateStr.split('/').map(Number);
-            return new Date(year, month - 1, day);
-        }
+function parseDMY(dateStr) {
+  var [day, month, year] = dateStr.split('/').map(Number);
+  return new Date(year, month - 1, day);
+}
 
-        function parseDMY_HM(dateTimeStr) {
-            var [datePart, timePart] = dateTimeStr.split(' ');
-            var [day, month, year] = datePart.split('/').map(Number);
-            var [hours, minutes] = timePart ? timePart.split(':').map(Number) : [0, 0];
-            return new Date(year, month - 1, day, hours, minutes);
-        }
-
-        function check_date() {
+function parseDMY_HM(dateTimeStr) {
+  var [datePart, timePart] = dateTimeStr.split(' ');
+  var [day, month, year] = datePart.split('/').map(Number);
+  var [hours, minutes] = timePart ? timePart.split(':').map(Number) : [0, 0];
+  return new Date(year, month - 1, day, hours, minutes);
+}
+        function check_date(){
 
 
             var P_DEAD_DATE = $("#P_Date_dead").val();
             var P_BIRTH_DATE = $("#P_BIRTH_DATE").val();
 
-            var start = parseDMY(P_BIRTH_DATE);
-            var end = parseDMY_HM(P_DEAD_DATE);
+var start = parseDMY(P_BIRTH_DATE);
+var end = parseDMY_HM(P_DEAD_DATE);
 
-            var diffMs = end - start;
-            var diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+var diffMs = end - start;
+var diffHours = Math.floor(diffMs / (1000 * 60 * 60));
 
             if (diffHours < 24) {
                 Swal.fire({
@@ -997,7 +994,7 @@
                     icon: 'error',
                     confirmButtonText: 'Ok'
                 });
-                $("#P_Date_dead").val('');
+$("#P_Date_dead").val('');
 
             }
 
@@ -1029,48 +1026,47 @@
                 minimumInputLength: 1
             });
         }
-
-        function clear_ICD2() {
-            $('#DEAD_ICD2_CD').val('').trigger('change');
+ function clear_ICD2(){
+$('#DEAD_ICD2_CD').val('').trigger('change');
             var P_ICD_CODE = $('#DEAD_ICD2_CD').val();
 
             if (P_ICD_CODE == '') {
                 $('#DIAG2_NAME').val('');
-                $('#DIAG2_NAME').val(null).trigger('change');
-                $('#DEAD_ICD2_CD').val(null).trigger('change');
+		$('#DIAG2_NAME').val(null).trigger('change');
+		$('#DEAD_ICD2_CD').val(null).trigger('change');
 
             }
         }
 
         function getDeadIcdToSelect_Byid(select_id) {
-            if (select_id == '') {
-                select_id = '';
-            } else {
-                select_id.select2({
-                    ajax: {
-                        url: "{{ route('dead.getDeadIcd_id') }}",
-                        method: 'post',
-                        delay: 250,
-                        dataType: 'json',
-                        data: function(params) {
-                            var query = {
-                                search: params.term
-                            }
-
-                            // Query parameters will be ?search=[term]&type=user_search
-                            return query;
-                        },
-                        processResults: function(data) {
-                            return {
-                                results: data
-                            };
+if (select_id == '') {
+select_id ='';
+}else{
+            select_id.select2({
+                ajax: {
+                    url: "{{ route('dead.getDeadIcd_id') }}",
+                    method: 'post',
+                    delay: 250,
+                    dataType: 'json',
+                    data: function(params) {
+                        var query = {
+                            search: params.term
                         }
+
+                        // Query parameters will be ?search=[term]&type=user_search
+                        return query;
                     },
-                    cache: true,
-                    placeholder: 'ابحث عن أسباب الوفاة',
-                    minimumInputLength: 1
-                });
-            }
+                    processResults: function(data) {
+                        return {
+                            results: data
+                        };
+                    }
+                },
+                cache: true,
+                placeholder: 'ابحث عن أسباب الوفاة',
+                minimumInputLength: 1
+            });
+}
         }
 
         $('#DEAD_ICD1_CD').change(function() {
@@ -1087,8 +1083,8 @@
                     $('#DIAG1_NAME').append('<option value="' + data[0].ICD_CODE + '" >' + data[
                         0].ICD_NAME_EN + '</option>');
 
-                    // $('#DEAD_ICD1_CD').prop('disabled', false);
-                    //  $('#DEAD_ICD1_CD').val(null).trigger('change');
+                	// $('#DEAD_ICD1_CD').prop('disabled', false);
+                  //  $('#DEAD_ICD1_CD').val(null).trigger('change');
 
                 }
             });
@@ -1115,7 +1111,7 @@
         $('#DEAD_ICD2_CD').change(function() {
 
             var P_ICD_CODE = $(this).val();
-            if (!P_ICD_CODE) {
+if(!P_ICD_CODE){
                 $('#DIAG2_NAME').empty();
                 return;
             }
@@ -1141,7 +1137,7 @@
         $('#DIAG2_NAME').change(function() {
 
             var P_ICD_CODE = $(this).val();
-            if (!P_ICD_CODE) {
+ if(!P_ICD_CODE){
                 $('#DEAD_ICD2_CD').empty();
                 return;
             }
@@ -1165,7 +1161,7 @@
 
         $('#DEAD_ICD3_CD').change(function() {
             var P_ICD_CODE = $(this).val();
-            if (!P_ICD_CODE) {
+ if(!P_ICD_CODE){
                 $('#DIAG3_NAME').empty();
                 return;
             }
@@ -1185,9 +1181,9 @@
             });
         });
 
-        $('#DIAG3_NAME').change(function() {
+       $('#DIAG3_NAME').change(function() {
             var P_ICD_CODE = $(this).val();
-            if (!P_ICD_CODE) {
+            if(!P_ICD_CODE){
                 $('#DEAD_ICD3_CD').empty();
                 return;
             }
@@ -1262,7 +1258,7 @@
 
             dateFormat: "d/m/Y H:i",
             maxDate: new Date(),
-
+	    
         });
 
         var P_BIRTH_DATE = $("#P_BIRTH_DATE").flatpickr({
@@ -1320,31 +1316,31 @@
 
         });
 
-        /* document.getElementById("P_Date_dead").addEventListener("input", function() {
-         let birthDate = document.getElementById("P_BIRTH_DATE").value;
-         let deathDate = this.value;
-         let errorMessage = document.getElementById("error-message");
+       /* document.getElementById("P_Date_dead").addEventListener("input", function() {
+        let birthDate = document.getElementById("P_BIRTH_DATE").value;
+        let deathDate = this.value;
+        let errorMessage = document.getElementById("error-message");
 
-         if (!birthDate) {
-             errorMessage.textContent = "Please enter a birth date first.";
-             this.value = ""; // Reset the death date field
-             return;
-         }
+        if (!birthDate) {
+            errorMessage.textContent = "Please enter a birth date first.";
+            this.value = ""; // Reset the death date field
+            return;
+        }
 
-         let birth = new Date(birthDate);
-         let death = new Date(deathDate);
+        let birth = new Date(birthDate);
+        let death = new Date(deathDate);
 
-         if (death <= birth) {
-             errorMessage.textContent = "Date of Death must be after Birth Date.";
-             this.value = ""; // Reset the death date field
-         } else {
-             errorMessage.textContent = ""; // Clear error message if valid
-         }
-         });*/
+        if (death <= birth) {
+            errorMessage.textContent = "Date of Death must be after Birth Date.";
+            this.value = ""; // Reset the death date field
+        } else {
+            errorMessage.textContent = ""; // Clear error message if valid
+        }
+        });*/
         function save_dead_data() {
             //dead data
 
-            var date1 = new Date($("#P_BIRTH_DATE").val(), 'd/m/Y H:i');
+        	var date1 = new Date($("#P_BIRTH_DATE").val(), 'd/m/Y H:i');
             var date2 = new Date($("#P_Date_dead").val(), 'd/m/Y H:i');
             var P_DATE_OF_REPORT = $('#P_advertise_Date').val();
 
@@ -1355,7 +1351,7 @@
                     icon: 'error',
                     confirmButtonText: 'Ok'
                 });
-                $(this).val(''); // Reset the value
+                    $(this).val(''); // Reset the value
             } else if (date2 > P_DATE_OF_REPORT) {
                 Swal.fire({
                     title: 'يوجد خطأ في عملية الإدخال !',
@@ -1458,7 +1454,7 @@
                 //Interior data
 
                 var P_RECEIVE_DATE = '';
-                var P_RECEIVER_NAME = '';
+                var P_RECEIVER_NAME ='';
                 var P_REGISTER_DATE = '';
                 var P_REGISTER_NAME = '';
                 var P_REGISTER_PLACE_CD = $('#P_Issuing_notice_place').val();
@@ -1536,7 +1532,7 @@
                         'P_BURIAL_PLACE': P_BURIAL_PLACE,
                         'P_BURIAL_CODE': P_BURIAL_CODE,
                         'P_SOURSE': P_SOURSE,
-                        'P_COMMITTE_OPINION': P_COMMITTE_OPINION
+                        'P_COMMITTE_OPINION' : P_COMMITTE_OPINION
 
                     },
                 }).done(function(response) {
@@ -1661,7 +1657,7 @@
                         var age = yyyy - dob;
 
                         if ($('#P_SEX_CD').val() == 2 && (age <= 50 && age >= 15) && $("#P_social_status_id")
-                            .val() == 2) {
+                        .val() == 2) {
                             document.getElementById("dead_women").style.display = "block";
                         } else {
                             document.getElementById("dead_women").style.display = "none";
@@ -1844,7 +1840,7 @@
                     'P_REGISTER_PLACE_CD': P_REGISTER_PLACE_CD,
                     'P_BURIAL_PLACE': P_BURIAL_PLACE,
                     'P_BURIAL_CODE': P_BURIAL_CODE,
-                    'P_COMMITTE_OPINION': P_COMMITTE_OPINION
+                    'P_COMMITTE_OPINION' : P_COMMITTE_OPINION
 
                 },
             }).done(function(response) {
@@ -2072,15 +2068,15 @@
                 contentType: false,
                 data: form_date,
             }).done(function(response) {
-                // alert('Nareen');
-                // const name = 'Nareen2025';
+               // alert('Nareen');
+               // const name = 'Nareen2025';
                 console.log(response.results);
-                //alert(response);
-                if (response == 3) {
+
+                if (response.exist == 3) {
                     $('#P_FLAG').val('وفاة عادية (غير شهيد)');
                     $('#P_SOURSE').val(0);
 
-                } else if (response == 0) {
+                } else if (response.exist == 0) {
 
                     if ($('#source').is(':checked') && ($('#P_ID_NO').val() != null || $('#P_ID_NO').val() != '')) {
                         $('#P_FLAG').val('متوفي لجنة');
@@ -2089,12 +2085,10 @@
                         $('#P_FLAG').val('وفاة عادية (غير شهيد)');
                         $('#P_SOURSE').val(0);
                     }
-                } else if (response == 2) {
-                        $('#P_FLAG').val('شهيد معتمد');
-                        $('#P_SOURSE').val(2);
 
-                } else if (response == 1) {
-                    let dead_date = new Date(response.event_date);
+
+                } else if (response.exist == 1) {
+                	let dead_date = new Date(response.event_date);
                     let formattedDate = dead_date.toLocaleString('en-GB', {
                         day: '2-digit',
                         month: '2-digit',
@@ -2113,22 +2107,22 @@
                         icon: 'error',
                         confirmButtonText: 'Ok'
                     }).then(() => {
-                        let P_FLAG_value = $('#P_FLAG').val(); // Store the value before reset
-                        $('#insert_dead_form')[0].reset(); // Reset the form
-                        $('#P_FLAG').val(P_FLAG_value); // Restore the value after reset
-                        //$('#insert_dead_form .form-select').val('').trigger('change'); // Reset select fields
-                        block_insert_dead.release(); // Unblock if necessary
-                        $('#save_btn').hide(); // Show save button if needed
-                    });
+                    let P_FLAG_value = $('#P_FLAG').val(); // Store the value before reset
+                    $('#insert_dead_form')[0].reset(); // Reset the form
+                    $('#P_FLAG').val(P_FLAG_value); // Restore the value after reset
+                    //$('#insert_dead_form .form-select').val('').trigger('change'); // Reset select fields
+                    block_insert_dead.release(); // Unblock if necessary
+                    $('#save_btn').hide(); // Show save button if needed
+                });
 
-                    block_insert_dead.release();
-                    $('#save_btn').show();
+                block_insert_dead.release();
+                $('#save_btn').show();
                     //}
 
                 } else if (response.exist == 2) {
                     $('#P_FLAG').val('شهيد');
                     $('#P_SOURSE').val(1);
-                    $('#P_Date_dead').val(response.event_date); /// by Nareen
+                    $('#P_Date_dead').val(response.event_date);  /// by Nareen
                     $('#P_COMMITTE_OPINION').val(response.notes);
 
                     let $select = $("#DEAD_ICD1_CD");

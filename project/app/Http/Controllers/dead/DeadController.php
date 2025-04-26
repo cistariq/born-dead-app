@@ -227,8 +227,8 @@ class DeadController extends Controller
     }
 
     function save_dead_info(Request $request)
-
     {
+        // validate in js
         //$date=  Carbon::createFromFormat('d/m/Y', $request->P_BIRTH_DATE)->format('d/m/Y');
         $role = [
 
@@ -255,12 +255,17 @@ class DeadController extends Controller
             'P_DEAD_HOURS' => 'nullable',
             'P_REGION_CD' => 'nullable',
             'P_CITY_CD' => 'nullable',
-            'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|before_or_equal:' . date('d/m/Y H:i'),
+           // 'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|before_or_equal:' . date('d/m/Y H:i'),
+         //'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:P_BIRTH_DATE' . date('d/m/Y H:i'),
+           // 'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:P_BIRTH_DATE',
+            'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:'.'P_BIRTH_DATE'.' '.'00:00',
             'P_BURIAL_PLACE' => 'nullable',
             'P_BURIAL_CODE' => 'nullable',
             'P_PARTNER_ID' => 'nullable',
             'P_PARTNER_NAME' => 'nullable',
             'P_DEAD_DETAILS_CD' => 'nullable',
+            'DEAD_ICD1_CD' => 'required',
+            'DEAD_ICD4_CD' => 'required',
             'P_ICD_1' => 'required',
             'P_ICD_2' => 'nullable',
             'P_ICD_3' => 'nullable',
@@ -397,7 +402,9 @@ class DeadController extends Controller
             'P_DEAD_HOURS' => 'nullable',
             'P_REGION_CD' => 'nullable',
             'P_CITY_CD' => 'nullable',
-            'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|before_or_equal:' . date('d/m/Y H:i'),
+            //'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:P_BIRTH_DATE',
+           // 'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|before_or_equal:' . date('d/m/Y H:i'),
+	    'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:'.'P_BIRTH_DATE'.' '.'00:00',
             'P_BURIAL_PLACE' => 'nullable',
             'P_BURIAL_CODE' => 'nullable',
             'P_PARTNER_ID' => 'nullable',

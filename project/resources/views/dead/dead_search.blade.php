@@ -239,9 +239,9 @@
 
                     </div>
 
-                    <label class="control-label col-md-1">سبب الوفاة</label>
+                    <label class="control-label col-md-1 d-none">سبب الوفاة</label>
 
-                    <div class="position-relative w-md-400px me-md-1">
+                    <div class="position-relative w-md-400px me-md-1 d-none">
                         <div class="row mb-4">
                             <div class="col-lg-10">
                                 <select id="DIAG1_NAME" data-control="select2" data-placeholder="اختر ..."
