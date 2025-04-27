@@ -2089,11 +2089,8 @@
                         $('#P_FLAG').val('وفاة عادية (غير شهيد)');
                         $('#P_SOURSE').val(0);
                     }
-                } else if (response == 2) {
-                        $('#P_FLAG').val('شهيد معتمد');
-                        $('#P_SOURSE').val(2);
-
-                } else if (response == 1) {
+                }
+                 else if (response == 1) {
                     let dead_date = new Date(response.event_date);
                     let formattedDate = dead_date.toLocaleString('en-GB', {
                         day: '2-digit',
@@ -2125,8 +2122,8 @@
                     $('#save_btn').show();
                     //}
 
-                } else if (response.exist == 2) {
-                    $('#P_FLAG').val('شهيد');
+                } else if (response == 2) {
+                    $('#P_FLAG').val('شهيد معتمد');
                     $('#P_SOURSE').val(1);
                     $('#P_Date_dead').val(response.event_date); /// by Nareen
                     $('#P_COMMITTE_OPINION').val(response.notes);

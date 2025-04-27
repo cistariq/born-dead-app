@@ -17,7 +17,7 @@ trait BornDataTrait {
                 'Accept' => 'application/json',
             ])->post('https://gapi.ctznps.com/api/Moh/GetBirthForms', [
                 'IdNumber' => $data['P_BI_ID'],
-                'Token' => 'JHyUyQOgG_lmclH7qOQHL4wddkN050M63B_qqbs0r0QgvHbI3lmB6cp2zdU_HvUzdhdysYsVLiSPBiCgIBw4cGxOb4_H-A1bPCUyYeMcV5r_isM7lyblL0ZYV3jcQVsPalY1hUVD0tZuXJfNm8QEeVEg2g4-6SlSI73IKvrO1AxzVoQ9lLDy-FylPB-xq30KoEhoI6B4ull1UD-xokcVZHYJ0oCkgyQHRSzT15VyJgYl8VsIkaeex5BivybOj6YjO59m2UIn53GO1tzYpw26KaWC23CkCRwF8hF-dzL7Gb1cFzSX-Wgx8A9u1KFegNhQXRj4vlzBkvUcU8GGn8wBTJKEXHRc-tw2qy6avXJr5dxrBW4o1XFTyg2pPJdXChYG-cPaz4YonCA1OICWi9Ht91imarRN0BCgd55BuLjrcjVhxM0AsQe3iur6s_EN_XtpZa-Xq3TndxMqnaJuvIZBLg',
+                'token' => 'qAvyNSHiDkOhvT3-TgEh9FafruRrYWWhu94140lbxKpp7jZ50HIe9djEpDhcHqgsmFwRKDjMZVikzmcSGZdPB9a-dCCOmBvjR07RFeXQJo4Wjv2TPbuGM81So0cWNrafBDdx5UBHA9ZZlEEcyQeaNfy1QZiTbPsjfwi8MlP1yVMiGQY99dYT8x1rvgQ7V3teJhBDDHc6xIchN4YfWI2f9kWp6laO8T2OOt2FOtGN57K8SxC2W1n_LwInrwBU_CvZLtSfzaFrNe7WtbDOkrDD4iGkdXev---KwF4hqB2RyzacEcbBXj0vTp-MNYs4Mg9YdGR5EJQuXaPtzQdrjKtrL5bcpYiyVNTE1-3ArR2PtHrTcEzOic-Cm-rcYGfK1FfofWonMm20nLZXi6KCxSVNZ6zf3NdZxB-Aub3OyNjU7UxwYYqyBDU02fsiy9QIx5qr47TtY0u_o5W3XUgZXvh4ng',
             ]);
             $data = $response->json();
  //dd($data);
