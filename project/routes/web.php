@@ -52,6 +52,7 @@ Route::group(['middleware' => [Authenticate::class]],function(){
     Route::post('/getPersonalInfo', [PersonalInfoController::class, 'getPersonalInfo'])->name('getPersonalInfo');
 
     Route::post('/check_records', [DeadController::class, 'check_records'])->name('check_records');
+    Route::post('/check_record_born', [BornController::class, 'check_record_born'])->name('check_record_born');
 
 
     Route::get('/welcome', [DashboardController::class, 'welcome'])->name('welcome');
@@ -228,6 +229,8 @@ Route::group(['middleware' => [Authenticate::class]],function(){
             Route::post('/check_born_id', [BornController::class,'check_born_id'])->name('check_born_id');
             Route::post('/check_born_date', [BornController::class,'check_born_date'])->name('check_born_date');
             Route::post('/check_born_count', [BornController::class,'check_born_count'])->name('check_born_count');
+            Route::get('/add_new_born', [BornController::class,'add_new_born'])->name('add_new_born');
+            Route::post('/check_record_born', [BornController::class, 'check_record_born'])->name('check_record_born');
 
 
 
@@ -240,7 +243,6 @@ Route::group(['middleware' => [Authenticate::class]],function(){
             Route::post('/getprintResult', [Print_logController::class,'getprintResult'])->name('getprintResult');
 
         });
-        Route::post('/check_born_records', [BornController::class, 'check_born_records'])->name('check_born_records');
 
 });
 

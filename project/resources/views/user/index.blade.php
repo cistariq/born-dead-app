@@ -381,7 +381,7 @@
                     <th class="min-w-125px">#</th>
                     <th class="min-w-125px">الاسم</th>
                     <th class="min-w-125px">اسم المستخدم</th>
-                    <th class="min-w-125px">المستشفى</th>
+                    {{-- <th class="min-w-125px">المستشفى</th> --}}
                     <th class="min-w-125px">تاريخ الإدخال</th>
                     <th class="text-end min-w-100px">الإجراءات</th>
                 </tr>
@@ -397,7 +397,7 @@
                     <td>{{ $loop->index +1}}</td>
                     <td>{{$user->name}}</td>
                     <td>{{$user->user_name}}</td>
-                    <td>{{$user->hospital ? $user->hospital ->name :''}}</td>
+                    {{-- <td>{{$user->hospital ? $user->hospital ->name :''}}</td> --}}
                     <td>{{$user->created_at}}</td>
                     <!--begin::Action=-->
                     <td class="text-end">

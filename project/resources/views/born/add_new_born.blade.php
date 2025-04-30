@@ -522,7 +522,7 @@
 
         }
 
-        function check_dead_record() {
+        function check_born_record() {
             var form_date = new FormData($('#born_form')[0]);
             var url = "{{ route('check_born_records') }}";
             $.ajax({

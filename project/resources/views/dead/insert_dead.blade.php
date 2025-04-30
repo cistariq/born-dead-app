@@ -168,19 +168,19 @@
                                         <div class="row">
                                             <div class="col-lg-3">
                                                 <input type="text" id="P_FIRST_NAME"
-                                                    class="form-control form-control-lg mb-3" placeholder="الاسم الأول">
+                                                    class="form-control form-control-lg mb-3" placeholder="الاسم الأول" readonly="readonly">
                                             </div>
                                             <div class="col-lg-3">
                                                 <input type="text" id="P_FATHER_NAME"
-                                                    class="form-control form-control-lg mb-3" placeholder="اسم الأب">
+                                                    class="form-control form-control-lg mb-3" placeholder="اسم الأب" readonly="readonly">
                                             </div>
                                             <div class="col-lg-3">
                                                 <input type="text" id="P_GRAND_FATHER_NAME"
-                                                    class="form-control form-control-lg mb-3" placeholder="اسم الجد">
+                                                    class="form-control form-control-lg mb-3" placeholder="اسم الجد" readonly="readonly">
                                             </div>
                                             <div class="col-lg-3">
                                                 <input type="text" id="P_FAMILY_NAME"
-                                                    class="form-control form-control-lg mb-3" placeholder="العائلة">
+                                                    class="form-control form-control-lg mb-3" placeholder="العائلة" readonly="readonly">
                                             </div>
                                         </div>
                                     </div>
@@ -195,7 +195,7 @@
                                     <!--begin::Col-->
                                     <div class="col-lg-4">
                                         <input type="text" name="P_BIRTH_DATE" id="P_BIRTH_DATE"
-                                            class="form-control form-control-lg mb-3 mb-lg-0">
+                                            class="form-control form-control-lg mb-3 mb-lg-0" readonly="readonly">
                                     </div>
                                     <label class="col-lg-2 col-form-label required fw-bold fs-6">الجنس</label>
                                     <div class="col-lg-4 fv-row">
@@ -483,10 +483,10 @@
 
                                 <div class="row mb-6">
                                     <!--begin::Label-->
-                                    <label class="col-lg-3 col-form-label  fw-bold fs-6">رأي اللجنة القضائية</label>
+                                    <label class="col-lg-2 col-form-label  fw-bold fs-6">رأي اللجنة القضائية</label>
                                     <!--end::Label-->
                                     <!--begin::Col-->
-                                    <div class="col-lg-9">
+                                    <div class="col-lg-10">
                                         <input type="text" name="P_COMMITTE_OPINION" id="P_COMMITTE_OPINION"
                                             class="form-control form-control-lg mb-3 mb-lg-0">
                                     </div>
@@ -789,18 +789,18 @@
                                     </div>
                                 </div>
                                 <div class="row mb-8">
-                                    <label class="col-lg-3 col-form-label  fw-bold fs-6">رقم التليفون</label>
+                                    <label class="col-lg-3 col-form-label required fw-bold fs-6">رقم التليفون</label>
                                     <div class="col-lg-3">
                                         <input type="text" name="P_advertiser_Phone" id="P_advertiser_Phone"
                                             class="form-control form-control-lg mb-3 mb-lg-0 text-center">
                                     </div>
-                                    <label class="col-lg-2 col-form-label  fw-bold fs-6">تاريخ التبليغ
+                                    <label class="col-lg-2 col-form-label required fw-bold fs-6">تاريخ التبليغ
                                     </label>
                                     <!--end::Label-->
                                     <!--begin::Col-->
                                     <div class="col-lg-4">
                                         <input type="text" name="P_advertise_Date" id="P_advertise_Date"
-                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center">
+                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center" value="{{ date('d/m/Y H:i') }}">
                                     </div>
                                 </div>
                                 <div class="row mb-8">
@@ -1265,12 +1265,12 @@
 
         });
 
-        var P_BIRTH_DATE = $("#P_BIRTH_DATE").flatpickr({
-            enableTime: true,
-            dateFormat: "d/m/Y",
-            maxDate: new Date(),
+        // var P_BIRTH_DATE = $("#P_BIRTH_DATE").flatpickr({
+        //     enableTime: true,
+        //     dateFormat: "d/m/Y",
+        //     maxDate: new Date(),
 
-        });
+        // });
 
         var DEAD_DATE_OF_REPORT = $("#P_advertise_Date").flatpickr({
             enableTime: true,
@@ -1644,7 +1644,10 @@
                         $("#P_region_id").val(response.results.REGION_CD).change();
 
                         $("#P_city_id").val(response.results.CITY_CD).change();
-
+                        $("#P_religion_id").val(1).change();
+                        $("#P_nationality_id").val(1).change();
+                        $("#P_JOB_CD").val(55).change();
+                        $('#P_DEATH_COUNTRY').val('فلسطين');
 
                         if (response.results.DEATH_DT != null) {
                             Swal.fire({
@@ -2129,9 +2132,9 @@
                     $('#P_COMMITTE_OPINION').val(response.notes);
 
                     let $select = $("#DEAD_ICD1_CD");
-                    let $select2 = $("#DEAD_ICD3_CD");
+                    let $select2 = $("#DEAD_ICD4_CD");
                     let $select3 = $("#DIAG1_NAME");
-                    let $select4 = $("#DIAG3_NAME");
+                    let $select4 = $("#DIAG4_NAME");
                     // Clear existing options
                     $select.empty();
                     // Append the new constant option
@@ -2240,6 +2243,7 @@
                             $('#P_advertiser_Name').val(response.results.fname + ' ' + response.results.sname +
                                 ' ' + response.results.lname);
                             $('#P_advertiser_gender').val(response.results.sex).change();
+                            $("#P_advertiser_nationality_id").val(1).change();
 
                         }
                     } else {

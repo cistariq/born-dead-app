@@ -6,6 +6,7 @@ use App\Rules\StartWith;
 
 use App\Http\Controllers\Controller;
 use App\Http\Traits\CitizenDataTrait;
+use App\Http\Traits\BornDataTrait;
 use App\Models\Constant;
 use App\Models\Log;
 use App\Models\C_DETAILS_REFERRAL_TB;
@@ -26,7 +27,7 @@ use Illuminate\Http\Request;
 
 class BornController extends Controller
 {
-    use CitizenDataTrait;
+    use CitizenDataTrait,BornDataTrait;
 
     public function insert_new_born()
     {
@@ -91,6 +92,18 @@ class BornController extends Controller
         return view('born.Daily_Form');
     }
 
+    public function add_new_born()
+    {
+        $data['region'] = C_REGION_TB::get();
+        $data['city'] = C_CITY_TB::get();
+        $data['marital_status'] = C_MARTIAL_STATUS_TB::get();
+        $data['jobs'] = C_JOB_TB::get();
+        $data['religion'] = C_RELEGION_TB::get();
+
+      //  dd($data['cities']);
+
+        return view('born.new_born', $data);
+    }
 
     public function getBornResult(Request $request)
     {

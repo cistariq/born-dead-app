@@ -398,8 +398,9 @@
             </tr>
             <tr>
                 {{-- <td>كود الاستعلام: {{ $data[0]['QR_CODE'] ? $data[0]['QR_CODE'] : '' }} </td> --}}
+                <td>كود الاستعلام: {!! $data[0]['QR_CODE'] !!}</td>
                 <td rowspan="2">{!! $image !!}</td>
-                <td></td>
+
                 <td>
                     <p style="font-size:12px;" align="left"> {{ $data[0]['USER_FULL_NAME'] ? $data[0]['USER_FULL_NAME'] : '' }}</p>
                 </td>
