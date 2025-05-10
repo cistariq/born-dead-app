@@ -98,7 +98,7 @@ class RolePageController extends Controller
             $data['ip'] = request()->ip();
             $data['table_name'] = 'role_page_users';
             $data['type_action'] = 'D';
-            $data['old_record'] = $rolePage;
+           // $data['old_record'] = $rolePage;
 
             $rolePage->delete();
             Log::create($data);

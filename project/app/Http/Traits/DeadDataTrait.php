@@ -15,8 +15,8 @@ trait DeadDataTrait {
         try {
             $response = Http::timeout(10)->withHeaders([
                 'Accept' => 'application/json',
-                      //  ])->post('http://5.75.180.175/moh-registration/public/api/check_records_details', [
-            ])->post('http://5.75.180.175/moh-registration/public/api/check_records', [
+              ])->post('http://5.75.180.175/moh-registration/public/api/check_records_details', [
+           // ])->post('http://5.75.180.175/moh-registration/public/api/check_records', [
                 'MA_ID' => $data['P_ID_NO'],
                 'token' => 'fad4fx49kldsjfljrefx49',
             ]);

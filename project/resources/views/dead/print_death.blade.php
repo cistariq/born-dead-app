@@ -243,7 +243,6 @@
             <tr>
                 <td colspan="3" width="90%">
                 تشهد لجنة الوفيات ب {{ $data[0]['HOS_NAME'] ? $data[0]['HOS_NAME'] : '' }} ان الوفاة وقعت بتاريخ {{ $data[0]['DEAD_DOD'] ? date('d/m/Y', strtotime($data[0]['DEAD_DOD'])) : '' }} حسب الوثائق والاوراق التي عاينتها اللجنة
-                {{ $data[0]['COMMITTE_OPINION'] ? " حيث  " . $data[0]['COMMITTE_OPINION'] : '' }}
             </td>
                 <td align="center" rowspan="5" width="10%">ختم المستشفى
                     <br />
@@ -252,6 +251,13 @@
                     طبيب اللجنة
 
                 </td>
+            </tr>
+            <tr>
+
+                <td colspan="3" width="90%">
+                {{ $data[0]['COMMITTE_OPINION'] ? " سبب التعديل :" . $data[0]['COMMITTE_OPINION'] : '' }}
+            </td>
+
             </tr>
             @else
             <tr style="background-color:#eee ">

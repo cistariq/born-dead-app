@@ -1265,12 +1265,12 @@
 
         });
 
-        // var P_BIRTH_DATE = $("#P_BIRTH_DATE").flatpickr({
-        //     enableTime: true,
-        //     dateFormat: "d/m/Y",
-        //     maxDate: new Date(),
+        var P_BIRTH_DATE = $("#P_BIRTH_DATE").flatpickr({
+            enableTime: true,
+            dateFormat: "d/m/Y",
+            maxDate: new Date(),
 
-        // });
+        });
 
         var DEAD_DATE_OF_REPORT = $("#P_advertise_Date").flatpickr({
             enableTime: true,
@@ -1649,6 +1649,7 @@
                         $("#P_JOB_CD").val(55).change();
                         $('#P_DEATH_COUNTRY').val('فلسطين');
 
+
                         if (response.results.DEATH_DT != null) {
                             Swal.fire({
                                 title: 'خطأ !',
@@ -1905,6 +1906,7 @@
                 console.log(response);
                 $('#P_ID_TYPE').val(response.results[0]['DEAD_ID_TYPE']).change();
                 $('#P_ID_NO').val(response.results[0]['DEAD_ID']);
+                check_dead_record();
                 $('#P_FIRST_NAME').val(response.results[0]['DEAD_FIRST_NAME_AR']);
                 $('#P_COMMITTE_OPINION').val(response.results[0]['COMMITTE_OPINION']);
 
@@ -2079,11 +2081,33 @@
                 // const name = 'Nareen2025';
                 console.log(response.results);
                 //alert(response);
-                if (response == 3) {
+                if (response.exist == 0) {
                     $('#P_FLAG').val('وفاة عادية (غير شهيد)');
                     $('#P_SOURSE').val(0);
+                }
+                else{
+                if (response.status_cd == 3) {
+                    $('#P_FLAG').val('وفاة عادية (غير شهيد)');
+                    $('#P_SOURSE').val(0);
+                    P_DEAD_DATE.setDate(new Date(response.event_date));
+                    if (response.event_region_cd == 1) {
+                        $('#P_DEATH_PLACE_CD').val(5).change();
+                    } else if (response.event_region_cd == 2) {
+                        $('#P_DEATH_PLACE_CD').val(1).change();
+                    } else if (response.event_region_cd == 3) {
+                        $('#P_DEATH_PLACE_CD').val(7).change();
+                    } else if (response.event_region_cd == 4) {
+                        $('#P_DEATH_PLACE_CD').val(8).change();
+                    } else if (response.event_region_cd == 5) {
+                        $('#P_DEATH_PLACE_CD').val(6).change();
 
-                } else if (response == 0) {
+                    } else {
+                        $('#P_DEATH_PLACE_CD').val('').change();
+                    }
+                  //  $('#P_DEATH_PLACE_CD').val(response.event_region_cd).change();
+                    $('#P_hospital_id').val(response.hosp_cd).change();
+                    $('#P_COMMITTE_OPINION').val(response.notes);
+                } else if (response.status_cd == 0) {
 
                     if ($('#source').is(':checked') && ($('#P_ID_NO').val() != null || $('#P_ID_NO').val() != '')) {
                         $('#P_FLAG').val('متوفي لجنة');
@@ -2092,8 +2116,27 @@
                         $('#P_FLAG').val('وفاة عادية (غير شهيد)');
                         $('#P_SOURSE').val(0);
                     }
+                    P_DEAD_DATE.setDate(new Date(response.event_date));
+                    if (response.event_region_cd == 1) {
+                        $('#P_DEATH_PLACE_CD').val(5).change();
+                    } else if (response.event_region_cd == 2) {
+                        $('#P_DEATH_PLACE_CD').val(1).change();
+                    } else if (response.event_region_cd == 3) {
+                        $('#P_DEATH_PLACE_CD').val(7).change();
+                    } else if (response.event_region_cd == 4) {
+                        $('#P_DEATH_PLACE_CD').val(8).change();
+                    } else if (response.event_region_cd == 5) {
+                        $('#P_DEATH_PLACE_CD').val(6).change();
+
+                    } else {
+                        $('#P_DEATH_PLACE_CD').val('').change();
+                    }
+                    $('#P_hospital_id').val(response.hosp_cd).change();
+
+
+                    $('#P_COMMITTE_OPINION').val(response.notes);
                 }
-                 else if (response == 1) {
+                 else if (response.status_cd == 1) {
                     let dead_date = new Date(response.event_date);
                     let formattedDate = dead_date.toLocaleString('en-GB', {
                         day: '2-digit',
@@ -2125,16 +2168,38 @@
                     $('#save_btn').show();
                     //}
 
-                } else if (response == 2) {
+                } else if (response.status_cd == 2) {
                     $('#P_FLAG').val('شهيد معتمد');
                     $('#P_SOURSE').val(1);
-                    $('#P_Date_dead').val(response.event_date); /// by Nareen
+                    P_DEAD_DATE.setDate(new Date(response.event_date));
+
+                 //   $('#P_Date_dead').val(response.event_date); /// by Nareen
                     $('#P_COMMITTE_OPINION').val(response.notes);
 
                     let $select = $("#DEAD_ICD1_CD");
                     let $select2 = $("#DEAD_ICD4_CD");
                     let $select3 = $("#DIAG1_NAME");
                     let $select4 = $("#DIAG4_NAME");
+
+                    $("#DEAD_DETAILS_CD").val(4).change();
+                    if (response.event_region_cd == 1) {
+                        $('#P_DEATH_PLACE_CD').val(5).change();
+                    } else if (response.event_region_cd == 2) {
+                        $('#P_DEATH_PLACE_CD').val(1).change();
+                    } else if (response.event_region_cd == 3) {
+                        $('#P_DEATH_PLACE_CD').val(7).change();
+                    } else if (response.event_region_cd == 4) {
+                        $('#P_DEATH_PLACE_CD').val(8).change();
+                    } else if (response.event_region_cd == 5) {
+                        $('#P_DEATH_PLACE_CD').val(6).change();
+
+                    } else {
+                        $('#P_DEATH_PLACE_CD').val('').change();
+                    }
+                    $('#P_hospital_id').val(response.hosp_cd).change();
+
+
+
                     // Clear existing options
                     $select.empty();
                     // Append the new constant option
@@ -2150,6 +2215,8 @@
                     $select4.append('<option value="22921" selected>Operations of war</option>');
 
                 }
+            }
+
                 var foo = document.getElementById('div_input');
 
                 foo.style.display = 'block';
@@ -2291,6 +2358,7 @@
 
         $('#P_DEATH_REGION_PLACE').change(function() {
             var region_cd = $(this).val();
+
             var url = "{{ route('dead.get_city') }}";
             $.ajax({
                 url: url,
@@ -2314,6 +2382,7 @@
 
                 }
             });
+
         });
 
 

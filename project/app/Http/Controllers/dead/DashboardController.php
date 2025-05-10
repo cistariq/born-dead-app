@@ -66,5 +66,11 @@ class DashboardController extends Controller
         //dd($data);
         return view('dashboard',$data);
     }
+    public function welcome()
+    {
+       // dd(1);
+        return view('dead.welcome');
+
+    }
 
 }

@@ -13,7 +13,7 @@
             <div class="d-flex align-items-center position-relative my-1">
                 <!--begin::Svg Icon | path: icons/duotune/general/gen021.svg-->
                 <span class="svg-icon svg-icon-1 position-absolute ms-6">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                         <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="black" />
                         <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="black" />
                     </svg>
@@ -33,7 +33,7 @@
                 <button type="button" class="btn btn-primary" onclick="clearField()">
                     <!--begin::Svg Icon | path: icons/duotune/arrows/arr075.svg-->
                     <span class="svg-icon svg-icon-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                        <svg  width="24" height="24" viewBox="0 0 24 24" fill="none">
                             <rect opacity="0.5" x="11.364" y="20.364" width="16" height="2" rx="1" transform="rotate(-90 11.364 20.364)" fill="black" />
                             <rect x="4.36396" y="11.364" width="16" height="2" rx="1" fill="black" />
                         </svg>
@@ -66,7 +66,7 @@
                             <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
                                 <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                                 <span class="svg-icon svg-icon-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                                         <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
                                     </svg>
@@ -115,7 +115,7 @@
                                             class="form-select form-select-solid form-select-lg fw-bold">
                                             <option></option>
                                             @foreach ($hospitals as $hospital)
-                                                <option value="{{$hospital->id}}">{{$hospital->name}}</option>
+                                                <option value="{{$hospital->dref_code}}">{{$hospital->dref_name_ar}}</option>
                                             @endforeach
                                         </select>
                                         <!--end::Input-->
@@ -183,7 +183,7 @@
                             <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
                                 <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                                 <span class="svg-icon svg-icon-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                                         <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
                                     </svg>
@@ -233,7 +233,7 @@
                                             class="form-select form-select-solid form-select-lg fw-bold">
                                             <option></option>
                                             @foreach ($hospitals as $hospital)
-                                                <option value="{{$hospital->id}}">{{$hospital->name}}</option>
+                                                <option value="{{$hospital->dref_code}}">{{$hospital->dref_name_ar}}</option>
                                             @endforeach
                                         </select>
                                         <!--end::Input-->
@@ -290,7 +290,7 @@
                             <div class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
                                 <!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
                                 <span class="svg-icon svg-icon-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                    <svg  width="24" height="24" viewBox="0 0 24 24" fill="none">
                                         <rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="black" />
                                         <rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="black" />
                                     </svg>
@@ -383,6 +383,7 @@
                     <th class="min-w-125px">اسم المستخدم</th>
                     {{-- <th class="min-w-125px">المستشفى</th> --}}
                     <th class="min-w-125px">تاريخ الإدخال</th>
+                    <th class="min-w-125px">الحالة</th>
                     <th class="text-end min-w-100px">الإجراءات</th>
                 </tr>
                 <!--end::Table row-->
@@ -393,18 +394,25 @@
                 <!--begin::Table row-->
                 @foreach ($users as $user)
                 <tr>
+
                     <!--begin::User=-->
                     <td>{{ $loop->index +1}}</td>
-                    <td>{{$user->name}}</td>
-                    <td>{{$user->user_name}}</td>
+                    <td>{{$user->user_full_name}}</td>
+                    <td>{{$user->user_username}}</td>
                     {{-- <td>{{$user->hospital ? $user->hospital ->name :''}}</td> --}}
                     <td>{{$user->created_at}}</td>
+                    @if ($user->status == 1)
+                    <td class="text-success">مفعل</td>
+                    @else
+                    <td class="text-danger">غير مفعل</td>
+                    @endif
+
                     <!--begin::Action=-->
                     <td class="text-end">
                         <a href="#" class="btn btn-light btn-active-light-primary btn-sm" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">الإجراءات
                         <!--begin::Svg Icon | path: icons/duotune/arrows/arr072.svg-->
                         <span class="svg-icon svg-icon-5 m-0">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                                 <path d="M11.4343 12.7344L7.25 8.55005C6.83579 8.13583 6.16421 8.13584 5.75 8.55005C5.33579 8.96426 5.33579 9.63583 5.75 10.05L11.2929 15.5929C11.6834 15.9835 12.3166 15.9835 12.7071 15.5929L18.25 10.05C18.6642 9.63584 18.6642 8.96426 18.25 8.55005C17.8358 8.13584 17.1642 8.13584 16.75 8.55005L12.5657 12.7344C12.2533 13.0468 11.7467 13.0468 11.4343 12.7344Z" fill="black" />
                             </svg>
                         </span>
@@ -443,6 +451,7 @@
      var form;
     var submitButton;
 $(document).ready(function() {
+    $('#add_user_form')[0].reset();
     form = document.querySelector('#add_user_form');
     submitButton = document.querySelector('#kt_new_password_submit');
 
@@ -547,9 +556,9 @@ $(document).ready(function() {
     }
     function insert_new_user()
     {
-        var user_name = $('#p_user_name').val();
-        var id_no = $('#p_id_no').val();
-        var hospital_id = $('#p_hospital_id').val();
+        var user_full_name = $('#p_user_name').val();
+        var user_username = $('#p_id_no').val();
+        var user_dref_cd = $('#p_hospital_id').val();
         var password = $('#password').val();
         var password_confirmation = $('#password_confirmation').val();
 
@@ -558,8 +567,8 @@ $(document).ready(function() {
             url: url,
             type:'json',
             method: 'post',
-            data: {'user_name' : user_name ,'password':password,'password':password ,
-                'password_confirmation':password_confirmation,'id_no':id_no , hospital_id:hospital_id
+            data: {'user_full_name' : user_full_name ,'password':password,'password':password ,
+                'password_confirmation':password_confirmation,'user_username':user_username , user_dref_cd:user_dref_cd
             },
         }).done(function (response) {
             console.log(response);
@@ -611,9 +620,9 @@ $(document).ready(function() {
     function updateUser()
     {
         var u_id_user =$('#u_id_user').val();
-        var user_name = $('#u_user_name').val();
-        var id_no = $('#u_id_no').val();
-        var hospital_id = $('#u_hospital_id').val();
+        var user_full_name = $('#u_user_name').val();
+        var user_username = $('#u_id_no').val();
+        var user_dref_cd = $('#u_hospital_id').val();
         var status = $('#u_status').is(":checked");
         if(status){
             status = 1;
@@ -625,8 +634,8 @@ $(document).ready(function() {
             url: url,
             type:'json',
             method: 'post',
-            data: {'user_name' : user_name ,'status':status
-                ,'id_no':id_no , 'id_user':u_id_user,hospital_id:hospital_id
+            data: {'user_full_name' : user_full_name ,'status':status
+                ,'user_username':user_username , 'id_user':u_id_user,user_dref_cd:user_dref_cd
             },
         }).done(function (response) {
             console.log(response);

@@ -16,7 +16,7 @@
                             data-placeholder="اختر المستخدم" onchange="get_role_user();">
                             <option></option>
                             @foreach ($users as $user)
-                                <option value="{{ $user->id }}">{{ $user->name }}
+                                <option value="{{ $user->id }}">{{ $user->user_full_name }}
                                 </option>
                             @endforeach
                         </select>

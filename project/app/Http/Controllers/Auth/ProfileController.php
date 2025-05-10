@@ -9,6 +9,7 @@ use App\Models\RoleBtnUser;
 use App\Models\RolePage;
 use App\Models\RolePageUser;
 use App\Models\user;
+use App\Models\USER_TB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;

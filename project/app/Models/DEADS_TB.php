@@ -1476,6 +1476,22 @@ class DEADS_TB extends Model
         });
     }
 
+    public static function ALL_HOS()
+    {
+        $sql = "begin DEAD_INFO_PKG.ALL_HOS (:M_CURS); end;";
+
+        return DB::transaction(function ($conn) use ($sql) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':M_CURS', $lista, PDO::PARAM_STMT);
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
     public static function GET_CITY($data)
     {
         $sql = "begin DEAD_INFO_PKG.GET_CITY (:REGION_CD,:RESULT_CUR); end;";

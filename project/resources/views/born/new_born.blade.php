@@ -690,18 +690,18 @@
                     $('#P_BI_NO').val(response.Data.ID_NUM);
                     $('#BI_FIRST_NAME').val(response.Data.CHILD_NAME);
                     $('#BI_WEIGHT_GM').val(response.Data.BIRTH_WEIGHT);
-                    if (response.Data.CHILD_SEX_DESC == "ذكر") {
+                    if (response.Data.CHILD_SEX == 532) {
                         $('#BI_SEX_CD').val(1).change();
                     } else {
                         $('#BI_SEX_CD').val(2).change();
                     }
-                    if (response.Data.FAHER_RELIGION == "مسلم") {
+                    if (response.Data.FAHER_RELIGION == 539) {
                         $('#BI_RELEGION_CD').val(1).change();
                     } else {
                         $('#BI_RELEGION_CD').val(2).change();
                     }
 
-                    $('#BORN_DETAILS_DELIVERY_DATE').val(response.Data.CHILD_DOB);
+                    $('#BORN_DETAILS_DELIVERY_DATE').val(response.Data.CHILD_DOB + " " + response.Data.BIRTH_HORS);
                     $('#P_FATHER_ID').val(response.Data.FAHER_ID);
                     getDataFatherInfoBy();
                     $('#P_MOTHER_ID').val(response.Data.MOTHER_ID);

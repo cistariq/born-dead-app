@@ -11,20 +11,13 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
    // protected $connection = 'second_db';
-
+    protected $table = 'USER_TB';
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'user_name',
-        'password',
-        'insert_user_id',
-        'status',
-        'hospital_id'
-    ];
+    protected $guarded = [];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -32,7 +25,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $hidden = [
-        'password',
+        'user_password',
         'remember_token',
     ];
 
@@ -41,11 +34,17 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
+    // تحديد اسم عمود كلمة المرور
+    public function getAuthPassword()
+    {
+        return $this->user_password;
+    }
     protected function casts(): array
     {
+       // dd(1);
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'user_password' => 'hashed',
         ];
     }
     protected static function booted()
@@ -54,8 +53,8 @@ class User extends Authenticatable
             $data['user_id'] = Auth()->id();
             $data['ip'] = request()->ip();
             $data['id_no'] = $user->id;
-            $data['table_name'] = 'users';
-            $data['old_record'] = $user;
+            $data['table_name'] = 'user_tb';
+          //  $data['old_record'] = $user;
             $data['type_action'] = 'U';
             if ($user->status != $user->getOriginal('status')) {
                 $data['column_name'] = 'status';
@@ -64,7 +63,7 @@ class User extends Authenticatable
                 Log::create($data);
             }
             if ($user->name != $user->getOriginal('name')) {
-                $data['column_name'] = 'name';
+                $data['column_name'] = 'user_full_name';
                 $data['old_value'] =$user->getOriginal('name');
                 $data['new_value'] = $user->name;
                 Log::create($data);
@@ -75,10 +74,10 @@ class User extends Authenticatable
                 $data['new_value'] = $user->hospital_id;
                 Log::create($data);
             }
-            if ($user->user_name != $user->getOriginal('user_name')) {
-                $data['column_name'] = 'user_name';
-                $data['old_value'] =$user->getOriginal('user_name');
-                $data['new_value'] = $user->user_name;
+            if ($user->user_name != $user->getOriginal('user_username')) {
+                $data['column_name'] = 'user_full_name';
+                $data['old_value'] =$user->getOriginal('user_username');
+                $data['new_value'] = $user->user_username;
                 Log::create($data);
             }
 
@@ -92,4 +91,5 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Constant::class,'hospital_id');
     }
+
 }
