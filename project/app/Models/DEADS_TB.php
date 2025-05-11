@@ -19,7 +19,7 @@ class DEADS_TB extends Model
     public static function GET_DEAD_DATA_BY_ID($data)
     {
 
-        $sql = "begin DEAD_INFO_PKG.GET_DEADS_DATA (:P_DEAD_CODE,:P_ID,:P_FIRST_NAME,:P_SECOND_NAME,:P_THIRD_NAME,:P_LAST_NAME,:P_DATE_FROM,:P_DATE_TO,:P_SEX_NO,:P_REGION_NO,:P_CITY_NO,:P_HOS_NO,:DIAG1_NAME,:DIAG4_NAME,:P_DEATH_PLACE,:P_ENTRY_POINT,:P_ENTER_FROM,:P_ENTER_TO,:P_START,:P_LIMIT,:RESULT_COUNT,:DEADS); end;";
+        $sql = "begin DEAD_INFO_PKG.GET_DEADS_DATA (:P_DEAD_CODE,:P_ID,:P_FIRST_NAME,:P_SECOND_NAME,:P_THIRD_NAME,:P_LAST_NAME,:P_DATE_FROM,:P_DATE_TO,:P_SEX_NO,:P_REGION_NO,:P_CITY_NO,:P_HOS_NO,:DIAG1_NAME,:DIAG4_NAME,:P_DEATH_PLACE,:P_ENTRY_POINT,:P_ENTER_FROM,:P_ENTER_TO,:P_ENTRY_EMPLOYEE,:P_START,:P_LIMIT,:RESULT_COUNT,:DEADS); end;";
 
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
@@ -44,6 +44,7 @@ class DEADS_TB extends Model
             $stmt->bindParam(':P_ENTRY_POINT', $data['P_ENTRY_POINT']);
             $stmt->bindParam(':P_ENTER_FROM', $data['P_ENTER_FROM']);
             $stmt->bindParam(':P_ENTER_TO', $data['P_ENTER_TO']);
+            $stmt->bindParam(':P_ENTRY_EMPLOYEE', $data['P_ENTRY_EMPLOYEE']);
             $stmt->bindParam(':P_START', $data['start']);
             $stmt->bindParam(':P_LIMIT', $data['length']);
             $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT, 11);
@@ -238,6 +239,24 @@ class DEADS_TB extends Model
         });
     }
 
+    public static function GET_HOS_DREF($P_HOS_CODE)
+    {
+        $sql = "begin DEAD_INFO_PKG.GET_HOS_DREF (:P_HOS_CODE,:HOS_OUT_CUR); end;";
+
+        return DB::transaction(function ($conn) use ($sql, $P_HOS_CODE) {
+            $lista = [];
+            //dd($P_ICD_CODE);
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':P_HOS_CODE', $P_HOS_CODE);
+            $stmt->bindParam(':HOS_OUT_CUR', $lista, PDO::PARAM_STMT);
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
     public static function GET_ICD_DATA_AUTO($P_TERM)
     {
         $sql = "begin DEAD_INFO_PKG.GET_ICD_DATA_AUTO (:P_TERM,:ICD_LIST); end;";

@@ -72,7 +72,7 @@
                             </div>
                         </div>
                     </div>
-                    <label class="control-label col-md-1">إسم الأب</label>
+                    <label class="control-label col-md-1">إسم الأب </label>
                     <div class="position-relative w-md-300px me-md-1">
                         <div class="row mb-4">
                             <div class="col-lg-10">
@@ -111,7 +111,7 @@
                         <div class="row mb-4">
                             <div class="col-lg-10">
                                 <select class="form-select" data-control="select2" id="P_SEX_NO"
-                                    data-placeholder="اختر الجنس">
+                                    data-placeholder="اختر الجنس" data-allow-clear="true">
                                     <option></option>
                                     <option value="1">ذكر</option>
                                     <option value="2">انثى</option>
@@ -129,7 +129,7 @@
                         <div class="row mb-4">
                             <div class="col-lg-10">
                                 <select class="form-select" data-control="select2" id="P_Region_NO"
-                                    data-placeholder=" المحافظة">
+                                    data-placeholder=" المحافظة" data-allow-clear="true">
                                     <option></option>
                                     @foreach ($region as $item)
                                         <option value="{{ $item->r_code }}">{{ $item->r_name_ar }}
@@ -147,7 +147,7 @@
                         <div class="row mb-4">
                             <div class="col-lg-10">
                                 <select class="form-select" data-control="select2" id="P_CITY_NO"
-                                    data-placeholder="اختر المدينة">
+                                    data-placeholder="اختر المدينة" data-allow-clear="true">
                                     <option></option>
                                     {{-- @foreach ($city as $item)
                                         <option value="{{ $item->c_code }}">{{ $item->c_name_ar }}
@@ -160,77 +160,14 @@
                     </div>
                 </div>
                 <div class="d-flex align-items-center">
-                    <label class="control-label col-md-1">مكان الوفاة</label>
-
-                    <div class="position-relative w-md-400px me-md-1">
-                        <div class="row mb-4">
-                            <div class="col-lg-10">
-                                <select class="form-select" data-control="select2" id="P_Death_Place"
-                                    data-placeholder="مكان الوفاة">
-                                    <option></option>
-                                    <option value="0">غير معروف</option>
-                                    <option value="1">غزة</option>
-                                    <option value="5">شمال غزة</option>
-                                    <option value="6">المنطقة الوسطى</option>
-                                    <option value="7">خانيونس</option>
-                                    <option value="8">رفح</option>
-                                    <option value="2">الضفة الغربية</option>
-                                    <option value="3">داخل الخط الأخضرو القدس</option>
-                                    <option value="4">خارج البلاد</option>
-                                </select>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <label class="control-label col-md-1">المستشفى</label>
-
-                    <div class="position-relative w-md-400px me-md-1">
-                        <div class="row mb-4">
-                            <div class="col-lg-10">
-                                <select class="form-select" data-control="select2" id="P_HOS_NO"
-                                    data-placeholder="المستشفى">
-                                    <option></option>
-                                    @foreach ($hospitals as $hospital)
-                                        <option value="{{ $hospital['DREF_CODE'] }}">
-                                            {{ $hospital['DREF_NAME_AR'] }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <label class="control-label col-md-1">نقطة الإدخال</label>
-
-                    <div class="position-relative w-md-400px me-md-1">
-                        <div class="row mb-4">
-                            <div class="col-lg-10">
-                                <select class="form-select" data-control="select2" id="P_Entry_point"
-                                    data-placeholder="نقطة الإدخال">
-                                    <option></option>
-                                    @foreach ($entry_reg_place as $entry_reg_places)
-                                        <option value="{{ $entry_reg_places['dref_code'] }}">
-                                            {{ $entry_reg_places['dref_name_ar'] }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-center">
 
                     <label class="control-label col-md-1">المرض الأصلي</label>
 
-                    <div class="position-relative w-md-400px me-md-1">
-                        <div class="row mb-4">
-                            <div class="col-lg-10">
+                    <div class="position-relative w-md-450px me-md-18">
+                        <div class="row mb-">
+                            <div class="col-lg-12">
                                 <select id="DIAG4_NAME" data-control="select2" data-placeholder="اختر ..."
-                                    class="form-select form-select-lg fw-bold">
+                                    class="form-select form-select-lg fw-bold" data-allow-clear="true">
                                     <option></option>
 
                                 </select>
@@ -239,13 +176,13 @@
 
                     </div>
 
-                    <label class="control-label col-md-1 d-none">سبب الوفاة</label>
+                    <label class="control-label col-md-1">سبب الوفاة</label>
 
-                    <div class="position-relative w-md-400px me-md-1 d-none">
+                    <div class="position-relative w-md-450px me-md-2">
                         <div class="row mb-4">
-                            <div class="col-lg-10">
+                            <div class="col-lg-12">
                                 <select id="DIAG1_NAME" data-control="select2" data-placeholder="اختر ..."
-                                    class="form-select form-select-lg fw-bold">
+                                    class="form-select form-select-lg fw-bold" data-allow-clear="true">
                                     <option></option>
 
                                 </select>
@@ -293,6 +230,91 @@
                         </div>
                     </div>
                 </div>
+                <div class="d-flex align-items-center">
+                    <label class="control-label col-md-1">مكان الوفاة</label>
+
+                    <div class="position-relative w-md-400px me-md-1">
+                        <div class="row mb-4">
+                            <div class="col-lg-10">
+                                <select class="form-select" data-control="select2" id="P_Death_Place"
+                                    data-placeholder="مكان الوفاة" data-allow-clear="true">
+                                    <option></option>
+                                    <option value="0">غير معروف</option>
+                                    <option value="1">غزة</option>
+                                    <option value="5">شمال غزة</option>
+                                    <option value="6">المنطقة الوسطى</option>
+                                    <option value="7">خانيونس</option>
+                                    <option value="8">رفح</option>
+                                    <option value="2">الضفة الغربية</option>
+                                    <option value="3">داخل الخط الأخضرو القدس</option>
+                                    <option value="4">خارج البلاد</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <label class="control-label col-md-1">المستشفى</label>
+
+                    <div class="position-relative w-md-400px me-md-1">
+                        <div class="row mb-4">
+                            <div class="col-lg-10">
+                                <select class="form-select" data-control="select2" id="P_HOS_NO"
+                                    data-placeholder="المستشفى" data-allow-clear="true">
+                                    <option></option>
+                                    @foreach ($hospitals as $hospital)
+                                        <option value="{{ $hospital['DREF_CODE'] }}">
+                                            {{ $hospital['DREF_NAME_AR'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </div>
+                <div class="d-flex align-items-center">
+                    <label class="control-label col-md-1">موظف الإدخال</label>
+
+                    <div class="position-relative w-md-400px me-md-1">
+                        <div class="row mb-4">
+                            <div class="col-lg-10">
+                                <select class="form-select" data-control="select2" id="P_Entry_employee"
+                                    data-placeholder="موظف الإدخال"  data-allow-clear="true">
+                                    <option></option>
+                                    @foreach ($entry_employee as $entry_employees)
+                                        <option value="{{ $entry_employees['id'] }}">
+                                            {{ $entry_employees['user_full_name'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                    <label class="control-label col-md-1">نقطة الإدخال</label>
+
+                    <div class="position-relative w-md-400px me-md-1">
+                        <div class="row mb-4">
+                            <div class="col-lg-10">
+                                <select class="form-select" data-control="select2" id="P_Entry_point"
+                                    data-placeholder="نقطة الإدخال" data-allow-clear="true">
+                                    <option></option>
+                                    @foreach ($entry_reg_place as $entry_reg_places)
+                                        <option value="{{ $entry_reg_places['dref_code'] }}">
+                                            {{ $entry_reg_places['dref_name_ar'] }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
                 <!--end::Compact form-->
                 <!--begin:Action-->
 
@@ -497,6 +519,11 @@
                         '#P_ENTER_TO').val() == null || $('#P_ENTER_TO').val() == undefined || $('#P_ENTER_TO')
                     .val() ==
                     '')
+                    && ($(
+                        '#P_Entry_employee').val() == null || $('#P_Entry_employee').val() == undefined || $('#P_Entry_employee')
+                    .val() ==
+                    '')
+
             ) {
 
                 Swal.fire({
@@ -540,7 +567,10 @@
                         '#P_ENTER_TO').val() == null || $('#P_ENTER_TO').val() == undefined || $('#P_ENTER_TO')
                     .val() ==
                     '')
-
+                    && ($(
+                        '#P_Entry_employee').val() == null || $('#P_Entry_employee').val() == undefined || $('#P_Entry_employee')
+                    .val() ==
+                    '')
                 )
 
             )
@@ -576,6 +606,8 @@
                 var P_ENTRY_POINT = $('#P_Entry_point').val();
                 var P_ENTER_FROM = $('#P_ENTER_FROM').val();
                 var P_ENTER_TO = $('#P_ENTER_TO').val();
+                var P_ENTRY_EMPLOYEE = $('#P_Entry_employee').val();
+
 
 
 
@@ -613,6 +645,7 @@
                             DIAG4_NAME: DIAG4_NAME,
                             P_DEATH_PLACE: P_DEATH_PLACE,
                             P_ENTRY_POINT: P_ENTRY_POINT,
+                            P_ENTRY_EMPLOYEE:P_ENTRY_EMPLOYEE,
 
                         },
                     },

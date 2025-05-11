@@ -2084,6 +2084,7 @@
                 if (response.exist == 0) {
                     $('#P_FLAG').val('وفاة عادية (غير شهيد)');
                     $('#P_SOURSE').val(0);
+                  //  $('#save_btn').show();
                 }
                 else{
                 if (response.status_cd == 3) {
@@ -2105,8 +2106,9 @@
                         $('#P_DEATH_PLACE_CD').val('').change();
                     }
                   //  $('#P_DEATH_PLACE_CD').val(response.event_region_cd).change();
-                    $('#P_hospital_id').val(response.hosp_cd).change();
+                    $('#P_hospital_id').val(response.dref_cd).change();
                     $('#P_COMMITTE_OPINION').val(response.notes);
+                  //  $('#save_btn').show();
                 } else if (response.status_cd == 0) {
 
                     if ($('#source').is(':checked') && ($('#P_ID_NO').val() != null || $('#P_ID_NO').val() != '')) {
@@ -2131,10 +2133,11 @@
                     } else {
                         $('#P_DEATH_PLACE_CD').val('').change();
                     }
-                    $('#P_hospital_id').val(response.hosp_cd).change();
+                    $('#P_hospital_id').val(response.dref_cd).change();
 
 
                     $('#P_COMMITTE_OPINION').val(response.notes);
+                   // $('#save_btn').show();
                 }
                  else if (response.status_cd == 1) {
                     let dead_date = new Date(response.event_date);
@@ -2161,6 +2164,7 @@
                         $('#P_FLAG').val(P_FLAG_value); // Restore the value after reset
                         //$('#insert_dead_form .form-select').val('').trigger('change'); // Reset select fields
                         block_insert_dead.release(); // Unblock if necessary
+                        $('#P_FLAG').val('');
                         $('#save_btn').hide(); // Show save button if needed
                     });
 
@@ -2196,7 +2200,7 @@
                     } else {
                         $('#P_DEATH_PLACE_CD').val('').change();
                     }
-                    $('#P_hospital_id').val(response.hosp_cd).change();
+                    $('#P_hospital_id').val(response.dref_cd).change();
 
 
 
@@ -2213,7 +2217,6 @@
                     $select4.empty();
                     // Append the new constant option
                     $select4.append('<option value="22921" selected>Operations of war</option>');
-
                 }
             }
 

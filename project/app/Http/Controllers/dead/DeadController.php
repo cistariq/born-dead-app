@@ -20,6 +20,7 @@ use App\Models\C_DEATH_CAUSE_TB;
 use App\Models\C_JOB_TB;
 use App\Models\C_NATIONALITY_TB;
 use App\Models\C_RELEGION_TB;
+use App\Models\User;
 use App\Models\PrintLog;
 use Carbon\Carbon;
 use Illuminate\Validation\Rule;
@@ -68,6 +69,8 @@ class DeadController extends Controller
         $data['region'] = C_REGION_TB::get();
         $data['city'] = C_CITY_TB::get();
         $data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::whereIn('DREF_M_CD', [2, 3])->orwhereIn('DREF_CODE', [134, 125, 146])->get();
+        $data['entry_employee'] = User::get();
+
 
         $data['entry_detail'] = C_DEATH_CAUSE_TB::get();
 
@@ -125,6 +128,7 @@ class DeadController extends Controller
             'DIAG4_NAME' => 'numeric|nullable',
             'P_DEATH_PLACE' => 'numeric|nullable',
             'P_ENTRY_POINT' => 'numeric|nullable',
+            'P_ENTRY_EMPLOYEE' => 'numeric|nullable',
 
         ];
 
