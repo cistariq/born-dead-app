@@ -937,6 +937,42 @@ public static function UPDATE_BORN_DATA($data)
         });
     }
 
+    public static function GET_BORN_REGION($P_REGION_CODE)
+    {
+        $sql = "begin BORN_INFO_PKG.GET_BORN_REGION (:P_REGION_CODE,:REGION_OUT_CUR); end;";
+
+        return DB::transaction(function ($conn) use ($sql, $P_REGION_CODE) {
+            $lista = [];
+
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':P_REGION_CODE', $P_REGION_CODE);
+            $stmt->bindParam(':REGION_OUT_CUR', $lista, PDO::PARAM_STMT);
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
+    public static function GET_BORN_CITY($P_CITY_CODE)
+    {
+        $sql = "begin BORN_INFO_PKG.GET_BORN_CITY (:P_CITY_CODE,:CITY_OUT_CUR); end;";
+
+        return DB::transaction(function ($conn) use ($sql, $P_CITY_CODE) {
+            $lista = [];
+
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':P_CITY_CODE', $P_CITY_CODE);
+            $stmt->bindParam(':CITY_OUT_CUR', $lista, PDO::PARAM_STMT);
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
     public static function GET_BORNS_LIMIT($data)
     {
      //   dd($data);

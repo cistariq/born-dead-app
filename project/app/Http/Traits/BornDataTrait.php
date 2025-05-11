@@ -2,6 +2,8 @@
 namespace App\Http\Traits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Models\C_REGION_TB;
+use App\Models\BORNS_INFO_TB;
 //
 trait BornDataTrait {
     public function check_record_born(Request $request)
@@ -21,7 +23,14 @@ trait BornDataTrait {
                 'IdNumber' => $data['P_BI_ID'],
             ]);
             $data = $response->json();
- //dd($data);
+          //   dd($data['Data']['REGION']);
+             $region_data= BORNS_INFO_TB::GET_BORN_REGION($data['Data']['REGION']);
+             $city_data= BORNS_INFO_TB::GET_BORN_CITY($data['Data']['CITY']);
+
+              $data['Data']['region_cd'] = $region_data[0]['R_CODE'];
+              $data['Data']['city_cd'] = $city_data[0]['C_CODE'];
+
+ //dd($data['region_cd']);
             return $data;
         }catch (\Exception $exception){
             return [];

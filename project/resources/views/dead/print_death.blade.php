@@ -129,7 +129,7 @@
                 <td width="20%">مكان الاقامة : {{ $data[0]['CITY'] }}</td>
 
                 <td width="20%">المحافظة: {{ $data[0]['REGION'] }}</td>
-                <td width="20%">الدولة : </td>
+                <td width="20%">الدولة : {{ 'فلسطين' }}</td>
             </tr>
 
             <tr>
@@ -335,7 +335,7 @@
         <table style="font-family: 'Tajawal'" class="datatable" width="100%" border="1" dir="rtl"
             cellpadding="0">
             <tr style="background-color:#eee ">
-                <td style="text-align: center; font-weight:bold" colspan="5">بينانات المبلغ</td>
+                <td style="text-align: center; font-weight:bold" colspan="5">بيانات المبلغ</td>
             </tr>
 
             <tr>

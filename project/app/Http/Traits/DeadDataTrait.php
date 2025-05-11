@@ -24,17 +24,20 @@ trait DeadDataTrait {
             ]);
 
             $data = $response->json();
-           // dd($data);
+
 
 if($data['exist']==1 && $data['status_cd'] != 1){
 
   if($data['hosp_cd'] != null){
-     $hos_data= DEADS_TB::GET_HOS_DREF($response->json()['hosp_cd']);
+
+     $hos_data= DEADS_TB::GET_HOS_DREF($data['hosp_cd']);
+    //  dd($data);
      $data['dref_cd'] = $hos_data[0]['DREF_CODE'];
+
 
      }
     }
-     //dd($data);
+
             return $data;
         }catch (\Exception $exception){
             return [];

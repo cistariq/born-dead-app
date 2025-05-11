@@ -57,14 +57,14 @@
                             <label class="col-form-label fw-bold col-lg-1">هوية رقم</label>
                             <div class="col-lg-2">
                                 <input id="P_BI_NO" type="text" value=""
-                                    class="form-control form-control-solid ps-8" onchange="check_born_id();" />
+                                    class="form-control form-control-solid ps-8 required" onchange="check_born_id();" />
                             </div>
-                            <label class="col-form-label fw-bold col-lg-2">اسم المولود الاول</label>
+                            <label class="col-form-label fw-bold col-lg-2 required">اسم المولود الاول</label>
                             <div class="col-lg-2">
                                 <input id="BI_FIRST_NAME" type="text" value=""
                                     class="form-control form-control-solid ps-8" />
                             </div>
-                            <label class="col-form-label fw-bold col-lg-2">جنس المولود</label>
+                            <label class="col-form-label fw-bold col-lg-2 required">جنس المولود</label>
                             <div class="col-lg-2">
                                 <select id="BI_SEX_CD" data-control="select2" data-placeholder="اختر ..."
                                     class="form-select form-select-lg fw-bold">
@@ -86,7 +86,7 @@
                                 <input id="BI_WEIGHT_GM" type="text" value=""
                                     class="form-control form-control-solid ps-8" />
                             </div>
-                            <label class="col-form-label fw-bold col-lg-2">ديانة المولود</label>
+                            <label class="col-form-label fw-bold col-lg-2 required">ديانة المولود</label>
                             <div class="col-lg-2">
                                 <select id="BI_RELEGION_CD" data-control="select2" data-placeholder="اختر ..."
                                     class="form-select form-select-lg fw-bold">
@@ -197,7 +197,7 @@
 
                                     </select>
                                 </div>
-                                <label class="col-lg-2 col-form-label required fw-bold fs-6">المركز الصحي</label>
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">المركز الصحي</label>
                                 <div class="col-lg-2 fv-row">
 
                                     <select id="BORN_DETAILS_HEALTH_CENTER_CD" data-control="select2"
@@ -205,7 +205,7 @@
 
                                     </select>
                                 </div>
-                                <label class="col-lg-2 col-form-label required fw-bold fs-6">رقم منزل الوالدين</label>
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">رقم منزل الوالدين</label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
                                     <input class="form-control text-center" id="BORN_DETAILS_HOME_NO">
@@ -213,18 +213,18 @@
                             </div>
 
                             <div class="row mb-6">
-                                <label class="col-lg-2 col-form-label required fw-bold fs-6">تاريخ الزواج </label>
+                                <label class="col-lg-2 col-form-label  fw-bold fs-6">تاريخ الزواج </label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
                                     <input class="form-control text-center" id="BORN_DETAILS_MARRIAGE_DATE">
                                 </div>
-                                <label class="col-lg-2 col-form-label required fw-bold fs-6">رقم زواج الأم </label>
+                                <label class="col-lg-2 col-form-label  fw-bold fs-6">رقم زواج الأم </label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
                                     <input class="form-control text-center" id="BORN_DETAILS_MARRIAGE_NUMBER"
                                         value="1">
                                 </div>
-                                <label class="col-lg-2 col-form-label required fw-bold fs-6">رقم تليفون الوالدين </label>
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">رقم تليفون الوالدين </label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
                                     <input class="form-control text-center" id="BORN_DETAILS_PARENTS_TEL_NO">
@@ -233,7 +233,7 @@
                             <div class="row mb-6">
 
                                 <!--begin::Label-->
-                                <label class="col-lg-3 col-form-label required fw-bold fs-6">عدد المواليد في الولادة
+                                <label class="col-lg-3 col-form-label fw-bold fs-6">عدد المواليد في الولادة
                                     الحالية</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
@@ -243,8 +243,8 @@
                                         onchange="get_twins();">
 
                                 </div>
-                                <label class="col-lg-2 col-form-label required fw-bold fs-6">توأم</label>
-                                <div class="col-lg-2 fv-row mt-n1">
+                                <label class="col-lg-2 col-form-label fw-bold fs-6">توأم</label>
+                                <div class="col-lg-2 fv-row mt-n1" style="position: relative;top: 10px;">
 
                                     <div class="form-check form-check-inline">
                                         <input class="form-check-input" type="radio" name="BORN_DETAILS_TWINS"
@@ -257,7 +257,7 @@
                                         <label class="form-check-label" for="inlineRadio2">نعم</label>
                                     </div>
                                 </div>
-                                <label class="col-lg-3 col-form-label required fw-bold fs-6">عدد المواليد الأحياء من الزواج
+                                <label class="col-lg-3 col-form-label  fw-bold fs-6">عدد المواليد الأحياء من الزواج
                                     الحالي</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
@@ -265,20 +265,20 @@
                                 </div>
                             </div>
                             <div class="row mb-6">
-                                <label class="col-lg-3 col-form-label required fw-bold fs-6">عدد المواليد الموتى من الزواج
+                                <label class="col-lg-3 col-form-label  fw-bold fs-6">عدد المواليد الموتى من الزواج
                                     الحالي</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
                                     <input class="form-control text-center" id="BORN_DETAILS_CUR_MARRIAGE_DEAD">
                                 </div>
-                                <label class="col-lg-3 col-form-label required fw-bold fs-6">عدد المواليد الأحياء من الزواج
+                                <label class="col-lg-3 col-form-label  fw-bold fs-6">عدد المواليد الأحياء من الزواج
                                     السابق</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
                                     <input class="form-control text-center" id="BORN_DETAILS_PRE_MARRIAGE_LIVE"
                                         value="0">
                                 </div>
-                                <label class="col-lg-3 col-form-label required fw-bold fs-6">عدد المواليد الموتى من الزواج
+                                <label class="col-lg-3 col-form-label  fw-bold fs-6">عدد المواليد الموتى من الزواج
                                     السابق</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
@@ -708,6 +708,19 @@
                     getDataMotherInfoBy();
                     $('#BORN_DETAILS_PARENTS_TEL_NO').val(response.Data.MOBILENO);
                     $('#P_mother_phone').val(response.Data.MOBILENO);
+                    $('#BORN_DETAILS_REGION_CD').val(response.Data.region_cd).change();
+                    $('#BORN_DETAILS_CITY_CD').val(response.Data.city_cd).change();
+                    if(response.Data.BIRTH_TYPE == 6573){
+                        document.getElementById('weekRadio1').checked = true;
+
+                        $('#BORN_DETAILS_TWINS').val(0);
+                    }
+                    else{
+                        $('#BORN_DETAILS_TWINS').val(1);
+                        document.getElementById('weekRadio2').checked = true;
+
+                    }
+
 
                 } else {
                     alert(response.Message);
@@ -1327,7 +1340,8 @@
                                     var M_ID = $('#P_MOTHER_ID').val();
                                     $('#P_BI_CODE').val(response[0]['B_CODE']);
                                     $('#P_BI_ADMISSION_CD').val(response[0]['B_CODE']);
-                                    Upborn_data($('#P_BI_ADMISSION_CD').val());
+                                    edit_born_data();
+                                  //  Upborn_data($('#P_BI_ADMISSION_CD').val());
 
                                 }
                             });
@@ -1688,5 +1702,18 @@
                 }
             });
         });
+
+        function get_twins() {
+            if ($('#BORN_DETAILS_PLURALITY').val() > 1) {
+                $('#weekRadio2').prop('checked', true);
+
+                //alert(1);
+
+            } else {
+                $('#weekRadio1').prop('checked', true);
+
+            }
+
+        }
     </script>
 @endpush

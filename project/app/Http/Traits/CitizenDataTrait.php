@@ -18,6 +18,7 @@ trait CitizenDataTrait {
                 'token' => 'fad4fx49kldsjfljre',
             ]);
             $data = $response->json();
+          //  dd($data);
             return $data;
         }catch (\Exception $exception){
             return [];
@@ -25,6 +26,6 @@ trait CitizenDataTrait {
 
     }
 
-    
+
 
 }

@@ -447,6 +447,7 @@ class DeadController extends Controller
             'P_REGISTER_DATE' => 'nullable',
             'P_REGISTER_NAME' => 'nullable',
             'P_REGISTER_PLACE_CD' => 'required',
+            'P_COMMITTE_OPINION' => 'nullable',
 
         ];
 

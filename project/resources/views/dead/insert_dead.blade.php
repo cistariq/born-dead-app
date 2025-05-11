@@ -1551,7 +1551,7 @@
                             });
                             $('#P_DEAD_NUMBER').val(response['P_DEAD_NUMBER']);
 
-                            clear_form();
+                            print_crt_dead(response['P_DEAD_NUMBER']);
 
                         } else {
 
@@ -2087,6 +2087,7 @@
                   //  $('#save_btn').show();
                 }
                 else{
+                  //  alert(response.status_cd);
                 if (response.status_cd == 3) {
                     $('#P_FLAG').val('وفاة عادية (غير شهيد)');
                     $('#P_SOURSE').val(0);
@@ -2173,6 +2174,7 @@
                     //}
 
                 } else if (response.status_cd == 2) {
+                   // alert('Tariq');
                     $('#P_FLAG').val('شهيد معتمد');
                     $('#P_SOURSE').val(1);
                     P_DEAD_DATE.setDate(new Date(response.event_date));
@@ -2442,6 +2444,49 @@
                 document.getElementById('P_city_id').disabled = true;
                 document.getElementById('P_region_id').disabled = true;
             }
+        }
+
+               function print_crt_dead(P_DEAD_NUMBER) {
+
+
+            var url = "{{ route('dead.print_crt_dead') }}";
+
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {
+                    P_DEAD_NUMBER: P_DEAD_NUMBER
+                },
+            }).done(function(response) {
+                console.log(response);
+                if (response.success != true) {
+                    Swal.fire({
+                        title: 'خطأ!',
+                        text: response.results.message,
+                        icon: "{{ session('m-class', 'error') }}",
+                    })
+                } else {
+                    if (response.results.count == 0) {
+                        var red_url = '{{ route('dead.print_dead_book', ':P_DEAD_NUMBER') }}';
+                        red_url = red_url.replace(':P_DEAD_NUMBER', P_DEAD_NUMBER);
+                        window.open(red_url, true);
+                    } else {
+                        Swal.fire({
+                            title: "تمت عملية طباعة الشهادة مسبقاً هل تريد الاستمرار بعملية الطباعة؟",
+                            showDenyButton: true,
+                            confirmButtonText: "تأكيد الطباعة",
+                            denyButtonText: `إلغاء`
+                        }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                                var red_url = '{{ route('dead.print_dead_book', ':P_DEAD_NUMBER') }}';
+                                red_url = red_url.replace(':P_DEAD_NUMBER', P_DEAD_NUMBER);
+                                window.open(red_url, true);
+                            }
+                        });
+                    }
+                }
+            });
         }
     </script>
 @endpush
