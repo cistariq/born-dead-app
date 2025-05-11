@@ -99,7 +99,7 @@ class BornController extends Controller
         $data['marital_status'] = C_MARTIAL_STATUS_TB::get();
         $data['jobs'] = C_JOB_TB::get();
         $data['religion'] = C_RELEGION_TB::get();
-
+        $data['hospitals'] = C_DETAILS_REFERRAL_TB::get();
       //  dd($data['cities']);
 
         return view('born.new_born', $data);

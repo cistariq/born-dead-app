@@ -168,7 +168,7 @@
 
             <tr>
                 <td width="50%" colspan="1">اسم الزوج/الزوجة رباعي: {{ $data[0]['DEAD_D_PARTNER_NAME'] }}</td>
-                <td width="50%" colspan="1">رقم الهوية : <?php echo $data[0]['DEAD_D_PARTNER_ID']; ?> {{ $data[0]['DEAD_D_PARTNER_ID'] ? $data[0]['DEAD_D_PARTNER_ID'] : '' }}</td>
+                <td width="50%" colspan="1">رقم الهوية :  {{ $data[0]['DEAD_D_PARTNER_ID'] ? $data[0]['DEAD_D_PARTNER_ID'] : '' }}</td>
             </tr>
 
         </table>
