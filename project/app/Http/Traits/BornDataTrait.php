@@ -26,9 +26,13 @@ trait BornDataTrait {
           //   dd($data['Data']['REGION']);
              $region_data= BORNS_INFO_TB::GET_BORN_REGION($data['Data']['REGION']);
              $city_data= BORNS_INFO_TB::GET_BORN_CITY($data['Data']['CITY']);
+             $born_status= BORNS_INFO_TB::GET_BORN_STATUS($data['Data']['BIRTH_STATUS']);
+
 
               $data['Data']['region_cd'] = $region_data[0]['R_CODE'];
               $data['Data']['city_cd'] = $city_data[0]['C_CODE'];
+              $data['Data']['delivery_cd'] = $born_status[0]['DELIVERY_CODE'];
+
 
  //dd($data['region_cd']);
             return $data;

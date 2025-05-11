@@ -973,6 +973,24 @@ public static function UPDATE_BORN_DATA($data)
             return $array;
         });
     }
+        public static function GET_BORN_STATUS($BIRTH_STATUS_CODE)
+    {
+        $sql = "begin BORN_INFO_PKG.GET_BORN_STATUS (:BIRTH_STATUS_CODE,:BOURN_STATUS_CUR); end;";
+
+        return DB::transaction(function ($conn) use ($sql, $BIRTH_STATUS_CODE) {
+            $lista = [];
+
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':BIRTH_STATUS_CODE', $BIRTH_STATUS_CODE);
+            $stmt->bindParam(':BOURN_STATUS_CUR', $lista, PDO::PARAM_STMT);
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
     public static function GET_BORNS_LIMIT($data)
     {
      //   dd($data);

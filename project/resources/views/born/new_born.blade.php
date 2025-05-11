@@ -720,10 +720,19 @@
                         document.getElementById('weekRadio2').checked = true;
 
                     }
+                  //  alert(response.Data.delivery_cd);
+                    $('#BORN_DETAILS_DELIVERY_CD').val(response.Data.delivery_cd);
+
 
 
                 } else {
-                    alert(response.Message);
+                   // alert(response.Message);
+                        Swal.fire({
+                            title: 'خطأ !',
+                            text: response.Message,
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
                     $('#new_born_data')[0].reset();
 
                     document.getElementById("new_born_data").style.display = "none";
