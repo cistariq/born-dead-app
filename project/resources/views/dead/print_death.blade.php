@@ -188,7 +188,7 @@
             </tr>
             <tr>
                 <td>السبب المباشر للوفاة</td>
-                <td colspan="1">{{ $data[0]['DEAD_ICD1_NAME'] }}</td>
+                <td colspan="1">{{ $data[0]['DEAD_ICD1_NAME'] }} {{$data[0]['SOURCE'] == 1 ? '(استهداف من الاحتلال)' : ''}} </td>
                 <td colspan="1"></td>
                 <td colspan="1">{{ $data[0]['DEAD_ICD1_CODE'] }}</td>
 

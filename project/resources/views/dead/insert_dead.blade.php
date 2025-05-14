@@ -2028,15 +2028,19 @@
                 // $('#P_advertise_Date').val(response.results[0]['DEAD_DATE_OF_REPORT']);
                 // $('#P_advertise_receive_Date').val(response.results[0]['DEAD_D_RECEIVE_DATE']);
                 $('#P_receive_emp_Name').val(response.results[0]['DEAD_D_RECEIVER_NAME']);
-                $('#P_registery_Date').val(response.results[0]['DEAD_D_REGISTER_DATE']);
+               // $('#P_registery_Date').val(response.results[0]['DEAD_D_REGISTER_DATE']);
                 $('#P_regisery_emp_Name').val(response.results[0]['DEAD_D_REGISTER_NAME']);
                 $('#P_Issuing_notice_place').val(response.results[0]['DEAD_REGISTER_PLACE_CD']).change();
 
+                if (response.results[0]['DEAD_DATE_OF_REPORT'] != null) {
                 DEAD_DATE_OF_REPORT.setDate(new Date(response.results[0]['DEAD_DATE_OF_REPORT']));
+                }
 
                 if (response.results[0]['DEAD_D_RECEIVE_DATE'] != null) {
                     DEAD_D_RECEIVE_DATE.setDate(new Date(response.results[0]['DEAD_D_RECEIVE_DATE']));
                 }
+
+
                 if (response.results[0]['DEAD_D_REGISTER_DATE'] != null) {
                     DEAD_D_REGISTER_DATE.setDate(new Date(response.results[0]['DEAD_D_REGISTER_DATE']));
                 }

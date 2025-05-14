@@ -232,6 +232,7 @@ Route::group(['middleware' => [Authenticate::class]],function(){
             Route::get('/add_new_born', [BornController::class,'add_new_born'])->name('add_new_born');
             Route::post('/check_record_born', [BornController::class, 'check_record_born'])->name('check_record_born');
 
+            Route::post('/save_all_born_info', [BornController::class, 'save_all_born_info'])->name('save_all_born_info');
 
 
 

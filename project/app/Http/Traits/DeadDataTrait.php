@@ -31,9 +31,10 @@ if($data['exist']==1 && $data['status_cd'] != 1){
   if($data['hosp_cd'] != null){
 
      $hos_data= DEADS_TB::GET_HOS_DREF($data['hosp_cd']);
+     if($hos_data != null){
     //  dd($data);
      $data['dref_cd'] = $hos_data[0]['DREF_CODE'];
-
+     }
 
      }
     }

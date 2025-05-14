@@ -1,75 +1,9 @@
 @extends('layouts.main')
-@section('title', 'إضافة مولود جديد')
+@section('title', 'تعديل بيانات مولود')
 
 @section('content')
 
-    <form action="#" id="new_born_form">
-        <!--begin::Card-->
-        <div class="card mb-7">
-            <!--begin::Card body-->
-            <div class="card-body">
-
-                <!--begin::Compact form-->
-                <div class="d-flex align-items-center">
-                    <!--begin::Input group-->
-                    <label class="col-lg-2 col-form-label required fw-bold fs-4">رقم هوية المولود
-                    </label>
-                    <!--end::Label-->
-                    <!--begin::Col-->
-                    <div class="col-lg-3">
-                        <!--begin::Col-->
-                        <input type="number" name="P_BI_ID" id="P_BI_ID" maxLength="9"
-                            oninput="this.value=this.value.slice(0,this.maxLength)"
-                            class="form-control form-control-lg mb-3 mb-lg-0" onchange="">
-                        <!--end::Col-->
-                    </div>
-                    <!--end::Input group-->
-
-                    <!--begin:Action-->
-                    <div class="d-flex">
-                        <button type="button" class="btn btn-primary me-5" onclick="check_born_id();">استعلام</button>
-
-                        <button type="button" class="btn btn-outline-danger me-5" onclick="clear_form();">جديد</button>
-
-
-                    </div>
-                    <!--end:Action-->
-                </div>
-                <!--end::Compact form-->
-                <div id="loading-spinner" style="display: none; text-align: center; margin: 10px;">
-                    <div class="spinner"
-                        style="
-        border: 10px solid #f3f3f3;
-        border-top: 10px solid #3498db;
-        border-radius: 50%;
-        width: 70px;
-        height: 70px;
-        animation: spin 1s linear infinite;
-        margin: auto;
-    ">
-                    </div>
-                    <div style="margin-top: 10px; font-size: 18px;">الرجاء الانتظار...</div>
-                </div>
-
-                <style>
-                    @keyframes spin {
-                        0% {
-                            transform: rotate(0deg);
-                        }
-
-                        100% {
-                            transform: rotate(360deg);
-                        }
-                    }
-                </style>
-
-            </div>
-            <!--end::Col-->
-
-        </div>
-
-    </form>
-    <form action="#" id="new_born_data" style="display: none;">
+    <form action="#" id="update_born_data" style="display: block;">
         <div class="card mb-7">
             <!--begin::Card body-->
             <div class="card-body">
@@ -82,8 +16,8 @@
                         <div class="row mb-10">
                             <label class="col-form-label fw-bold col-lg-1">هوية رقم</label>
                             <div class="col-lg-2">
-                                <input id="P_BI_NO" type="text" value=""
-                                    class="form-control form-control-solid ps-8 required" onchange="check_born_id();" />
+                                <input id="P_BI_ID" type="text" value=""
+                                    class="form-control form-control-solid ps-8 required" readonly />
                             </div>
                             <label class="col-form-label fw-bold col-lg-2 required">اسم المولود الاول</label>
                             <div class="col-lg-2">
@@ -131,6 +65,7 @@
 
                             <!--begin::Input group-->
                             <!-- input hidden -->
+                            <input type="hidden" value="{{ @$P_BI_CODE }}" id="P_BI_CODE" name="P_BI_CODE">
                             <input type="hidden" value="" name="BORN_DETAILS_DELIVERY_CD"
                                 id="BORN_DETAILS_DELIVERY_CD" />
                             <input type="hidden" value="" name="BORN_DETAILS_DELIVERY_COMPLI_C"
@@ -164,8 +99,25 @@
                             <input type="hidden" name="BORN_DETAILS_GRAVID"
                                 style="background-color:#F0F0F0;border-top-width:thin; border-style:groove"
                                 id="BORN_DETAILS_GRAVID" value="" />
-                            {{-- <input type="hidden" value="" name="B_CODE" id="B_CODE" /> --}}
 
+                            {{-- <input type="hidden" value="" name="B_CODE" id="B_CODE" /> --}}
+                            <input type="hidden" value="" name="BI_PARTOGRAM_CD" id="BI_PARTOGRAM_CD" />
+                            <input type="hidden" value="" name="BI_PRESENTATION_CD" id="BI_PRESENTATION_CD" />
+                            <input type="hidden" value="" name="BI_OUT_COME_CD" id="BI_OUT_COME_CD" />
+                            <input name="BI_APAGAR_5"
+                                style="background-color:#FFFFFF;border-top-width:thin; border-style:groove" type="hidden"
+                                id="BI_APAGAR_5" tabindex="15" value="" dir="rtl"
+                                onblur="check_digits(1,this.value,this.id)" />
+                            <input name="BI_APAGAR_1"
+                                style="background-color:#FFFFFF;border-top-width:thin; border-style:groove" type="hidden"
+                                id="BI_APAGAR_1" tabindex="14" dir="rtl" value=""
+                                onblur="check_digits(1,this.value,this.id)" />
+                            <input type="hidden" value="" name="BI_CONGENITAL_ANOMALIES_CD"
+                                id="BI_CONGENITAL_ANOMALIES_CD" />
+                            <input type="hidden" value="" name="BI_EXAM_OUT_COME_CD" id="BI_EXAM_OUT_COME_CD" />
+                            <input type="hidden" value="" name="BI_EXAM_BEFORE_CD" id="BI_EXAM_BEFORE_CD" />
+                            <input type="hidden" value="" name="BI_ADMITTED_NICU_CD" id="BI_ADMITTED_NICU_CD" />
+                            <input type="hidden" value="" name="BI_ADMISSION_CD" id="BI_ADMISSION_CD" />
 
                             <div class="row mb-6">
                                 <!--begin::Label-->
@@ -680,7 +632,7 @@
                         <div class="d-flex justify-content-center">
 
                             <button type="button" class="btn btn-primary me-5"
-                                onclick="save_born_details_info();">حفظ</button>
+                                onclick="update_born_data();">حفظ التعديلات</button>
                         </div>
                         <!--end:Action-->
                     </div>
@@ -693,159 +645,89 @@
 
 @endsection
 @push('scripts')
+
     <script>
-        var block_insert_born = document.querySelector("#new_born_form");
-        var block_insert_born = new KTBlockUI(block_insert_born);
-
-        function clear_form() {
-            $('#new_born_form')[0].reset();
-            $('#new_born_data')[0].reset();
-
-        }
-
-        function check_born_record() {
-            block_insert_born.block();
-            var form_date = new FormData($('#new_born_form')[0]);
-            var url = "{{ route('check_record_born') }}";
-            $('#loading-spinner').show();
-
+        $('#BORN_DETAILS_REGION_CD').change(function() {
+            var region_cd = $(this).val();
+            var url = "{{ route('dead.get_city') }}";
             $.ajax({
                 url: url,
                 type: 'json',
                 method: 'post',
-                cache: false,
-                processData: false,
-                contentType: false,
-                async: true,
-                data: form_date,
-            }).done(function(response) {
-                $('#loading-spinner').hide();
+                async: false,
+                data: {
+                    region_cd: region_cd
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#BORN_DETAILS_CITY_CD').empty();
+                    console.log(3);
+                    $('#BORN_DETAILS_CITY_CD').append('<option >  </option>');
+                    $.each(data, function(key, value) {
+                        // console.log(value.C_NAME_AR);
 
-                console.log(response.StatusCode);
-                //alert(response.StatusCode);
-                if (response.StatusCode == 1) {
-                    document.getElementById("new_born_data").style.display = "block";
-                    $('#P_BI_NO').val(response.Data.ID_NUM);
-                    $('#BI_FIRST_NAME').val(response.Data.CHILD_NAME);
-                    $('#BI_WEIGHT_GM').val(response.Data.BIRTH_WEIGHT);
-                    if (response.Data.CHILD_SEX == 532) {
-                        $('#BI_SEX_CD').val(1).change();
-                    } else {
-                        $('#BI_SEX_CD').val(2).change();
-                    }
-                    if (response.Data.FAHER_RELIGION == 539) {
-                        $('#BI_RELEGION_CD').val(1).change();
-                    } else {
-                        $('#BI_RELEGION_CD').val(2).change();
-                    }
-
-                    $('#BORN_DETAILS_DELIVERY_DATE').val(response.Data.CHILD_DOB + " " + response.Data.BIRTH_HORS);
-                    $('#P_FATHER_ID').val(response.Data.FAHER_ID);
-                    getDataFatherInfoBy();
-                    $('#P_MOTHER_ID').val(response.Data.MOTHER_ID);
-                    getDataMotherInfoBy();
-                    $('#BORN_DETAILS_PARENTS_TEL_NO').val(response.Data.MOBILENO);
-                    $('#P_mother_phone').val(response.Data.MOBILENO);
-                    $('#BORN_DETAILS_REGION_CD').val(response.Data.region_cd).change();
-                    $('#BORN_DETAILS_CITY_CD').val(response.Data.city_cd).change();
-                    if (response.Data.BIRTH_TYPE == 6573) {
-                        document.getElementById('weekRadio1').checked = true;
-
-                        $('#BORN_DETAILS_TWINS').val(0);
-                    } else {
-                        $('#BORN_DETAILS_TWINS').val(1);
-                        document.getElementById('weekRadio2').checked = true;
-
-                    }
-
-                    $('#BORN_DETAILS_BIRTH_PLACE_CD').val(response.Data.dref_cd).change();
-
-                    //  alert(response.Data.delivery_cd);
-                    $('#BORN_DETAILS_DELIVERY_CD').val(response.Data.delivery_cd);
-                    block_insert_born.release();
-
-
-
-                } else {
-                    // alert(response.Message);
-                    Swal.fire({
-                        title: 'خطأ !',
-                        text: response.Message,
-                        icon: 'error',
-                        confirmButtonText: 'Ok'
+                        $('#BORN_DETAILS_CITY_CD').append('<option value="' + value.C_CODE +
+                            '" >' + value.C_NAME_AR + '</option>');
                     });
-                    $('#new_born_data')[0].reset();
-
-                    document.getElementById("new_born_data").style.display = "none";
 
                 }
-
             });
-        }
+        });
 
-        function getDataFatherInfoBy() {
-            var P_FATHER_NO = $('#P_FATHER_ID').val();
-            if (P_FATHER_NO) {
-                var url = "{{ route('born.getFatherInfoByIdNo') }}";
-                $.ajax({
-                    url: url,
-                    type: 'json',
-                    method: 'post',
-                    async: false,
-                    data: {
-                        'P_FATHER_NO': P_FATHER_NO
-                    },
-                }).done(function(response) {
-                    console.log(response);
-                    if (response.success) {
-                        if (response.success == 1) {
-                            if (response.results.sex == 2) {
-                                Swal.fire({
-                                    title: 'خطأ !',
-                                    text: 'يرجى إدخال رقم هوية خاص بالأب!!!',
-                                    icon: 'error',
-                                    confirmButtonText: 'Ok'
-                                });
-                            } else {
+        $('#BORN_DETAILS_CITY_CD').change(function() {
+            var city_cd = $(this).val();
+            var url = "{{ route('dead.get_helth_center') }}";
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                async: false,
+                data: {
+                    city_cd: city_cd
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#BORN_DETAILS_HEALTH_CENTER_CD').empty();
+                    console.log(3);
+                    $('#BORN_DETAILS_HEALTH_CENTER_CD').append('<option >  </option>');
+                    $.each(data, function(key, value) {
+                        // console.log(value.C_NAME_AR);
 
-                                $('#IN_FIRST_NAME').val(response.results.fname);
-                                $('#IN_SECOND_NAME').val(response.results.sname);
-                                $('#IN_THIRD_NAME').val(response.results.tname);
-                                $('#IN_LAST_NAME').val(response.results.lname);
-                                $('#P_FATHER_BIRTH_DATE').val(response.results.birth_date.replace("00:00:00", ""));
-                                $('#P_birth_state').val(response.results.birth_place);
-                                $('#f_birth_state').val(response.results.father_birth_place);
-                                $('#P_social_status_id').val(response.results.MARTIAL_STATUS_CD).change();
-                                $('#P_social_status_name').val(response.results.MS_NAME);
-                                $('#P_FATHER_JOB_CD').val(response.results.JOB_CD).change();
-                                $('#P_FATHER_JOB_NAME').val(response.results.JOB_NAME);
-                                $('#f_Year_Edu').val(response.results.YEAR_OF_EDUCATION);
-                                $("#f_region_id").val(response.results.REGION_CD).change();
-                                $("#f_city_id").val(response.results.CITY_CD).change();
-                                $('#FATHER_NUMBER').val(response.results.FATHER_NUMBER);
+                        $('#BORN_DETAILS_HEALTH_CENTER_CD').append('<option value="' + value
+                            .dref_code +
+                            '" >' + value.dref_name_ar + '</option>');
+                    });
 
-                            }
+                }
+            });
+        });
 
+        $('#m_region_id').change(function() {
+            var region_cd = $(this).val();
+            var url = "{{ route('dead.get_city') }}";
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                async: false,
+                data: {
+                    region_cd: region_cd
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#m_city_id').empty();
+                    console.log(3);
+                    $('#m_city_id').append('<option >  </option>');
+                    $.each(data, function(key, value) {
+                        // console.log(value.C_NAME_AR);
 
-                        }
-                    } else {
-                        console.log(response);
-                        $message = "";
-                        $.each(response.errors, function(key, value) {
-                            console.log(value);
-                            console.log(key);
-                            $message += value.join('-') + "\r\n";
-                        });
-                        Swal.fire({
-                            title: 'خطأ !',
-                            text: $message,
-                            icon: 'error',
-                            confirmButtonText: 'Ok'
-                        });
-                    }
-                });
-            }
-        }
+                        $('#m_city_id').append('<option value="' + value.C_CODE +
+                            '" >' + value.C_NAME_AR + '</option>');
+                    });
+
+                }
+            });
+        });
 
         $('#f_region_id').change(function() {
             var region_cd = $(this).val();
@@ -874,49 +756,162 @@
             });
         });
 
-        function getDataMotherInfoBy() {
-            var P_MOTHER_ID = $('#P_MOTHER_ID').val();
-            if (P_MOTHER_ID) {
-                var url = "{{ route('born.getMotherInfoByIdNo') }}";
+        var P_FATHER_BIRTH_DATE = $("#P_FATHER_BIRTH_DATE").flatpickr({
+            // enableTime: true,
+            // dateFormat: "d/m/Y H:i",
+            dateFormat: "d/m/Y",
+
+        });
+
+        var M_BIRTH_DATE = $("#M_BIRTH_DATE").flatpickr({
+            //  enableTime: true,
+            //dateFormat: "d/m/Y H:i",
+            dateFormat: "d/m/Y",
+
+        });
+
+
+        $(document).ready(function() {
+
+
+
+            if ($("#P_BI_CODE").val() != 0 || $("#P_BI_CODE").val() != '') {
+                getDataBornInfoBy($("#P_BI_CODE").val());
+                document.getElementById('save_btn').style.visibility = 'hidden';
+                document.getElementById('update_btn').style.visibility = 'visible';
+
+
+
+            } else {
+                document.getElementById('save_btn').style.visibility = 'visible';
+                document.getElementById('update_btn').style.visibility = 'hidden';
+
+            }
+
+        });
+        //date init
+
+        var BORN_DETAILS_DELIVERY_DATE = $("#BORN_DETAILS_DELIVERY_DATE").flatpickr({
+            enableTime: true,
+            dateFormat: "d/m/Y H:i",
+
+        });
+
+
+        var BORN_DETAILS_MARRIAGE_DATE = $("#BORN_DETAILS_MARRIAGE_DATE").flatpickr({
+            enableTime: true,
+            dateFormat: "d/m/Y",
+        });
+        // Stepper lement
+        var element = document.querySelector("#kt_stepper_example_basic");
+
+        // Initialize Stepper
+        var stepper = new KTStepper(element);
+
+        // Handle next step
+        stepper.on("kt.stepper.next", function(stepper) {
+            stepper.goNext(); // go next step
+        });
+
+        // Handle previous step
+        stepper.on("kt.stepper.previous", function(stepper) {
+            stepper.goPrevious(); // go previous step
+        });
+
+        // add born info
+
+        function save_born_details_info() {
+            if (($("#FATHER_NUMBER").val() != 0 || $("#FATHER_NUMBER").val() != '') && ($("#MOTHER_NUMBER").val() != 0 || $(
+                    "#MOTHER_NUMBER").val() != '')) {
+                var BORN_DETAILS_REASON_CD = $("#BORN_DETAILS_REASON_CD").val();
+                var BORN_DETAILS_GRAVID = $("#BORN_DETAILS_GRAVID").val();
+                var BORN_DETAILS_PARITY = $("#BORN_DETAILS_PARITY").val();
+                var BORN_DETAILS_ABORTION = $("#BORN_DETAILS_ABORTION").val();
+                var BORN_DETAILS_GESTATIONAL_WEEKS = $("#BORN_DETAILS_GESTATIONAL_WEEKS").val();
+                var BORN_DETAILS_DELIVERY_DATE = $("#BORN_DETAILS_DELIVERY_DATE").val();
+                var BORN_DETAILS_DELIVERY_CD = $("#BORN_DETAILS_DELIVERY_CD").val();
+                var BORN_DETAILS_PLURALITY = $("#BORN_DETAILS_PLURALITY").val();
+                var BORN_DETAILS_DELIVERY_COMPLI_C = $("#BORN_DETAILS_DELIVERY_COMPLI_C").val();
+                var BORN_DETAILS_CATALYST_CD = $("#BORN_DETAILS_CATALYST_CD").val();
+                var BORN_DETAILS_MOTHER_EXAM_CD = $("#BORN_DETAILS_MOTHER_EXAM_CD").val();
+                var BORN_DETAILS_MOTHER_RESULT_CD = $("#BORN_DETAILS_MOTHER_RESULT_CD").val();
+                var BORN_DETAILS_PAIN_RELIEF_CD = $("#BORN_DETAILS_PAIN_RELIEF_CD").val();
+                var BORN_DETAILS_BLOOD_TRANS_CD = $("#BORN_DETAILS_BLOOD_TRANS_CD").val();
+                var BORN_DETAILS_PLACENTA_COND_CD = $("#BORN_DETAILS_PLACENTA_COND_CD").val();
+                var BORN_DETAILS_MARRIAGE_DATE = $("#BORN_DETAILS_MARRIAGE_DATE").val();
+                var BORN_DETAILS_MARRIAGE_NUMBER = $("#BORN_DETAILS_MARRIAGE_NUMBER").val();
+                var BORN_DETAILS_CUR_MARRIAGE_LIVE = $("#BORN_DETAILS_CUR_MARRIAGE_LIVE").val();
+                var BORN_DETAILS_CUR_MARRIAGE_DEAD = $("#BORN_DETAILS_CUR_MARRIAGE_DEAD").val();
+                var BORN_DETAILS_PRE_MARRIAGE_LIVE = $("#BORN_DETAILS_PRE_MARRIAGE_LIVE").val();
+                var BORN_DETAILS_PRE_MARRIAGE_DEAD = $("#BORN_DETAILS_PRE_MARRIAGE_DEAD").val();
+                var BORN_DETAILS_GENERATOR_CD = $("#BORN_DETAILS_GENERATOR_CD").val();
+                var BORN_DETAILS_TWINS = $("#BORN_DETAILS_TWINS").val();
+                var BORN_DETAILS_FATH_CD = $("#FATHER_NUMBER").val();
+                var BORN_DETAILS_MOTHER_CD = $("#MOTHER_NUMBER").val();
+                var BORN_DETAILS_CITY_CD = $("#BORN_DETAILS_CITY_CD").val();
+                var BORN_DETAILS_REGION_CD = $("#BORN_DETAILS_REGION_CD").val();
+                var BORN_DETAILS_HOME_NO = $("#BORN_DETAILS_HOME_NO").val();
+                var BORN_DETAILS_PARENTS_TEL_NO = $("#BORN_DETAILS_PARENTS_TEL_NO").val();
+                var BORN_DETAILS_HEALTH_CENTER_CD = $("#BORN_DETAILS_HEALTH_CENTER_CD").val();
+                var BORN_DETAILS_BIRTH_PLACE_CD = $("#BORN_DETAILS_BIRTH_PLACE_CD").val();
+
+
+                var url = "{{ route('born.save_born_details_info') }}";
                 $.ajax({
                     url: url,
                     type: 'json',
                     method: 'post',
-                    async: false,
                     data: {
-                        'P_MOTHER_ID': P_MOTHER_ID
+                        'BORN_DETAILS_REASON_CD': BORN_DETAILS_REASON_CD,
+                        'BORN_DETAILS_GRAVID': BORN_DETAILS_GRAVID,
+                        'BORN_DETAILS_PARITY': BORN_DETAILS_PARITY,
+                        'BORN_DETAILS_ABORTION': BORN_DETAILS_ABORTION,
+                        'BORN_DETAILS_GESTATIONAL_WEEKS': BORN_DETAILS_GESTATIONAL_WEEKS,
+                        'BORN_DETAILS_DELIVERY_DATE': BORN_DETAILS_DELIVERY_DATE,
+                        'BORN_DETAILS_DELIVERY_CD': BORN_DETAILS_DELIVERY_CD,
+                        'BORN_DETAILS_PLURALITY': BORN_DETAILS_PLURALITY,
+                        'BORN_DETAILS_DELIVERY_COMPLI_C': BORN_DETAILS_DELIVERY_COMPLI_C,
+                        'BORN_DETAILS_CATALYST_CD': BORN_DETAILS_CATALYST_CD,
+                        'BORN_DETAILS_MOTHER_EXAM_CD': BORN_DETAILS_MOTHER_EXAM_CD,
+                        'BORN_DETAILS_MOTHER_RESULT_CD': BORN_DETAILS_MOTHER_RESULT_CD,
+                        'BORN_DETAILS_PAIN_RELIEF_CD': BORN_DETAILS_PAIN_RELIEF_CD,
+                        'BORN_DETAILS_BLOOD_TRANS_CD': BORN_DETAILS_BLOOD_TRANS_CD,
+                        'BORN_DETAILS_PLACENTA_COND_CD': BORN_DETAILS_PLACENTA_COND_CD,
+                        'BORN_DETAILS_MARRIAGE_DATE': BORN_DETAILS_MARRIAGE_DATE,
+                        'BORN_DETAILS_MARRIAGE_NUMBER': BORN_DETAILS_MARRIAGE_NUMBER,
+                        'BORN_DETAILS_CUR_MARRIAGE_LIVE': BORN_DETAILS_CUR_MARRIAGE_LIVE,
+                        'BORN_DETAILS_CUR_MARRIAGE_DEAD': BORN_DETAILS_CUR_MARRIAGE_DEAD,
+                        'BORN_DETAILS_PRE_MARRIAGE_LIVE': BORN_DETAILS_PRE_MARRIAGE_LIVE,
+                        'BORN_DETAILS_PRE_MARRIAGE_DEAD': BORN_DETAILS_PRE_MARRIAGE_DEAD,
+                        'BORN_DETAILS_GENERATOR_CD': BORN_DETAILS_GENERATOR_CD,
+                        'BORN_DETAILS_TWINS': BORN_DETAILS_TWINS,
+                        'BORN_DETAILS_FATH_CD': BORN_DETAILS_FATH_CD,
+                        'BORN_DETAILS_MOTHER_CD': BORN_DETAILS_MOTHER_CD,
+                        'BORN_DETAILS_CITY_CD': BORN_DETAILS_CITY_CD,
+                        'BORN_DETAILS_REGION_CD': BORN_DETAILS_REGION_CD,
+                        'BORN_DETAILS_HOME_NO': BORN_DETAILS_HOME_NO,
+                        'BORN_DETAILS_PARENTS_TEL_NO': BORN_DETAILS_PARENTS_TEL_NO,
+                        'BORN_DETAILS_HEALTH_CENTER_CD': BORN_DETAILS_HEALTH_CENTER_CD,
+                        'BORN_DETAILS_BIRTH_PLACE_CD': BORN_DETAILS_BIRTH_PLACE_CD,
+
+
                     },
                 }).done(function(response) {
                     console.log(response);
                     if (response.success) {
                         if (response.success == 1) {
-                            if (response.results.sex == 1) {
-                                Swal.fire({
-                                    title: 'خطأ !',
-                                    text: 'يرجى إدخال رقم هوية خاص بالأم!!!',
-                                    icon: 'error',
-                                    confirmButtonText: 'Ok'
-                                });
-                            } else {
-                                $('#M_FIRST_NAME').val(response.results.fname);
-                                $('#M_SECOND_NAME').val(response.results.sname);
-                                $('#M_THIRD_NAME').val(response.results.tname);
-                                $('#M_LAST_NAME').val(response.results.lname);
-                                $('#M_BIRTH_DATE').val(response.results.birth_date.replace("00:00:00", ""));
-                                $('#m_birth_state').val(response.results.birth_place);
-                                $('#mf_birth_state').val(response.results.father_birth_place);
-                                $('#m_social_status_id').val(response.results.MARTIAL_STATUS_CD).change();
-                                $('#m_social_status_name').val(response.results.MS_NAME);
-                                $('#P_MOTHER_JOB_CD').val(response.results.JOB_CD).change();
-                                $('#P_MOTHER_JOB_NAME').val(response.results.JOB_NAME);
-                                $('#m_Year_Edu').val(response.results.YEAR_OF_EDUCATION);
-                                //  $('#P_mother_phone').val(response.results.TEL);
+                            Swal.fire({
+                                title: 'تمت عملية إضافة إشعار الولادة بنجاح !',
+                                text: response.results.message,
+                                icon: "success",
+                                confirmButtonText: 'موافق'
+                            });
 
-                                $('#P_mother_family').val(response.results.FAMILY_NAME);
-                                $("#m_region_id").val(response.results.REGION_CD).change();
-                                $("#m_city_id").val(response.results.CITY_CD).change();
-                                $('#MOTHER_NUMBER').val(response.results.MOTHER_NUMBER);
-                            }
+                            // $('#B_CODE').val(response.results.B_CODE);
+
+                        } else {
+
+                            toastr["error"](response.results.message);
                         }
                     } else {
                         console.log(response);
@@ -927,41 +922,20 @@
                             $message += value.join('-') + "\r\n";
                         });
                         Swal.fire({
-                            title: 'خطأ !',
+                            title: 'يوجد خطأ في عملية الإدخال !',
                             text: $message,
                             icon: 'error',
                             confirmButtonText: 'Ok'
                         });
                     }
                 });
+
+            } else {
+                save_born_father_info();
             }
+
+
         }
-        $('#m_region_id').change(function() {
-            var region_cd = $(this).val();
-            var url = "{{ route('dead.get_city') }}";
-            $.ajax({
-                url: url,
-                type: 'json',
-                method: 'post',
-                async: false,
-                data: {
-                    region_cd: region_cd
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#m_city_id').empty();
-                    console.log(3);
-                    $('#m_city_id').append('<option >  </option>');
-                    $.each(data, function(key, value) {
-                        // console.log(value.C_NAME_AR);
-
-                        $('#m_city_id').append('<option value="' + value.C_CODE +
-                            '" >' + value.C_NAME_AR + '</option>');
-                    });
-
-                }
-            });
-        });
 
         function edit_father_data() {
 
@@ -982,7 +956,7 @@
                 var F_CITY_CD = $('#f_city_id').val();
                 var F_DATA_FRM_MOI = $('#FATHER_DATA_FRM_MOI').val();
                 var F_ID_TYPE = $('#f_type_id').val();
-                var B_CODE = $('#P_BI_CODE').val();
+                var B_CODE = $('#B_CODE').val();
 
 
                 var url = "{{ route('born.update_father_info') }}";
@@ -1056,10 +1030,10 @@
                 var MOTHER_FATHER_NAME_AR = $('#M_SECOND_NAME').val();
                 var MOTHER_GRANDFATHER_NAME_AR = $('#M_THIRD_NAME').val();
                 var MOTHER_LAST_NAME_AR = $('#M_LAST_NAME').val();
-                var MOTHER_DOB = $('#P_MOTHER_BIRTH_DATE').val();
+                var MOTHER_DOB = $('#M_BIRTH_DATE').val();
                 var MOTHER_BIRTH_PLACE = $('#m_birth_state').val();
                 var MOTHER_FATHER_BIRTH_PLACE = $('#mf_birth_state').val();
-                var MOTHER_JOB = $('#P_MOTHER_JOB_NAME').val();
+                var MOTHER_JOB = $('#P_MOTHER_JOB_CD').val();
                 var MOTHER_MARTIAL_STATUS_CD = $('#m_social_status_id').val();
                 var MOTHER_YEAR_OF_EDUCATION = $('#m_Year_Edu').val();
                 var MOTHER_REGION_CD = $('#m_region_id').val();
@@ -1068,7 +1042,7 @@
                 var MOTHER_FAMILY_NAME = $('#P_mother_family').val();
                 var MOTHER_DATA_FRM_MOI = $('#MOTHER_DATA_FRM_MOI').val();
                 var MOTHER_ID_TYPE = $('#m_type_id').val();
-                var B_CODE = $('#P_BI_CODE').val();
+                var B_CODE = $('#B_CODE').val();
 
 
                 var url = "{{ route('born.update_mother_info') }}";
@@ -1221,7 +1195,7 @@
                 var MOTHER_FATHER_NAME_AR = $('#M_SECOND_NAME').val();
                 var MOTHER_GRANDFATHER_NAME_AR = $('#M_THIRD_NAME').val();
                 var MOTHER_LAST_NAME_AR = $('#M_LAST_NAME').val();
-                var MOTHER_DOB = $('#P_MOTHER_BIRTH_DATE').val();
+                var MOTHER_DOB = $('#M_BIRTH_DATE').val();
                 var MOTHER_BIRTH_PLACE = $('#m_birth_state').val();
                 var MOTHER_FATHER_BIRTH_PLACE = $('#mf_birth_state').val();
                 var MOTHER_JOB = $('#P_MOTHER_JOB_NAME').val();
@@ -1294,379 +1268,49 @@
 
         }
 
-        function save_born_details_info() {
-
-            if (($("#FATHER_NUMBER").val() != 0 || $("#FATHER_NUMBER").val() != '') && ($("#MOTHER_NUMBER").val() != 0 || $(
-                    "#MOTHER_NUMBER").val() != '')) {
-
-                var BORN_DETAILS_REASON_CD = $("#BORN_DETAILS_REASON_CD").val();
-                var BORN_DETAILS_GRAVID = $("#BORN_DETAILS_GRAVID").val();
-                var BORN_DETAILS_PARITY = $("#BORN_DETAILS_PARITY").val();
-                var BORN_DETAILS_ABORTION = $("#BORN_DETAILS_ABORTION").val();
-                var BORN_DETAILS_GESTATIONAL_WEEKS = $("#BORN_DETAILS_GESTATIONAL_WEEKS").val();
-                var BORN_DETAILS_DELIVERY_DATE = $("#BORN_DETAILS_DELIVERY_DATE").val();
-                var BORN_DETAILS_DELIVERY_CD = $("#BORN_DETAILS_DELIVERY_CD").val();
-                var BORN_DETAILS_PLURALITY = $("#BORN_DETAILS_PLURALITY").val();
-                var BORN_DETAILS_DELIVERY_COMPLI_C = $("#BORN_DETAILS_DELIVERY_COMPLI_C").val();
-                var BORN_DETAILS_CATALYST_CD = $("#BORN_DETAILS_CATALYST_CD").val();
-                var BORN_DETAILS_MOTHER_EXAM_CD = $("#BORN_DETAILS_MOTHER_EXAM_CD").val();
-                var BORN_DETAILS_MOTHER_RESULT_CD = $("#BORN_DETAILS_MOTHER_RESULT_CD").val();
-                var BORN_DETAILS_PAIN_RELIEF_CD = $("#BORN_DETAILS_PAIN_RELIEF_CD").val();
-                var BORN_DETAILS_BLOOD_TRANS_CD = $("#BORN_DETAILS_BLOOD_TRANS_CD").val();
-                var BORN_DETAILS_PLACENTA_COND_CD = $("#BORN_DETAILS_PLACENTA_COND_CD").val();
-                var BORN_DETAILS_MARRIAGE_DATE = $("#BORN_DETAILS_MARRIAGE_DATE").val();
-                var BORN_DETAILS_MARRIAGE_NUMBER = $("#BORN_DETAILS_MARRIAGE_NUMBER").val();
-                var BORN_DETAILS_CUR_MARRIAGE_LIVE = $("#BORN_DETAILS_CUR_MARRIAGE_LIVE").val();
-                var BORN_DETAILS_CUR_MARRIAGE_DEAD = $("#BORN_DETAILS_CUR_MARRIAGE_DEAD").val();
-                var BORN_DETAILS_PRE_MARRIAGE_LIVE = $("#BORN_DETAILS_PRE_MARRIAGE_LIVE").val();
-                var BORN_DETAILS_PRE_MARRIAGE_DEAD = $("#BORN_DETAILS_PRE_MARRIAGE_DEAD").val();
-                var BORN_DETAILS_GENERATOR_CD = $("#BORN_DETAILS_GENERATOR_CD").val();
-                var BORN_DETAILS_TWINS = $("#BORN_DETAILS_TWINS").val();
-                var BORN_DETAILS_FATH_CD = $("#FATHER_NUMBER").val();
-                var BORN_DETAILS_MOTHER_CD = $("#MOTHER_NUMBER").val();
-                var BORN_DETAILS_CITY_CD = $("#BORN_DETAILS_CITY_CD").val();
-                var BORN_DETAILS_REGION_CD = $("#BORN_DETAILS_REGION_CD").val();
-                var BORN_DETAILS_HOME_NO = $("#BORN_DETAILS_HOME_NO").val();
-                var BORN_DETAILS_PARENTS_TEL_NO = $("#BORN_DETAILS_PARENTS_TEL_NO").val();
-                var BORN_DETAILS_HEALTH_CENTER_CD = $("#BORN_DETAILS_HEALTH_CENTER_CD").val();
-                var BORN_DETAILS_BIRTH_PLACE_CD = $("#BORN_DETAILS_BIRTH_PLACE_CD").val();
-                var P_BI_ID = $('#P_BI_NO').val();
-                var P_BI_ORDER = $('#BI_ORDER').val();
-                var P_BI_WEIGHT_GM = $('#BI_WEIGHT_GM').val();
-                var P_BI_FIRST_NAME = $('#BI_FIRST_NAME').val();
-                var P_BI_SEX_CD = $('#BI_SEX_CD').val();
-                var P_BI_RELEGION_CD = $('#BI_RELEGION_CD').val();
-                var P_BI_PARTOGRAM_CD = $('#BI_PARTOGRAM_CD').val();
-                var P_BI_PRESENTATION_CD = $('#BI_PRESENTATION_CD').val();
-                var P_BI_OUT_COME_CD = $('#BI_OUT_COME_CD').val();
-                var P_BI_APAGAR_5 = $('#BI_APAGAR_5').val();
-                var P_BI_APAGAR_1 = $('#BI_APAGAR_1').val();
-                var P_BI_CONGENITAL_ANOMALIES_CD = $('#BI_CONGENITAL_ANOMALIES_CD').val();
-                var P_BI_EXAM_OUT_COME_CD = $('#BI_EXAM_OUT_COME_CD').val();
-                var P_BI_EXAM_BEFORE_CD = $('#BI_EXAM_BEFORE_CD').val();
-                var P_BI_ADMITTED_NICU_CD = $('#BI_ADMITTED_NICU_CD').val();
-
-
-                var url = "{{ route('born.save_all_born_info') }}";
+        function getDataFatherInfoBy() {
+            var P_FATHER_NO = $('#P_FATHER_ID').val();
+            if (P_FATHER_NO) {
+                var url = "{{ route('born.getFatherInfoByIdNo') }}";
                 $.ajax({
                     url: url,
                     type: 'json',
                     method: 'post',
                     data: {
-
-                        'BORN_DETAILS_REASON_CD': BORN_DETAILS_REASON_CD,
-                        'BORN_DETAILS_GRAVID': BORN_DETAILS_GRAVID,
-                        'BORN_DETAILS_PARITY': BORN_DETAILS_PARITY,
-                        'BORN_DETAILS_ABORTION': BORN_DETAILS_ABORTION,
-                        'BORN_DETAILS_GESTATIONAL_WEEKS': BORN_DETAILS_GESTATIONAL_WEEKS,
-                        'BORN_DETAILS_DELIVERY_DATE': BORN_DETAILS_DELIVERY_DATE,
-                        'BORN_DETAILS_DELIVERY_CD': BORN_DETAILS_DELIVERY_CD,
-                        'BORN_DETAILS_PLURALITY': BORN_DETAILS_PLURALITY,
-                        'BORN_DETAILS_DELIVERY_COMPLI_C': BORN_DETAILS_DELIVERY_COMPLI_C,
-                        'BORN_DETAILS_CATALYST_CD': BORN_DETAILS_CATALYST_CD,
-                        'BORN_DETAILS_MOTHER_EXAM_CD': BORN_DETAILS_MOTHER_EXAM_CD,
-                        'BORN_DETAILS_MOTHER_RESULT_CD': BORN_DETAILS_MOTHER_RESULT_CD,
-                        'BORN_DETAILS_PAIN_RELIEF_CD': BORN_DETAILS_PAIN_RELIEF_CD,
-                        'BORN_DETAILS_BLOOD_TRANS_CD': BORN_DETAILS_BLOOD_TRANS_CD,
-                        'BORN_DETAILS_PLACENTA_COND_CD': BORN_DETAILS_PLACENTA_COND_CD,
-                        'BORN_DETAILS_MARRIAGE_DATE': BORN_DETAILS_MARRIAGE_DATE,
-                        'BORN_DETAILS_MARRIAGE_NUMBER': BORN_DETAILS_MARRIAGE_NUMBER,
-                        'BORN_DETAILS_CUR_MARRIAGE_LIVE': BORN_DETAILS_CUR_MARRIAGE_LIVE,
-                        'BORN_DETAILS_CUR_MARRIAGE_DEAD': BORN_DETAILS_CUR_MARRIAGE_DEAD,
-                        'BORN_DETAILS_PRE_MARRIAGE_LIVE': BORN_DETAILS_PRE_MARRIAGE_LIVE,
-                        'BORN_DETAILS_PRE_MARRIAGE_DEAD': BORN_DETAILS_PRE_MARRIAGE_DEAD,
-                        'BORN_DETAILS_GENERATOR_CD': BORN_DETAILS_GENERATOR_CD,
-                        'BORN_DETAILS_TWINS': BORN_DETAILS_TWINS,
-                        'BORN_DETAILS_FATH_CD': BORN_DETAILS_FATH_CD,
-                        'BORN_DETAILS_MOTHER_CD': BORN_DETAILS_MOTHER_CD,
-                        'BORN_DETAILS_CITY_CD': BORN_DETAILS_CITY_CD,
-                        'BORN_DETAILS_REGION_CD': BORN_DETAILS_REGION_CD,
-                        'BORN_DETAILS_HOME_NO': BORN_DETAILS_HOME_NO,
-                        'BORN_DETAILS_PARENTS_TEL_NO': BORN_DETAILS_PARENTS_TEL_NO,
-                        'BORN_DETAILS_HEALTH_CENTER_CD': BORN_DETAILS_HEALTH_CENTER_CD,
-                        'BORN_DETAILS_BIRTH_PLACE_CD': BORN_DETAILS_BIRTH_PLACE_CD,
-                        'P_BI_ID': P_BI_ID,
-                        'P_BI_ORDER': P_BI_ORDER,
-                        'P_BI_WEIGHT_GM': P_BI_WEIGHT_GM,
-                        'P_BI_FIRST_NAME': P_BI_FIRST_NAME,
-                        'P_BI_SEX_CD': P_BI_SEX_CD,
-                        'P_BI_RELEGION_CD': P_BI_RELEGION_CD,
-                        'P_BI_PARTOGRAM_CD': P_BI_PARTOGRAM_CD,
-                        'P_BI_PRESENTATION_CD': P_BI_PRESENTATION_CD,
-                        'P_BI_OUT_COME_CD': P_BI_OUT_COME_CD,
-                        'P_BI_APAGAR_5': P_BI_APAGAR_5,
-                        'P_BI_APAGAR_1': P_BI_APAGAR_1,
-                        'P_BI_CONGENITAL_ANOMALIES_CD': P_BI_CONGENITAL_ANOMALIES_CD,
-                        'P_BI_EXAM_OUT_COME_CD': P_BI_EXAM_OUT_COME_CD,
-                        'P_BI_EXAM_BEFORE_CD': P_BI_EXAM_BEFORE_CD,
-                        'P_BI_ADMITTED_NICU_CD': P_BI_ADMITTED_NICU_CD,
-
-                    },
-                }).done(function(response) {
-                    if (response.success) {
-                        if (response.success == 1) {
-                            Swal.fire({
-                                title: 'تمت عملية إضافة إشعار الولادة بنجاح !',
-                                text: response.results.message,
-                                icon: "success",
-                                confirmButtonText: 'موافق'
-                            }).then((result) => {
-                                /* Read more about isConfirmed, isDenied below */
-                                if (result.isConfirmed) {
-                                        clear_form();
-
-                                }
-                            });
-
-                        } else {
-
-                            toastr["error"](response.results.message);
-                        }
-                    } else {
-                        // console.log(response);
-                        $message = "";
-                        $.each(response.errors, function(key, value) {
-                            //  console.log(value);
-                            //console.log(key);
-                            $message += value.join('-') + "\r\n";
-                        });
-                        Swal.fire({
-                            title: 'يوجد خطأ في عملية الإدخال !',
-                            text: $message,
-                            icon: 'error',
-                            confirmButtonText: 'Ok'
-                        });
-                    }
-                });
-
-            } else {
-                save_born_father_info();
-            }
-
-
-        }
-
-        function Upborn_data(P_BI_ADMISSION_CD) {
-
-            var url = "{{ route('born.is_born_found') }}";
-            $.ajax({
-                url: url,
-                type: 'json',
-                method: 'post',
-                data: {
-                    'P_BI_ADMISSION_CD': P_BI_ADMISSION_CD
-                },
-            }).done(function(response) {
-                console.log(response);
-                if (response.success) {
-                    if (response.success == 1) {
-
-                        if (response.results.FLAG == 1) {
-
-                            var url = "{{ route('born.getBornInfoByNo') }}";
-                            $.ajax({
-                                url: url,
-                                type: 'json',
-                                method: 'post',
-                                data: {
-                                    'P_BI_ADMISSION_CD': P_BI_ADMISSION_CD
-                                },
-                            }).done(function(response) {
-                                console.log(response);
-                                if (response.success) {
-                                    if (response.success == 1) {
-
-                                        $('#P_BI_ID').val(response.results.BI_ID);
-                                        $('#BI_ORDER').val(response.results.BI_ORDER);
-                                        $('#BI_WEIGHT_GM').val(response.results
-                                            .BI_WEIGHT_GM);
-                                        $('#BI_FIRST_NAME').val(response.results
-                                            .BI_FIRST_NAME);
-                                        $('#BI_SEX_CD').val(response.results.BI_SEX_CD)
-                                            .change();
-                                        $('#BI_RELEGION_CD').val(response.results
-                                            .BI_RELEGION_CD).change();
-                                        $('#BI_PARTOGRAM_CD').val(response.results
-                                            .BI_PARTOGRAM_CD);
-                                        $('#BI_PRESENTATION_CD').val(response.results
-                                            .BI_PRESENTATION_CD);
-                                        $('#BI_OUT_COME_CD').val(response.results
-                                            .BI_OUT_COME_CD);
-                                        $('#BI_APAGAR_5').val(response.results
-                                            .BI_APAGAR_5);
-                                        $('#BI_APAGAR_1').val(response.results
-                                            .BI_APAGAR_1);
-                                        $('#BI_CONGENITAL_ANOMALIES_CD').val(response
-                                            .results.BI_CONGENITAL_ANOMALIES_CD);
-                                        $('#BI_EXAM_OUT_COME_CD').val(response.results
-                                            .BI_EXAM_OUT_COME_CD);
-                                        $('#BI_EXAM_BEFORE_CD').val(response.results
-                                            .BI_EXAM_BEFORE_CD);
-                                        $('#BI_ADMITTED_NICU_CD').val(response.results
-                                            .BI_ADMITTED_NICU_CD);
-
-                                    }
-                                } else {
-                                    console.log(response);
-                                    $message = "";
-                                    $.each(response.errors, function(key, value) {
-                                        console.log(value);
-                                        console.log(key);
-                                        $message += value.join('-') + "\r\n";
-                                    });
-                                    Swal.fire({
-                                        title: 'خطأ !',
-                                        text: $message,
-                                        icon: 'error',
-                                        confirmButtonText: 'Ok'
-                                    });
-                                }
-                            });
-                        }
-
-
-                    }
-                } else {
-                    console.log(response);
-                    $message = "";
-                    $.each(response.errors, function(key, value) {
-                        console.log(value);
-                        console.log(key);
-                        $message += value.join('-') + "\r\n";
-                    });
-                    Swal.fire({
-                        title: 'خطأ !',
-                        text: $message,
-                        icon: 'error',
-                        confirmButtonText: 'Ok'
-                    });
-                }
-            });
-
-
-
-        }
-
-        function check_born_id() {
-            var P_BI_ID = $('#P_BI_ID').val();
-            var url = "{{ route('born.check_born_id') }}";
-            $.ajax({
-                url: url,
-                type: 'json',
-                method: 'post',
-                data: {
-                    'P_BI_ID': P_BI_ID,
-                },
-            }).done(function(response) {
-                console.log(response);
-                if (response.success) {
-                    check_born_record();
-                } else {
-                    console.log(response);
-                    $message = "";
-                    $.each(response.errors, function(key, value) {
-                        console.log(value);
-                        console.log(key);
-                        $message += value.join('-') + "\r\n";
-                    });
-                    Swal.fire({
-                        title: 'يوجد خطأ في عملية الإدخال !',
-                        text: 'رقم الهوية مدخل مسبقاً يرجى اختيار رقم آخر!',
-                        icon: 'error',
-                        confirmButtonText: 'Ok'
-                    }).then((result) => {
-                        /* Read more about isConfirmed, isDenied below */
-                        if (result.isConfirmed) {
-                            $('#P_BI_NO').val('');
-                            document.getElementById("P_BI_NO").focus();
-
-                        }
-                    });
-
-                }
-            });
-        }
-
-        function edit_born_data() {
-            //dead data
-            if (($('#P_BI_NO').val() == null || $('#P_BI_NO').val() == undefined || $('#P_BI_NO').val() == '') || ($(
-                    '#BI_ORDER').val() == null || $('#BI_ORDER').val() == undefined || $('#BI_ORDER').val() == '') || ($(
-                        '#BI_WEIGHT_GM').val() == null || $('#BI_WEIGHT_GM').val() == undefined || $('#BI_WEIGHT_GM')
-                    .val() == '') || ($(
-                        '#BI_FIRST_NAME').val() == null || $('#BI_FIRST_NAME').val() == undefined || $('#BI_FIRST_NAME')
-                    .val() == '') || ($(
-                    '#BI_SEX_CD').val() == null || $('#BI_SEX_CD').val() == undefined || $('#BI_SEX_CD').val() == '') || ($(
-                        '#BI_RELEGION_CD').val() == null || $('#BI_RELEGION_CD').val() == undefined || $('#BI_RELEGION_CD')
-                    .val() == '')) {
-                Swal.fire({
-
-                    icon: 'info',
-                    title: 'تنبيه',
-                    text: 'يجب إدخال جميع البيانات الخاصة بالمولود! ',
-
-                });
-            } else {
-                var P_BI_ADMISSION_CD = $('#BI_ADMISSION_CD').val();
-                var P_BI_ID = $('#P_BI_NO').val();
-                var P_BI_ORDER = $('#BI_ORDER').val();
-                var P_BI_WEIGHT_GM = $('#BI_WEIGHT_GM').val();
-                var P_BI_FIRST_NAME = $('#BI_FIRST_NAME').val();
-                var P_BI_SEX_CD = $('#BI_SEX_CD').val();
-                var P_BI_RELEGION_CD = $('#BI_RELEGION_CD').val();
-                var P_BI_PARTOGRAM_CD = $('#BI_PARTOGRAM_CD').val();
-                var P_BI_PRESENTATION_CD = $('#BI_PRESENTATION_CD').val();
-                var P_BI_OUT_COME_CD = $('#BI_OUT_COME_CD').val();
-                var P_BI_APAGAR_5 = $('#BI_APAGAR_5').val();
-                var P_BI_APAGAR_1 = $('#BI_APAGAR_1').val();
-                var P_BI_CONGENITAL_ANOMALIES_CD = $('#BI_CONGENITAL_ANOMALIES_CD').val();
-                var P_BI_EXAM_OUT_COME_CD = $('#BI_EXAM_OUT_COME_CD').val();
-                var P_BI_EXAM_BEFORE_CD = $('#BI_EXAM_BEFORE_CD').val();
-                var P_BI_ADMITTED_NICU_CD = $('#BI_ADMITTED_NICU_CD').val();
-
-                var url = "{{ route('born.save_born_info') }}";
-                $.ajax({
-                    url: url,
-                    type: 'json',
-                    method: 'post',
-                    data: {
-                        'P_BI_ID': P_BI_ID,
-                        'P_BI_ADMISSION_CD': P_BI_ADMISSION_CD,
-                        'P_BI_ORDER': P_BI_ORDER,
-                        'P_BI_WEIGHT_GM': P_BI_WEIGHT_GM,
-                        'P_BI_FIRST_NAME': P_BI_FIRST_NAME,
-                        'P_BI_SEX_CD': P_BI_SEX_CD,
-                        'P_BI_RELEGION_CD': P_BI_RELEGION_CD,
-                        'P_BI_PARTOGRAM_CD': P_BI_PARTOGRAM_CD,
-                        'P_BI_PRESENTATION_CD': P_BI_PRESENTATION_CD,
-                        'P_BI_OUT_COME_CD': P_BI_OUT_COME_CD,
-                        'P_BI_APAGAR_5': P_BI_APAGAR_5,
-                        'P_BI_APAGAR_1': P_BI_APAGAR_1,
-                        'P_BI_CONGENITAL_ANOMALIES_CD': P_BI_CONGENITAL_ANOMALIES_CD,
-                        'P_BI_EXAM_OUT_COME_CD': P_BI_EXAM_OUT_COME_CD,
-                        'P_BI_EXAM_BEFORE_CD': P_BI_EXAM_BEFORE_CD,
-                        'P_BI_ADMITTED_NICU_CD': P_BI_ADMITTED_NICU_CD,
-
+                        'P_FATHER_NO': P_FATHER_NO
                     },
                 }).done(function(response) {
                     console.log(response);
                     if (response.success) {
                         if (response.success == 1) {
-                            Swal.fire({
-                                title: 'تمت عملية تعديل بيانات المولود  بنجاح !',
-                                text: response.results.message,
-                                icon: "success",
-                                confirmButtonText: 'موافق'
-                            }).then((result) => {
-                                /* Read more about isConfirmed, isDenied below */
-                                if (result.isConfirmed) {
-                                    clear_form();
-                                }
-                            });
+                            if (response.results.sex == 2) {
+                                Swal.fire({
+                                    title: 'خطأ !',
+                                    text: 'يرجى إدخال رقم هوية خاص بالأب!!!',
+                                    icon: 'error',
+                                    confirmButtonText: 'Ok'
+                                });
+                            } else {
+
+                                $('#IN_FIRST_NAME').val(response.results.fname);
+                                $('#IN_SECOND_NAME').val(response.results.sname);
+                                $('#IN_THIRD_NAME').val(response.results.tname);
+                                $('#IN_LAST_NAME').val(response.results.lname);
+                                $('#P_FATHER_BIRTH_DATE').val(response.results.birth_date.replace("00:00:00", ""));
+                                $('#P_birth_state').val(response.results.birth_place);
+                                $('#f_birth_state').val(response.results.father_birth_place);
+                                $('#P_social_status_id').val(response.results.MARTIAL_STATUS_CD);
+                                $('#P_social_status_name').val(response.results.MS_NAME);
+                                $('#P_FATHER_JOB_CD').val(response.results.JOB_CD);
+                                $('#P_FATHER_JOB_NAME').val(response.results.JOB_NAME);
+                                $('#f_Year_Edu').val(response.results.YEAR_OF_EDUCATION);
+                                $("#f_region_id").val(response.results.REGION_CD).change();
+                                $("#f_city_id").val(response.results.CITY_CD).change();
+                                $('#FATHER_NUMBER').val(response.results.FATHER_NUMBER);
+
+                            }
 
 
-                        } else {
-
-                            toastr["error"](response.results.message);
                         }
                     } else {
                         console.log(response);
@@ -1677,8 +1321,8 @@
                             $message += value.join('-') + "\r\n";
                         });
                         Swal.fire({
-                            title: 'يوجد خطأ في عملية الإدخال !',
-                            text: 'تأكد من البيانات المولود المدخلة!',
+                            title: 'خطأ !',
+                            text: $message,
                             icon: 'error',
                             confirmButtonText: 'Ok'
                         });
@@ -1687,101 +1331,329 @@
             }
         }
 
-        $('#BORN_DETAILS_CITY_CD').change(function() {
-            var city_cd = $(this).val();
-            var url = "{{ route('dead.get_helth_center') }}";
-            $.ajax({
-                url: url,
-                type: 'json',
-                method: 'post',
-                async: false,
-                data: {
-                    city_cd: city_cd
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#BORN_DETAILS_HEALTH_CENTER_CD').empty();
-                    console.log(3);
-                    $('#BORN_DETAILS_HEALTH_CENTER_CD').append('<option >  </option>');
-                    $.each(data, function(key, value) {
-                        // console.log(value.C_NAME_AR);
-
-                        $('#BORN_DETAILS_HEALTH_CENTER_CD').append('<option value="' + value
-                            .dref_code +
-                            '" >' + value.dref_name_ar + '</option>');
-                    });
-
-                }
-            });
-        });
-
-        $('#BORN_DETAILS_REGION_CD').change(function() {
-            var region_cd = $(this).val();
-            var url = "{{ route('dead.get_city') }}";
-            $.ajax({
-                url: url,
-                type: 'json',
-                method: 'post',
-                async: false,
-                data: {
-                    region_cd: region_cd
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#BORN_DETAILS_CITY_CD').empty();
-                    console.log(3);
-                    $('#BORN_DETAILS_CITY_CD').append('<option >  </option>');
-                    $.each(data, function(key, value) {
-                        // console.log(value.C_NAME_AR);
-
-                        $('#BORN_DETAILS_CITY_CD').append('<option value="' + value.C_CODE +
-                            '" >' + value.C_NAME_AR + '</option>');
-                    });
-
-                }
-            });
-        });
-
-
-
-        $('#BORN_DETAILS_CITY_CD').change(function() {
-            var city_cd = $(this).val();
-            var url = "{{ route('dead.get_helth_center') }}";
-            $.ajax({
-                url: url,
-                type: 'json',
-                method: 'post',
-                async: false,
-                data: {
-                    city_cd: city_cd
-                },
-                success: function(data) {
-                    console.log(data);
-                    $('#BORN_DETAILS_HEALTH_CENTER_CD').empty();
-                    console.log(3);
-                    $('#BORN_DETAILS_HEALTH_CENTER_CD').append('<option >  </option>');
-                    $.each(data, function(key, value) {
-                        // console.log(value.C_NAME_AR);
-
-                        $('#BORN_DETAILS_HEALTH_CENTER_CD').append('<option value="' + value
-                            .dref_code +
-                            '" >' + value.dref_name_ar + '</option>');
-                    });
-
-                }
-            });
-        });
-
-        function get_twins() {
-            if ($('#BORN_DETAILS_PLURALITY').val() > 1) {
-                $('#weekRadio2').prop('checked', true);
-
-                //alert(1);
-
-            } else {
-                $('#weekRadio1').prop('checked', true);
-
+        function getDataMotherInfoBy() {
+            var P_MOTHER_ID = $('#P_MOTHER_ID').val();
+            if (P_MOTHER_ID) {
+                var url = "{{ route('born.getMotherInfoByIdNo') }}";
+                $.ajax({
+                    url: url,
+                    type: 'json',
+                    method: 'post',
+                    data: {
+                        'P_MOTHER_ID': P_MOTHER_ID
+                    },
+                }).done(function(response) {
+                    console.log(response);
+                    if (response.success) {
+                        if (response.success == 1) {
+                            if (response.results.sex == 1) {
+                                Swal.fire({
+                                    title: 'خطأ !',
+                                    text: 'يرجى إدخال رقم هوية خاص بالأم!!!',
+                                    icon: 'error',
+                                    confirmButtonText: 'Ok'
+                                });
+                            } else {
+                                $('#M_FIRST_NAME').val(response.results.fname);
+                                $('#M_SECOND_NAME').val(response.results.sname);
+                                $('#M_THIRD_NAME').val(response.results.tname);
+                                $('#M_LAST_NAME').val(response.results.lname);
+                                $('#M_BIRTH_DATE').val(response.results.birth_date.replace("00:00:00", ""));
+                                $('#m_birth_state').val(response.results.birth_place);
+                                $('#mf_birth_state').val(response.results.father_birth_place);
+                                $('#m_social_status_id').val(response.results.MARTIAL_STATUS_CD);
+                                $('#m_social_status_name').val(response.results.MS_NAME);
+                                $('#P_MOTHER_JOB_CD').val(response.results.JOB_CD);
+                                $('#P_MOTHER_JOB_NAME').val(response.results.JOB_NAME);
+                                $('#m_Year_Edu').val(response.results.YEAR_OF_EDUCATION);
+                                $('#P_mother_phone').val(response.results.TEL);
+                                $('#P_mother_family').val(response.results.FAMILY_NAME);
+                                $("#m_region_id").val(response.results.REGION_CD).change();
+                                $("#m_city_id").val(response.results.CITY_CD).change();
+                                $('#MOTHER_NUMBER').val(response.results.MOTHER_NUMBER);
+                            }
+                        }
+                    } else {
+                        console.log(response);
+                        $message = "";
+                        $.each(response.errors, function(key, value) {
+                            console.log(value);
+                            console.log(key);
+                            $message += value.join('-') + "\r\n";
+                        });
+                        Swal.fire({
+                            title: 'خطأ !',
+                            text: $message,
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
+                    }
+                });
             }
+        }
+
+        function getDataBornInfoBy(P_BI_CODE) {
+            var url = "{{ route('born.getBornInfoByCodeNo') }}";
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                data: {
+                    'P_BI_CODE': P_BI_CODE
+                },
+            }).done(function(response) {
+                console.log(response);
+                //Father data
+
+                $('#P_BI_CODE').val(P_BI_CODE);
+                $('#P_FATHER_ID').val(response.results[0]['FATHER_ID']);
+                $('#IN_FIRST_NAME').val(response.results[0]['FATHER_FIRST_NAME_AR']);
+                $('#IN_SECOND_NAME').val(response.results[0]['FATHER_FATHER_NAME_AR']);
+                $('#IN_THIRD_NAME').val(response.results[0]['FATHER_GRANDFATHER_NAME_AR']);
+                $('#IN_LAST_NAME').val(response.results[0]['FATHER_LAST_NAME_AR']);
+                //$('#P_FATHER_BIRTH_DATE').val(response.results[0]['FATHER_DOB'].replace("00:00:00", ""));
+                P_FATHER_BIRTH_DATE.setDate(new Date(response.results[0]['FATHER_DOB']));
+
+                //  $('#P_FATHER_BIRTH_DATE').val(response.results[0]['FATHER_DOB']);
+                $('#P_birth_state').val(response.results[0]['FATHER_BIRTH_PLACE']);
+                $('#f_birth_state').val(response.results[0]['FATHER_FATHER_BIRTH_PLACE']);
+                $('#P_social_status_id').val(response.results[0]['FATHER_MARTIAL_STATUS_CD']).change();
+                $('#P_social_status_name').val(response.results[0]['FATHER_MARTIAL_STATUS']);
+                $('#P_FATHER_JOB_CD').val(response.results[0]['FATHER_JOB_CD']).change();
+                $('#P_FATHER_JOB_NAME').val(response.results[0]['FATHER_JOB']);
+                $('#f_Year_Edu').val(response.results[0]['FATHER_YEAR_OF_EDUCATION']);
+                $("#f_region_id").val(response.results[0]['FATHER_REGION_CD']).change();
+                $("#f_city_id").val(response.results[0]['FATHER_CITY_CD']).change();
+                $('#FATHER_NUMBER').val(response.results[0]['FATHER_CODE']);
+                $('#FATHER_DATA_FRM_MOI').val(response.results[0]['FATHER_DATA_FRM_MOI']);
+
+
+                //mother data
+                $('#P_MOTHER_ID').val(response.results[0]['MOTHER_ID']);
+                $('#M_FIRST_NAME').val(response.results[0]['MOTHER_FIRST_NAME_AR']);
+                $('#M_SECOND_NAME').val(response.results[0]['MOTHER_FATHER_NAME_AR']);
+                $('#M_THIRD_NAME').val(response.results[0]['MOTHER_GRANDFATHER_NAME_AR']);
+                $('#M_LAST_NAME').val(response.results[0]['MOTHER_LAST_NAME_AR']);
+                M_BIRTH_DATE.setDate(new Date(response.results[0]['MOTHER_DOB']));
+
+                $('#m_birth_state').val(response.results[0]['MOTHER_BIRTH_PLACE']);
+                $('#mf_birth_state').val(response.results[0]['MOTHER_FATHER_BIRTH_PLACE']);
+                $('#m_social_status_id').val(response.results[0]['MOTHER_MARTIAL_STATUS_CD']).change();
+                $('#m_social_status_name').val(response.results[0]['MOTHER_MARTIAL_STATUS']);
+                $('#P_MOTHER_JOB_CD').val(response.results[0]['MOTHER_JOB_CD']).change();
+                $('#P_MOTHER_JOB_NAME').val(response.results[0]['MOTHER_JOB']);
+                $('#m_Year_Edu').val(response.results[0]['MOTHER_YEAR_OF_EDUCATION']);
+                $('#P_mother_phone').val(response.results[0]['MOTHER_TEL']);
+                $('#P_mother_family').val(response.results[0]['MOTHER_FAMILY_NAME']);
+                $("#m_region_id").val(response.results[0]['MOTHER_REGION_CD']).change();
+                $("#m_city_id").val(response.results[0]['MOTHER_CITY_CD']).change();
+                $('#MOTHER_NUMBER').val(response.results[0]['MOTHER_CODE']);
+                $('#MOTHER_DATA_FRM_MOI').val(response.results[0]['MOTHER_DATA_FRM_MOI']);
+
+                //BORN DETAILS data
+                $("#BORN_DETAILS_REASON_CD").val(response.results[0]['BORN_DETAILS_REASON_CD']);
+                $("#BORN_DETAILS_GRAVID").val(response.results[0]['BORN_DETAILS_GRAVID']);
+                $("#BORN_DETAILS_PARITY").val(response.results[0]['BORN_DETAILS_PARITY']);
+                $("#BORN_DETAILS_ABORTION").val(response.results[0]['BORN_DETAILS_ABORTION']);
+                $("#BORN_DETAILS_GESTATIONAL_WEEKS").val(response.results[0]['BORN_DETAILS_GESTATIONAL_WEEKS']);
+                BORN_DETAILS_DELIVERY_DATE.setDate(new Date(response.results[0]['BORN_DETAILS_DELIVERY_DATE']));
+
+                $("#BORN_DETAILS_DELIVERY_CD").val(response.results[0]['BORN_DETAILS_DELIVERY_CD']);
+                $("#BORN_DETAILS_PLURALITY").val(response.results[0]['BORN_DETAILS_PLURALITY']);
+                $("#BORN_DETAILS_DELIVERY_COMPLI_C").val(response.results[0]['BORN_DETAILS_DELIVERY_COMPLI_C']);
+                $("#BORN_DETAILS_CATALYST_CD").val(response.results[0]['BORN_DETAILS_CATALYST_CD']);
+                $("#BORN_DETAILS_MOTHER_EXAM_CD").val(response.results[0]['BORN_DETAILS_MOTHER_EXAM_CD']);
+                $("#BORN_DETAILS_MOTHER_RESULT_CD").val(response.results[0]['BORN_DETAILS_MOTHER_RESULT_CD']);
+                $("#BORN_DETAILS_PAIN_RELIEF_CD").val(response.results[0]['BORN_DETAILS_PAIN_RELIEF_CD']);
+                $("#BORN_DETAILS_BLOOD_TRANS_CD").val(response.results[0]['BORN_DETAILS_BLOOD_TRANS_CD']);
+                $("#BORN_DETAILS_PLACENTA_COND_CD").val(response.results[0]['BORN_DETAILS_PLACENTA_COND_CD']);
+                if (response.results[0]['BORN_DETAILS_MARRIAGE_DATE'] != null) {
+                    BORN_DETAILS_MARRIAGE_DATE.setDate(new Date(response.results[0]['BORN_DETAILS_MARRIAGE_DATE']));
+                }
+
+                $("#BORN_DETAILS_MARRIAGE_NUMBER").val(response.results[0]['BORN_DETAILS_MARRIAGE_NUMBER']);
+                $("#BORN_DETAILS_CUR_MARRIAGE_LIVE").val(response.results[0]['BORN_DETAILS_CUR_MARRIAGE_LIVE']);
+                $("#BORN_DETAILS_CUR_MARRIAGE_DEAD").val(response.results[0]['BORN_DETAILS_CUR_MARRIAGE_DEAD']);
+                $("#BORN_DETAILS_PRE_MARRIAGE_LIVE").val(response.results[0]['BORN_DETAILS_PRE_MARRIAGE_LIVE']);
+                $("#BORN_DETAILS_PRE_MARRIAGE_DEAD").val(response.results[0]['BORN_DETAILS_PRE_MARRIAGE_DEAD']);
+                $("#BORN_DETAILS_GENERATOR_CD").val(response.results[0]['BORN_DETAILS_GENERATOR_CD']);
+                $("#BORN_DETAILS_TWINS").val(response.results[0]['BORN_DETAILS_TWINS']);
+                $("#FATHER_NUMBER").val(response.results[0]['BORN_DETAILS_FATH_CD']);
+                $("#MOTHER_NUMBER").val(response.results[0]['BORN_DETAILS_MOTHER_CD']);
+                //alert(response.results[0]['BORN_DETAILS_CITY_CD']);
+
+                $("#BORN_DETAILS_REGION_CD").val(response.results[0]['BORN_DETAILS_REGION_CD']).change();
+                $("#BORN_DETAILS_CITY_CD").val(response.results[0]['BORN_DETAILS_CITY_CD']).change();
+                $("#BORN_DETAILS_HOME_NO").val(response.results[0]['BORN_DETAILS_HOME_NO']);
+                $("#BORN_DETAILS_PARENTS_TEL_NO").val(response.results[0]['BORN_DETAILS_PARENTS_TEL_NO']);
+                $("#BORN_DETAILS_HEALTH_CENTER_CD").val(response.results[0]['BORN_DETAILS_HEALTH_CENTER_CD']).change();
+                $("#BORN_DETAILS_BIRTH_PLACE_CD").val(response.results[0]['BORN_DETAILS_BIRTH_PLACE_CD']).change();
+
+                //born data
+                $('#BI_ADMISSION_CD').val(response.results[0]['BI_ADMISSION_CD']);
+                $('#P_BI_ID').val(response.results[0]['BI_ID']);
+                $('#BI_ORDER').val(response.results[0]['BI_ORDER']);
+                $('#BI_WEIGHT_GM').val(response.results[0]['BI_WEIGHT_GM']);
+                $('#BI_FIRST_NAME').val(response.results[0]['BI_FIRST_NAME']);
+                $('#BI_SEX_CD').val(response.results[0]['BI_SEX_CD']).change();
+                $('#BI_RELEGION_CD').val(response.results[0]['BI_RELEGION_CD']).change();
+                $('#BI_PARTOGRAM_CD').val(response.results[0]['BI_PARTOGRAM_CD']);
+                $('#BI_PRESENTATION_CD').val(response.results[0]['BI_PRESENTATION_CD']);
+                $('#BI_OUT_COME_CD').val(response.results[0]['BI_OUT_COME_CD']);
+                $('#BI_APAGAR_5').val(response.results[0]['BI_APAGAR_5']);
+                $('#BI_APAGAR_1').val(response.results[0]['BI_APAGAR_1']);
+                $('#BI_CONGENITAL_ANOMALIES_CD').val(response.results[0]['BI_CONGENITAL_ANOMALIES_CD']);
+                $('#BI_EXAM_OUT_COME_CD').val(response.results[0]['BI_EXAM_OUT_COME_CD']);
+                $('#BI_EXAM_BEFORE_CD').val(response.results[0]['BI_EXAM_BEFORE_CD']);
+                $('#BI_ADMITTED_NICU_CD').val(response.results[0]['BI_ADMITTED_NICU_CD']);
+
+
+
+            });
+
+        }
+
+        //update data
+        function update_born_data() {
+            var P_BI_CODE = $("#P_BI_CODE").val();
+            var BORN_DETAILS_REASON_CD = $("#BORN_DETAILS_REASON_CD").val();
+            var BORN_DETAILS_GRAVID = $("#BORN_DETAILS_GRAVID").val();
+            var BORN_DETAILS_PARITY = $("#BORN_DETAILS_PARITY").val();
+            var BORN_DETAILS_ABORTION = $("#BORN_DETAILS_ABORTION").val();
+            var BORN_DETAILS_GESTATIONAL_WEEKS = $("#BORN_DETAILS_GESTATIONAL_WEEKS").val();
+            var BORN_DETAILS_DELIVERY_DATE = $("#BORN_DETAILS_DELIVERY_DATE").val();
+            var BORN_DETAILS_DELIVERY_CD = $("#BORN_DETAILS_DELIVERY_CD").val();
+            var BORN_DETAILS_PLURALITY = $("#BORN_DETAILS_PLURALITY").val();
+            var BORN_DETAILS_DELIVERY_COMPLI_C = $("#BORN_DETAILS_DELIVERY_COMPLI_C").val();
+            var BORN_DETAILS_CATALYST_CD = $("#BORN_DETAILS_CATALYST_CD").val();
+            var BORN_DETAILS_MOTHER_EXAM_CD = $("#BORN_DETAILS_MOTHER_EXAM_CD").val();
+            var BORN_DETAILS_MOTHER_RESULT_CD = $("#BORN_DETAILS_MOTHER_RESULT_CD").val();
+            var BORN_DETAILS_PAIN_RELIEF_CD = $("#BORN_DETAILS_PAIN_RELIEF_CD").val();
+            var BORN_DETAILS_BLOOD_TRANS_CD = $("#BORN_DETAILS_BLOOD_TRANS_CD").val();
+            var BORN_DETAILS_PLACENTA_COND_CD = $("#BORN_DETAILS_PLACENTA_COND_CD").val();
+            var BORN_DETAILS_MARRIAGE_DATE = $("#BORN_DETAILS_MARRIAGE_DATE").val();
+            var BORN_DETAILS_MARRIAGE_NUMBER = $("#BORN_DETAILS_MARRIAGE_NUMBER").val();
+            var BORN_DETAILS_CUR_MARRIAGE_LIVE = $("#BORN_DETAILS_CUR_MARRIAGE_LIVE").val();
+            var BORN_DETAILS_CUR_MARRIAGE_DEAD = $("#BORN_DETAILS_CUR_MARRIAGE_DEAD").val();
+            var BORN_DETAILS_PRE_MARRIAGE_LIVE = $("#BORN_DETAILS_PRE_MARRIAGE_LIVE").val();
+            var BORN_DETAILS_PRE_MARRIAGE_DEAD = $("#BORN_DETAILS_PRE_MARRIAGE_DEAD").val();
+            var BORN_DETAILS_GENERATOR_CD = $("#BORN_DETAILS_GENERATOR_CD").val();
+            var BORN_DETAILS_TWINS = $("#BORN_DETAILS_TWINS").val();
+            var BORN_DETAILS_FATH_CD = $("#FATHER_NUMBER").val();
+            var BORN_DETAILS_MOTHER_CD = $("#MOTHER_NUMBER").val();
+            var BORN_DETAILS_CITY_CD = $("#BORN_DETAILS_CITY_CD").val();
+            var BORN_DETAILS_REGION_CD = $("#BORN_DETAILS_REGION_CD").val();
+            var BORN_DETAILS_HOME_NO = $("#BORN_DETAILS_HOME_NO").val();
+            var BORN_DETAILS_PARENTS_TEL_NO = $("#BORN_DETAILS_PARENTS_TEL_NO").val();
+            var BORN_DETAILS_HEALTH_CENTER_CD = $("#BORN_DETAILS_HEALTH_CENTER_CD").val();
+            var BORN_DETAILS_BIRTH_PLACE_CD = $("#BORN_DETAILS_BIRTH_PLACE_CD").val();
+            var P_BI_ADMISSION_CD = $('#BI_ADMISSION_CD').val();
+            var P_BI_ID = $('#P_BI_ID').val();
+            var P_BI_ORDER = $('#BI_ORDER').val();
+            var P_BI_WEIGHT_GM = $('#BI_WEIGHT_GM').val();
+            var P_BI_FIRST_NAME = $('#BI_FIRST_NAME').val();
+            var P_BI_SEX_CD = $('#BI_SEX_CD').val();
+            var P_BI_RELEGION_CD = $('#BI_RELEGION_CD').val();
+            var P_BI_PARTOGRAM_CD = $('#BI_PARTOGRAM_CD').val();
+            var P_BI_PRESENTATION_CD = $('#BI_PRESENTATION_CD').val();
+            var P_BI_OUT_COME_CD = $('#BI_OUT_COME_CD').val();
+            var P_BI_APAGAR_5 = $('#BI_APAGAR_5').val();
+            var P_BI_APAGAR_1 = $('#BI_APAGAR_1').val();
+            var P_BI_CONGENITAL_ANOMALIES_CD = $('#BI_CONGENITAL_ANOMALIES_CD').val();
+            var P_BI_EXAM_OUT_COME_CD = $('#BI_EXAM_OUT_COME_CD').val();
+            var P_BI_EXAM_BEFORE_CD = $('#BI_EXAM_BEFORE_CD').val();
+            var P_BI_ADMITTED_NICU_CD = $('#BI_ADMITTED_NICU_CD').val();
+
+
+            var url = "{{ route('born.update_born_info') }}";
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                data: {
+                    'P_BI_CODE': P_BI_CODE,
+                    'BORN_DETAILS_REASON_CD': BORN_DETAILS_REASON_CD,
+                    'BORN_DETAILS_GRAVID': BORN_DETAILS_GRAVID,
+                    'BORN_DETAILS_PARITY': BORN_DETAILS_PARITY,
+                    'BORN_DETAILS_ABORTION': BORN_DETAILS_ABORTION,
+                    'BORN_DETAILS_GESTATIONAL_WEEKS': BORN_DETAILS_GESTATIONAL_WEEKS,
+                    'BORN_DETAILS_DELIVERY_DATE': BORN_DETAILS_DELIVERY_DATE,
+                    'BORN_DETAILS_DELIVERY_CD': BORN_DETAILS_DELIVERY_CD,
+                    'BORN_DETAILS_PLURALITY': BORN_DETAILS_PLURALITY,
+                    'BORN_DETAILS_DELIVERY_COMPLI_C': BORN_DETAILS_DELIVERY_COMPLI_C,
+                    'BORN_DETAILS_CATALYST_CD': BORN_DETAILS_CATALYST_CD,
+                    'BORN_DETAILS_MOTHER_EXAM_CD': BORN_DETAILS_MOTHER_EXAM_CD,
+                    'BORN_DETAILS_MOTHER_RESULT_CD': BORN_DETAILS_MOTHER_RESULT_CD,
+                    'BORN_DETAILS_PAIN_RELIEF_CD': BORN_DETAILS_PAIN_RELIEF_CD,
+                    'BORN_DETAILS_BLOOD_TRANS_CD': BORN_DETAILS_BLOOD_TRANS_CD,
+                    'BORN_DETAILS_PLACENTA_COND_CD': BORN_DETAILS_PLACENTA_COND_CD,
+                    'BORN_DETAILS_MARRIAGE_DATE': BORN_DETAILS_MARRIAGE_DATE,
+                    'BORN_DETAILS_MARRIAGE_NUMBER': BORN_DETAILS_MARRIAGE_NUMBER,
+                    'BORN_DETAILS_CUR_MARRIAGE_LIVE': BORN_DETAILS_CUR_MARRIAGE_LIVE,
+                    'BORN_DETAILS_CUR_MARRIAGE_DEAD': BORN_DETAILS_CUR_MARRIAGE_DEAD,
+                    'BORN_DETAILS_PRE_MARRIAGE_LIVE': BORN_DETAILS_PRE_MARRIAGE_LIVE,
+                    'BORN_DETAILS_PRE_MARRIAGE_DEAD': BORN_DETAILS_PRE_MARRIAGE_DEAD,
+                    'BORN_DETAILS_GENERATOR_CD': BORN_DETAILS_GENERATOR_CD,
+                    'BORN_DETAILS_TWINS': BORN_DETAILS_TWINS,
+                    'BORN_DETAILS_FATH_CD': BORN_DETAILS_FATH_CD,
+                    'BORN_DETAILS_MOTHER_CD': BORN_DETAILS_MOTHER_CD,
+                    'BORN_DETAILS_CITY_CD': BORN_DETAILS_CITY_CD,
+                    'BORN_DETAILS_REGION_CD': BORN_DETAILS_REGION_CD,
+                    'BORN_DETAILS_HOME_NO': BORN_DETAILS_HOME_NO,
+                    'BORN_DETAILS_PARENTS_TEL_NO': BORN_DETAILS_PARENTS_TEL_NO,
+                    'BORN_DETAILS_HEALTH_CENTER_CD': BORN_DETAILS_HEALTH_CENTER_CD,
+                    'BORN_DETAILS_BIRTH_PLACE_CD': BORN_DETAILS_BIRTH_PLACE_CD,
+                    'P_BI_ID': P_BI_ID,
+                    'P_BI_ADMISSION_CD': P_BI_ADMISSION_CD,
+                    'P_BI_ORDER': P_BI_ORDER,
+                    'P_BI_WEIGHT_GM': P_BI_WEIGHT_GM,
+                    'P_BI_FIRST_NAME': P_BI_FIRST_NAME,
+                    'P_BI_SEX_CD': P_BI_SEX_CD,
+                    'P_BI_RELEGION_CD': P_BI_RELEGION_CD,
+                    'P_BI_PARTOGRAM_CD': P_BI_PARTOGRAM_CD,
+                    'P_BI_PRESENTATION_CD': P_BI_PRESENTATION_CD,
+                    'P_BI_OUT_COME_CD': P_BI_OUT_COME_CD,
+                    'P_BI_APAGAR_5': P_BI_APAGAR_5,
+                    'P_BI_APAGAR_1': P_BI_APAGAR_1,
+                    'P_BI_CONGENITAL_ANOMALIES_CD': P_BI_CONGENITAL_ANOMALIES_CD,
+                    'P_BI_EXAM_OUT_COME_CD': P_BI_EXAM_OUT_COME_CD,
+                    'P_BI_EXAM_BEFORE_CD': P_BI_EXAM_BEFORE_CD,
+                    'P_BI_ADMITTED_NICU_CD': P_BI_ADMITTED_NICU_CD,
+
+
+                },
+            }).done(function(response) {
+                if (response.success) {
+                    if (response.success == 1) {
+                        Swal.fire({
+                            title: 'تمت عملية تعديل إشعار الولادة بنجاح !',
+                            text: response.results.message,
+                            icon: "success",
+                            confirmButtonText: 'موافق'
+                        });
+
+                        openedWindow.close();
+
+                    } else {
+
+                        toastr["error"](response.results.message);
+                    }
+                } else {
+                    $message = "";
+                    $.each(response.errors, function(key, value) {
+                        console.log(value);
+                        console.log(key);
+                        $message += value.join('-') + "\r\n";
+                    });
+
+                    Swal.fire({
+                        title: 'يوجد خطأ في عملية الإدخال !',
+                        text: $message,
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+                }
+            });
 
         }
     </script>

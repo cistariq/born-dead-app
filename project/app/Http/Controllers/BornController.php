@@ -47,7 +47,27 @@ class BornController extends Controller
 
         return view('born.add_born', $data);
     }
-    public function update_born($P_BI_CODE = null)
+    // public function update_born($P_BI_CODE = null)
+    // {
+    //     if ($P_BI_CODE) {
+    //         $data['P_BI_CODE'] = $P_BI_CODE;
+    //         $data['region'] = C_REGION_TB::get();
+    //         $data['city'] = C_CITY_TB::get();
+    //         $data['jobs'] = C_JOB_TB::get();
+    //         $data['religion'] = C_RELEGION_TB::get();
+    //         $data['hospitals'] = C_DETAILS_REFERRAL_TB::get();
+
+    //         $data['marital_status'] = C_MARTIAL_STATUS_TB::get();
+
+    //         $data['HEALTH_CENTER'] = C_DETAILS_REFERRAL_TB::get();
+
+    //         return view('born.update_born', $data);
+
+    //     }
+    //     return abort(404);
+    // }
+
+        public function update_born($P_BI_CODE = null)
     {
         if ($P_BI_CODE) {
             $data['P_BI_CODE'] = $P_BI_CODE;
@@ -55,12 +75,10 @@ class BornController extends Controller
             $data['city'] = C_CITY_TB::get();
             $data['jobs'] = C_JOB_TB::get();
             $data['religion'] = C_RELEGION_TB::get();
-
+            $data['hospitals'] = C_DETAILS_REFERRAL_TB::get();
             $data['marital_status'] = C_MARTIAL_STATUS_TB::get();
 
-            $data['HEALTH_CENTER'] = C_DETAILS_REFERRAL_TB::get();
-
-            return view('born.update_born', $data);
+            return view('born.update_born_data', $data);
         }
         return abort(404);
     }
@@ -100,7 +118,7 @@ class BornController extends Controller
         $data['jobs'] = C_JOB_TB::get();
         $data['religion'] = C_RELEGION_TB::get();
         $data['hospitals'] = C_DETAILS_REFERRAL_TB::get();
-      //  dd($data['cities']);
+      //  dd($data['hospitals']);
 
         return view('born.new_born', $data);
     }
@@ -1079,5 +1097,97 @@ class BornController extends Controller
         } else {
             return Response::json(array('success' => false, 'results' =>  "تم الانتهاء من ادخال المواليد للولادة الحالية!!!"));
         }
+    }
+//add all born data
+    function save_all_born_info(Request $request)
+    {
+        $role = [
+            'BORN_DETAILS_REASON_CD' => 'numeric|nullable',
+            'BORN_DETAILS_GRAVID' => 'numeric|nullable',
+            'BORN_DETAILS_PARITY' => 'numeric|nullable',
+            'BORN_DETAILS_ABORTION' => 'numeric|nullable',
+            'BORN_DETAILS_GESTATIONAL_WEEKS' => 'numeric|nullable',
+            'BORN_DETAILS_DELIVERY_DATE' => 'string|required',
+            'BORN_DETAILS_DELIVERY_CD' => 'numeric|nullable',
+            'BORN_DETAILS_PLURALITY' => 'numeric|required',
+            'BORN_DETAILS_DELIVERY_COMPLI_C' => 'numeric|nullable',
+            'BORN_DETAILS_CATALYST_CD' => 'numeric|nullable',
+            'BORN_DETAILS_MOTHER_EXAM_CD' => 'numeric|nullable',
+            'BORN_DETAILS_MOTHER_RESULT_CD' => 'numeric|nullable',
+            'BORN_DETAILS_PAIN_RELIEF_CD' => 'numeric|nullable',
+            'BORN_DETAILS_BLOOD_TRANS_CD' => 'numeric|nullable',
+            'BORN_DETAILS_PLACENTA_COND_CD' => 'numeric|nullable',
+            'BORN_DETAILS_MARRIAGE_DATE' => 'string|nullable',
+            'BORN_DETAILS_MARRIAGE_NUMBER' => 'numeric|required',
+            'BORN_DETAILS_CUR_MARRIAGE_LIVE' => 'numeric|nullable',
+            'BORN_DETAILS_CUR_MARRIAGE_DEAD' => 'numeric|nullable',
+            'BORN_DETAILS_PRE_MARRIAGE_LIVE' => 'numeric|nullable',
+            'BORN_DETAILS_PRE_MARRIAGE_DEAD' => 'numeric|nullable',
+            'BORN_DETAILS_GENERATOR_CD' => 'numeric|nullable',
+            'BORN_DETAILS_TWINS' => 'numeric|nullable',
+            'BORN_DETAILS_FATH_CD' => 'numeric|nullable',
+            'BORN_DETAILS_MOTHER_CD' => 'numeric|nullable',
+            'BORN_DETAILS_CITY_CD' => 'numeric|required',
+            'BORN_DETAILS_REGION_CD' => 'numeric|required',
+            'BORN_DETAILS_HOME_NO' => 'string|nullable',
+            'BORN_DETAILS_PARENTS_TEL_NO' => ['required', 'numeric', 'digits:10', new StartWith('059', '056')],
+            'BORN_DETAILS_HEALTH_CENTER_CD' => 'numeric|nullable',
+            'BORN_DETAILS_BIRTH_PLACE_CD' => 'numeric|required',
+            'P_BI_ID' => 'required|numeric|digits:9',
+            'P_BI_ORDER' => 'nullable|numeric',
+            'P_BI_WEIGHT_GM' => 'required|numeric|digits_between:3,4',
+            'P_BI_FIRST_NAME' => 'required|string|max:15',
+            'P_BI_SEX_CD' => 'required|numeric',
+            'P_BI_RELEGION_CD' => 'required|numeric',
+            'P_BI_PARTOGRAM_CD' => 'nullable|numeric',
+            'P_BI_PRESENTATION_CD' => 'nullable|numeric',
+            'P_BI_OUT_COME_CD' => 'nullable|numeric',
+            'P_BI_APAGAR_5' => 'nullable|numeric',
+            'P_BI_APAGAR_1' => 'nullable|numeric',
+            'P_BI_CONGENITAL_ANOMALIES_CD' => 'nullable|numeric',
+            'P_BI_EXAM_OUT_COME_CD' => 'nullable|numeric',
+            'P_BI_EXAM_BEFORE_CD' => 'nullable|numeric',
+            'P_BI_ADMITTED_NICU_CD' => 'nullable|numeric',
+
+        ];
+
+        $validator = Validator::make($request->all(), $role);
+        if ($validator->fails()) {
+            return Response::json(array(
+                'success' => false,
+                'errors' => $validator->getMessageBag()->toArray()
+
+            )); // 400 being the HTTP code for an invalid request.
+        }
+
+        try {
+            $query = BORNS_INFO_TB::ADD_BORN_DETAILS_DATA($request->all());
+            $result['B_CODE']=$query['BI_NUMBER'];
+
+            $request->merge(["P_BI_NOTIFICATION_CREATED_BY" => Auth()->id()]);
+            $request->merge(["P_BI_NOTIFICATION_CREATED_ON" => date('d/m/Y h:i')]);
+            $request->merge(["P_BI_ADMISSION_CD" => $result['B_CODE']]);
+
+            $query1 = BORNS_INFO_TB::ADD_BORN_DATA($request->all());
+
+           // dd($result['B_CODE']);
+            $data1['user_id'] = Auth()->id();
+            $data1['ip'] = request()->ip();
+            $data1['id_no'] = Auth()->id();
+            $data1['table_name'] = 'BORN_DETAILS_TB';
+            $data1['column_name'] = 'e';
+            $data['old_record'] = $request->all();
+            $data1['type_action'] = 'I';
+            Log::create($data1);
+
+
+        } catch (\Exception $exception) {
+
+            //DB::rollBack();
+                       return Response::json(array('success' => false, 'results' => ['message' => $exception->getMessage(), 400]));
+            //$exception->getTraceAsString()
+        }
+        return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية الإدخال بنجاح'],$result));
+
     }
 }

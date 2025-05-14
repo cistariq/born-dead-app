@@ -1166,4 +1166,22 @@ public static function UPDATE_BORN_DATA($data)
             return $data;
         });
     }
+    public static function GET_HOS_DREF($P_HOS_CODE)
+    {
+        $sql = "begin BORN_INFO_PKG.GET_HOS_DREF (:P_HOS_CODE,:HOS_OUT_CUR); end;";
+
+        return DB::transaction(function ($conn) use ($sql, $P_HOS_CODE) {
+            $lista = [];
+            //dd($P_ICD_CODE);
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':P_HOS_CODE', $P_HOS_CODE);
+            $stmt->bindParam(':HOS_OUT_CUR', $lista, PDO::PARAM_STMT);
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
 }
