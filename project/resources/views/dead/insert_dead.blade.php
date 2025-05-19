@@ -320,8 +320,13 @@
                                     <div class="col-lg-4 fv-row">
                                         <select id="P_DEATH_PLACE_CD" data-control="select2" data-placeholder="اختر..."
                                             class="form-select form-select-lg fw-bold">
-                                            {{-- <option value="0">غير معروف</option> --}}
                                             <option value="">اختر</option>
+                                            <option value="1">مستشفى</option>
+                                            <option value="2">بيت</option>
+                                            <option value="3">غير ذلك</option>
+
+                                            {{-- <option value="0">غير معروف</option> --}}
+                                            {{-- <option value="">اختر</option>
                                             <option value="1">غزة</option>
                                             <option value="5">شمال غزة</option>
                                             <option value="6">المنطقة الوسطى</option>
@@ -329,7 +334,7 @@
                                             <option value="8">رفح</option>
                                             <option value="2">الضفة الغربية</option>
                                             <option value="3">داخل الخط الأخضرو القدس</option>
-                                            <option value="4">خارج البلاد</option>
+                                            <option value="4">خارج البلاد</option> --}}
 
                                         </select>
                                     </div>
@@ -338,11 +343,11 @@
                                         <select id="P_hospital_id" data-control="select2" data-placeholder="اختر ..."
                                             class="form-select form-select-lg fw-bold">
                                             <option></option>
-                                            @foreach ($hospitals as $hospital)
+                                            {{-- @foreach ($hospitals as $hospital)
                                                 <option value="{{ $hospital['DREF_CODE'] }}">
                                                     {{ $hospital['DREF_NAME_AR'] }}
                                                 </option>
-                                            @endforeach
+                                            @endforeach --}}
                                         </select>
                                     </div>
                                 </div>
@@ -1548,10 +1553,15 @@
                                 text: response.results.message,
                                 icon: "success",
                                 confirmButtonText: 'موافق'
-                            });
-                            $('#P_DEAD_NUMBER').val(response['P_DEAD_NUMBER']);
+                            }).then((result) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result.isConfirmed) {
+                            $('#P_DEAD_NUMBER').val(response[0]['P_DEAD_NUMBER']);
+                            print_crt_dead(response[0]['P_DEAD_NUMBER']);
+                            }
+                        });
+                          //  alert(response[0]['P_DEAD_NUMBER']);
 
-                            print_crt_dead(response['P_DEAD_NUMBER']);
 
                         } else {
 
@@ -2492,5 +2502,32 @@
                 }
             });
         }
+        $('#P_DEATH_PLACE_CD').change(function() {
+            var death_place_cd = $(this).val();
+            var url = "{{ route('dead.get_hos_by_place') }}";
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                async: false,
+                data: {
+                    death_place_cd: death_place_cd
+                },
+                success: function(data) {
+                    console.log(data);
+                    $('#P_hospital_id').empty();
+                    console.log(3);
+                    $('#P_hospital_id').append('<option >  </option>');
+                    $.each(data, function(key, value) {
+                        // console.log(value.C_NAME_AR);
+
+                        $('#P_hospital_id').append('<option value="' + value.dref_code +
+                            '" >' + value.dref_name_ar + '</option>');
+                    });
+
+                }
+            });
+
+        });
     </script>
 @endpush

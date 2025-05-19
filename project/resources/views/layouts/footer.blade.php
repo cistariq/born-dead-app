@@ -4,17 +4,17 @@
     <script src="{{asset('assets/js/scripts.bundle.js')}}"></script>
     <!--end::Global Javascript Bundle-->
     <!--begin::Vendors Javascript(used by this page)-->
-    <script src="{{asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js')}}"></script>
-    <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}"></script>
+    <script src="{{asset('assets/plugins/custom/fullcalendar/fullcalendar.bundle.js')}}" defer></script>
+    <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" defer></script>
     <!--end::Vendors Javascript-->
     <!--begin::Custom Javascript(used by this page)-->
-    <script src="{{asset('assets/js/widgets.bundle.js')}}"></script>
-    <script src="{{asset('assets/js/custom/widgets.js')}}"></script>
-    <script src="{{asset('assets/js/custom/apps/chat/chat.js')}}"></script>
-    <script src="{{asset('assets/js/custom/utilities/modals/upgrade-plan.js')}}"></script>
-    <script src="{{asset('assets/js/custom/utilities/modals/create-app.js')}}"></script>
-    <script src="{{asset('assets/js/custom/utilities/modals/new-target.js')}}"></script>
-    <script src="{{asset('assets/js/custom/utilities/modals/users-search.js')}}"></script>
+    <script src="{{asset('assets/js/widgets.bundle.js')}}" defer></script>
+    <script src="{{asset('assets/js/custom/widgets.js')}}" defer></script>
+    <script src="{{asset('assets/js/custom/apps/chat/chat.js')}}" defer></script>
+    <script src="{{asset('assets/js/custom/utilities/modals/upgrade-plan.js')}}" defer></script>
+    <script src="{{asset('assets/js/custom/utilities/modals/create-app.js')}}" defer></script>
+    <script src="{{asset('assets/js/custom/utilities/modals/new-target.js')}}" defer></script>
+    <script src="{{asset('assets/js/custom/utilities/modals/users-search.js')}}" defer></script>
     {{-- <script src="{{asset('assets/plugins/global/tagify.min.js')}} "></script> --}}
 
 

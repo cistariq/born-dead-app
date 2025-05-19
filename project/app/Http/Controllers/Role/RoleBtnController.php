@@ -57,7 +57,7 @@ class RoleBtnController extends Controller
     public function changeRoleBtnToUser(Request $request)
     {
         $role = [
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:user_tb,id',
             'role_btn_id' => 'required|exists:role_btns,id',
         ];
 
@@ -81,7 +81,7 @@ class RoleBtnController extends Controller
             $data['id_no'] = $roleBtn->id;
             $data['ip'] = request()->ip();
             $data['table_name'] = 'role_btn_users';
-            $data['old_record'] = $roleBtn;
+           // $data['old_record'] = $roleBtn;
             $data['type_action'] = 'D';
 
             $roleBtn->delete();
@@ -91,7 +91,9 @@ class RoleBtnController extends Controller
             $data['user_id']= $request->user_id;
             $data['role_btns_id']= $request->role_btn_id;
             $data['insert_user_id']=Auth()->id();
+           // dd($data);
             $rolePage = RoleBtnUser::create($data);
+           // dd($rolePage);
             $data = [];
             $data['column_name'] = 'id';
             $data['old_value'] = $rolePage->user_id;
@@ -101,6 +103,7 @@ class RoleBtnController extends Controller
             $data['ip'] = request()->ip();
             $data['table_name'] = 'role_btn_users';
             $data['type_action'] = 'I';
+
             Log::create($data);
 
             return Response::json(array('success' => true,'results'=>'تمت عملية منح الصلاحية من للمستخدم بنجاح'));

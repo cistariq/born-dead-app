@@ -706,6 +706,7 @@ public function Get_Daily_Dead_Rep_D(Request $request)
     $totalData =$count;
     $totalFiltered =$totalData;
     $result['data'] = [];
+   // dd($query);
     if ($query['data']) {
 
         foreach ($query['data'] as $key => $value) {

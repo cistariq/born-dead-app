@@ -17,17 +17,17 @@
                             <label class="col-form-label fw-bold col-lg-1">هوية رقم</label>
                             <div class="col-lg-2">
                                 <input id="P_BI_ID" type="text" value=""
-                                    class="form-control form-control-solid ps-8 required" readonly />
+                                    class="form-control form-control-solid ps-8 required border border-1 border border-dark" readonly />
                             </div>
                             <label class="col-form-label fw-bold col-lg-2 required">اسم المولود الاول</label>
                             <div class="col-lg-2">
                                 <input id="BI_FIRST_NAME" type="text" value=""
-                                    class="form-control form-control-solid ps-8" />
+                                    class="form-control form-control-solid ps-8 border border-1 border border-dark" />
                             </div>
                             <label class="col-form-label fw-bold col-lg-2 required">جنس المولود</label>
                             <div class="col-lg-2">
                                 <select id="BI_SEX_CD" data-control="select2" data-placeholder="اختر ..."
-                                    class="form-select form-select-lg fw-bold">
+                                    class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                     <option value="">اختر...</option>
                                     <option value="1">ذكر</option>
                                     <option value="2">أنثى</option>
@@ -39,17 +39,17 @@
                             <label class="col-form-label fw-bold col-lg-1">ترتيب المولود</label>
                             <div class="col-lg-2">
                                 <input id="BI_ORDER" type="text" value=""
-                                    class="form-control form-control-solid ps-8" />
+                                    class="form-control form-control-solid ps-8 border border-1 border border-dark" />
                             </div>
                             <label class="col-form-label fw-bold col-lg-2">وزن المولود بالجرام</label>
                             <div class="col-lg-2">
                                 <input id="BI_WEIGHT_GM" type="text" value=""
-                                    class="form-control form-control-solid ps-8" />
+                                    class="form-control form-control-solid ps-8 border border-1 border border-dark" />
                             </div>
                             <label class="col-form-label fw-bold col-lg-2 required">ديانة المولود</label>
                             <div class="col-lg-2">
                                 <select id="BI_RELEGION_CD" data-control="select2" data-placeholder="اختر ..."
-                                    class="form-select form-select-lg fw-bold">
+                                    class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                     <option value="">اختر...</option>
                                     @foreach ($religion as $item)
                                         <option value="{{ $item->re_code }}">{{ $item->re_name_ar }}
@@ -124,12 +124,12 @@
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">تاريخ وساعة الولادة</label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_DELIVERY_DATE">
+                                    <input class="form-control text-center border border-1 border border-dark" id="BORN_DETAILS_DELIVERY_DATE">
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">مكان الولادة</label>
                                 <div class="col-lg-2 fv-row">
                                     <select id="BORN_DETAILS_BIRTH_PLACE_CD" data-control="select2"
-                                        data-placeholder="مكان الولادة" class="form-select form-select-lg fw-bold">
+                                        data-placeholder="مكان الولادة" class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                         {{-- <option value="0" selected="selected">غير معرف</option>
                                         <option value="9">مستشفى الهلال الإماراتي</option>
                                         <option value="3">مستشفى ناصر الطبي</option>
@@ -161,7 +161,7 @@
                                 <div class="col-lg-2 fv-row">
 
                                     <select id="BORN_DETAILS_REGION_CD" data-control="select2" data-placeholder="المدينة"
-                                        class="form-select form-select-lg fw-bold">
+                                        class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                         @foreach ($region as $item)
                                             <option value="{{ $item->r_code }}">{{ $item->r_name_ar }}
                                             </option>
@@ -175,7 +175,7 @@
                                 <div class="col-lg-2 fv-row">
 
                                     <select id="BORN_DETAILS_CITY_CD" data-control="select2" data-placeholder="الحي"
-                                        class="form-select form-select-lg fw-bold">
+                                        class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                         <option></option>
 
                                     </select>
@@ -184,14 +184,14 @@
                                 <div class="col-lg-2 fv-row">
 
                                     <select id="BORN_DETAILS_HEALTH_CENTER_CD" data-control="select2"
-                                        data-placeholder="المركز الصحي" class="form-select form-select-lg fw-bold">
+                                        data-placeholder="المركز الصحي" class="form-select form-select-lg fw-bold border border-1 border border-dark">
 
                                     </select>
                                 </div>
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">رقم منزل الوالدين</label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_HOME_NO">
+                                    <input class="form-control text-center border border-1 border border-dark" id="BORN_DETAILS_HOME_NO">
                                 </div>
                             </div>
 
@@ -199,18 +199,18 @@
                                 <label class="col-lg-2 col-form-label  fw-bold fs-6">تاريخ الزواج </label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_MARRIAGE_DATE">
+                                    <input class="form-control text-center border border-1 border border-dark" id="BORN_DETAILS_MARRIAGE_DATE">
                                 </div>
                                 <label class="col-lg-2 col-form-label  fw-bold fs-6">رقم زواج الأم </label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_MARRIAGE_NUMBER"
+                                    <input class="form-control text-center border border-1 border border-dark" id="BORN_DETAILS_MARRIAGE_NUMBER"
                                         value="1">
                                 </div>
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">رقم تليفون الوالدين </label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_PARENTS_TEL_NO">
+                                    <input class="form-control text-center border border-1 border border-dark" id="BORN_DETAILS_PARENTS_TEL_NO">
                                 </div>
                             </div>
                             <div class="row mb-6">
@@ -222,7 +222,7 @@
                                 <div class="col-lg-1 fv-row">
                                     <input type="number" name="BORN_DETAILS_PLURALITY" id="BORN_DETAILS_PLURALITY"
                                         maxLength="9" oninput="this.value=this.value.slice(0,this.maxLength)"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0" value="1"
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 border border-1 border border-dark" value="1"
                                         onchange="get_twins();">
 
                                 </div>
@@ -244,7 +244,7 @@
                                     الحالي</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_CUR_MARRIAGE_LIVE">
+                                    <input class="form-control text-center border border-1 border border-dark" id="BORN_DETAILS_CUR_MARRIAGE_LIVE">
                                 </div>
                             </div>
                             <div class="row mb-6">
@@ -252,20 +252,20 @@
                                     الحالي</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_CUR_MARRIAGE_DEAD">
+                                    <input class="form-control text-center border border-1 border border-dark" id="BORN_DETAILS_CUR_MARRIAGE_DEAD">
                                 </div>
                                 <label class="col-lg-3 col-form-label  fw-bold fs-6">عدد المواليد الأحياء من الزواج
                                     السابق</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_PRE_MARRIAGE_LIVE"
+                                    <input class="form-control text-center border border-1 border border-dark" id="BORN_DETAILS_PRE_MARRIAGE_LIVE"
                                         value="0">
                                 </div>
                                 <label class="col-lg-3 col-form-label  fw-bold fs-6">عدد المواليد الموتى من الزواج
                                     السابق</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
-                                    <input class="form-control text-center" id="BORN_DETAILS_PRE_MARRIAGE_DEAD"
+                                    <input class="form-control text-center border border-1 border border-dark" id="BORN_DETAILS_PRE_MARRIAGE_DEAD"
                                         value="0">
                                 </div>
                             </div>
@@ -280,7 +280,7 @@
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
                                     <select id="f_type_id" name="f_type_id" data-control="select2"
-                                        data-placeholder="اختر ..." class="form-select form-select-lg fw-bold">
+                                        data-placeholder="اختر ..." class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                         <option></option>
                                         <option value="1" selected>هوية </option>
                                         <option value="2">جواز سفر </option>
@@ -294,7 +294,7 @@
                                     <!--begin::Col-->
                                     <input type="number" name="P_FATHER_ID" id="P_FATHER_ID" maxLength="9"
                                         oninput="this.value=this.value.slice(0,this.maxLength)"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0"
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 border border-1 border border-dark"
                                         placeholder="رقم الهوية" onchange="getDataFatherInfoBy();">
                                     <!--end::Col-->
                                 </div>
@@ -316,22 +316,22 @@
                                     <div class="row">
                                         <div class="col-lg-3">
                                             <input type="text" id="IN_FIRST_NAME"
-                                                class="form-control text-center form-control-lg mb-3"
+                                                class="form-control text-center form-control-lg mb-3 border border-1 border border-dark"
                                                 placeholder="الاسم الأول" disabled>
                                         </div>
                                         <div class="col-lg-3">
                                             <input type="text" id="IN_SECOND_NAME"
-                                                class="form-control text-center form-control-lg mb-3"
+                                                class="form-control text-center form-control-lg mb-3 border border-1 border border-dark"
                                                 placeholder="اسم الأب" disabled>
                                         </div>
                                         <div class="col-lg-3">
                                             <input type="text" id="IN_THIRD_NAME"
-                                                class="form-control text-center form-control-lg mb-3"
+                                                class="form-control text-center form-control-lg mb-3 border border-1 border border-dark"
                                                 placeholder="اسم الجد" disabled>
                                         </div>
                                         <div class="col-lg-3">
                                             <input type="text" id="IN_LAST_NAME"
-                                                class="form-control text-center form-control-lg mb-3"
+                                                class="form-control text-center form-control-lg mb-3 border border-1 border border-dark"
                                                 placeholder="العائلة" disabled>
                                         </div>
                                     </div>
@@ -342,7 +342,7 @@
                                 <!--begin::Label-->
                                 <label class="col-lg-2 col-form-label  fw-bold fs-6">تاريخ ميلاد الأب</label>
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center" id="P_FATHER_BIRTH_DATE" disabled>
+                                    <input class="form-control text-center border border-1 border border-dark" id="P_FATHER_BIRTH_DATE" disabled>
                                 </div>
 
                                 <!--begin::Label-->
@@ -350,14 +350,14 @@
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="P_birth_state" id="P_birth_state"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0" disabled>
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 border border-1 border border-dark" disabled>
                                     <!--end::Col-->
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">مكان ميلاد والد الأب</label>
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="f_birth_state" id="f_birth_state"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0" disabled>
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 border border-1 border border-dark" disabled>
                                     <!--end::Col-->
                                 </div>
 
@@ -366,11 +366,11 @@
                                 <!--begin::Label-->
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">الحالة الاجتماعية للأب</label>
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center" id="P_social_status_name" disabled
+                                    <input class="form-control text-center border border-1 border border-dark" id="P_social_status_name" disabled
                                         type="hidden">
 
                                     <select id="P_social_status_id" data-control="select2"
-                                        data-placeholder="الحالة الاجتماعية" class="form-select form-select-lg fw-bold">
+                                        data-placeholder="الحالة الاجتماعية" class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                         <option></option>
                                         @foreach ($marital_status as $item)
                                             <option value="{{ $item->ms_code }}">{{ $item->ms_name_ar }}
@@ -385,7 +385,7 @@
                                 <div class="col-lg-2 fv-row">
                                     <input class="form-control text-center" id="P_FATHER_JOB_NAME" type="hidden">
                                     <select id="P_FATHER_JOB_CD" data-control="select2" data-placeholder="المهنة"
-                                        class="form-select form-select-lg fw-bold">
+                                        class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                         <option></option>
                                         @foreach ($jobs as $item)
                                             <option value="{{ $item->job_code }}">{{ $item->job_name_ar }}
@@ -401,7 +401,7 @@
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="f_Year_Edu" id="f_Year_Edu"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0">
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 border border-1 border border-dark">
                                     <!--end::Col-->
                                 </div>
                             </div>
@@ -414,7 +414,7 @@
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <select id="f_region_id" data-control="select2" data-placeholder="المحافظة"
-                                                class="form-select form-select-lg fw-bold">
+                                                class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                                 <option></option>
                                                 @foreach ($region as $item)
                                                     <option value="{{ $item->r_code }}">{{ $item->r_name_ar }}
@@ -425,7 +425,7 @@
 
                                         <div class="col-lg-4">
                                             <select id="f_city_id" data-control="select2" data-placeholder="المدينة"
-                                                class="form-select form-select-lg fw-bold">
+                                                class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                                 <option></option>
                                                 {{-- @foreach ($city as $item)
                                                             <option value="{{ $item->c_code }}">{{ $item->c_name_ar }}
@@ -449,7 +449,7 @@
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
                                     <select id="P_type_id" name="m_type_id" data-control="select2"
-                                        data-placeholder="اختر ..." class="form-select form-select-lg fw-bold">
+                                        data-placeholder="اختر ..." class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                         <option></option>
                                         <option value="1" selected>هوية </option>
                                         <option value="2">جواز سفر </option>
@@ -463,7 +463,7 @@
                                     <!--begin::Col-->
                                     <input type="number" name="P_MOTHER_ID" id="P_MOTHER_ID" maxLength="9"
                                         oninput="this.value=this.value.slice(0,this.maxLength)"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0"
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 border border-1 border border-dark"
                                         placeholder="رقم الهوية" onchange="getDataMotherInfoBy();">
                                     <!--end::Col-->
                                 </div>
@@ -485,22 +485,22 @@
                                     <div class="row">
                                         <div class="col-lg-3">
                                             <input type="text" id="M_FIRST_NAME"
-                                                class="form-control text-center form-control-lg mb-3"
+                                                class="form-control text-center form-control-lg mb-3 border border-1 border border-dark"
                                                 placeholder="الاسم الأول" disabled>
                                         </div>
                                         <div class="col-lg-3">
                                             <input type="text" id="M_SECOND_NAME"
-                                                class="form-control text-center form-control-lg mb-3"
+                                                class="form-control text-center form-control-lg mb-3 border border-1 border border-dark"
                                                 placeholder="اسم الأب" disabled>
                                         </div>
                                         <div class="col-lg-3">
                                             <input type="text" id="M_THIRD_NAME"
-                                                class="form-control text-center form-control-lg mb-3"
+                                                class="form-control text-center form-control-lg mb-3 border border-1 border border-dark"
                                                 placeholder="اسم الجد" disabled>
                                         </div>
                                         <div class="col-lg-3">
                                             <input type="text" id="M_LAST_NAME"
-                                                class="form-control text-center form-control-lg mb-3"
+                                                class="form-control text-center form-control-lg mb-3 border border-1 border border-dark"
                                                 placeholder="العائلة" disabled>
                                         </div>
                                     </div>
@@ -511,7 +511,7 @@
                                 <!--begin::Label-->
                                 <label class="col-lg-2 col-form-label  fw-bold fs-6">تاريخ ميلاد الأم</label>
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center" id="M_BIRTH_DATE" disabled>
+                                    <input class="form-control text-center border border-1 border border-dark" id="M_BIRTH_DATE" disabled>
                                 </div>
 
                                 <!--begin::Label-->
@@ -519,14 +519,14 @@
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="m_birth_state" id="m_birth_state"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0" disabled>
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 border border-1 border border-dark" disabled>
                                     <!--end::Col-->
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">مكان ميلاد والد الأم</label>
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="mf_birth_state" id="mf_birth_state"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0" disabled>
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 border border-1 border border-dark" disabled>
                                     <!--end::Col-->
                                 </div>
 
@@ -538,7 +538,7 @@
                                     <input class="form-control text-center" id="m_social_status_name" disabled
                                         type="hidden">
                                     <select id="m_social_status_id" data-control="select2"
-                                        data-placeholder="الحالة الاجتماعية" class="form-select form-select-lg fw-bold">
+                                        data-placeholder="الحالة الاجتماعية" class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                         <option></option>
                                         @foreach ($marital_status as $item)
                                             <option value="{{ $item->ms_code }}">{{ $item->ms_name_ar }}
@@ -554,7 +554,7 @@
                                 <div class="col-lg-2 fv-row">
                                     <input class="form-control text-center" id="P_MOTHER_JOB_NAME" type="hidden">
                                     <select id="P_MOTHER_JOB_CD" data-control="select2" data-placeholder="المهنة"
-                                        class="form-select form-select-lg fw-bold">
+                                        class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                         <option></option>
                                         @foreach ($jobs as $item)
                                             <option value="{{ $item->job_code }}">{{ $item->job_name_ar }}
@@ -570,7 +570,7 @@
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="m_Year_Edu" id="m_Year_Edu"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0">
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 border border-1 border border-dark">
                                     <!--end::Col-->
                                 </div>
                             </div>
@@ -580,14 +580,14 @@
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="P_mother_phone" id="P_mother_phone"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0">
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 border border-1 border border-dark">
                                     <!--end::Col-->
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">اسم عائلة الأم</label>
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="P_mother_family" id="P_mother_family"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0">
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 border border-1 border border-dark">
                                     <!--end::Col-->
                                 </div>
                             </div>
@@ -600,7 +600,7 @@
                                     <div class="row">
                                         <div class="col-lg-4">
                                             <select id="m_region_id" data-control="select2" data-placeholder="المحافظة"
-                                                class="form-select form-select-lg fw-bold">
+                                                class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                                 <option></option>
                                                 @foreach ($region as $item)
                                                     <option value="{{ $item->r_code }}">{{ $item->r_name_ar }}
@@ -611,7 +611,7 @@
 
                                         <div class="col-lg-4">
                                             <select id="m_city_id" data-control="select2" data-placeholder="المدينة"
-                                                class="form-select form-select-lg fw-bold">
+                                                class="form-select form-select-lg fw-bold border border-1 border border-dark">
                                                 <option></option>
                                                 {{-- @foreach ($city as $item)
                                                             <option value="{{ $item->c_code }}">{{ $item->c_name_ar }}
@@ -630,9 +630,11 @@
                         </div>
                         <!--begin:Action-->
                         <div class="d-flex justify-content-center">
+                            @if (IsPermissionBtn(31))
 
                             <button type="button" class="btn btn-primary me-5"
                                 onclick="update_born_data();">حفظ التعديلات</button>
+                            @endif
                         </div>
                         <!--end:Action-->
                     </div>

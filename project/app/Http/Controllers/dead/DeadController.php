@@ -294,7 +294,7 @@ class DeadController extends Controller
             'P_REPORT_SUBMITTED_BY' => 'nullable',
             'P_REPORTER_SEX_CD' => 'nullable',
             'P_REPORTER_NATIONALITY_CD' => 'nullable',
-            'P_RELATIONSHIP' => 'nullable',
+            'P_RELATIONSHIP' => 'required|nullable',
             'P_REPORTER_ADDRESS' => 'nullable',
             'P_REPORTER_MOBILE' => ['nullable', 'numeric', 'digits:10', new StartWith('059', '056')],
             'P_DATE_OF_REPORT' => 'required|date_format:d/m/Y H:i|after_or_equal:P_DATE_DEATH',            'P_RECEIVE_DATE' => 'nullable',
@@ -338,7 +338,7 @@ class DeadController extends Controller
             return Response::json(array('success' => false, 'errors' => $exception->getMessage()));
             //$exception->getTraceAsString()
         }
-        return Response::json(array('success' => true, 'results' => 'تمت عملية الإدخال بنجاح'));
+        return Response::json(array('success' => true, 'results' => 'تمت عملية الإدخال بنجاح',$query));
     }
     public function getDeadIcd_name(Request $request)
     {
@@ -528,7 +528,9 @@ class DeadController extends Controller
 
             )); // 400 being the HTTP code for an invalid request.
         }
+      //  dd($request->all());
         $dead = DEADS_TB::where('DEAD_CODE', $request->P_DEAD_NUMBER)->first();
+      //  dd($dead);
 
         if (isset($dead->dead_dod) && $dead->dead_dod == false) {
             return Response::json(array('success' => false, 'results' => ['message' => "يوجد خطأ في صيغة تاريخ الوفاة !!!"]));
@@ -766,7 +768,20 @@ class DeadController extends Controller
         return Response::json($query);
     }
 
+  public function get_hos_by_place(Request $request)
+    {
+        if ($request->death_place_cd == 2) {
+            $query = C_DETAILS_REFERRAL_TB::where('DREF_CODE', 125)->get();
+        } elseif ($request->death_place_cd == 3) {
+            $query = C_DETAILS_REFERRAL_TB::whereIn('DREF_CODE', [138,166,167,173,174,175,176])->get();
 
+        } else {
+            $query = C_DETAILS_REFERRAL_TB::whereNotIn('DREF_CODE', [125,138,166,167,173,174,175,176])->get();
+        }
+
+
+        return Response::json($query);
+    }
     //$data['HEALTH_CENTER'] =
 
 }

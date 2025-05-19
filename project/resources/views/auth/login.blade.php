@@ -153,8 +153,8 @@
         <!--end::Main-->
 
         <!--begin::Global Javascript Bundle(used by all pages)-->
-        <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}"></script>
-        <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
+        <script src="{{ asset('assets/plugins/global/plugins.bundle.js') }}" defer></script>
+        <script src="{{ asset('assets/js/scripts.bundle.js') }}" defer></script>
         <!--end::Global Javascript Bundle-->
 
 </body>

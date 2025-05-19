@@ -91,6 +91,7 @@ Route::group(['middleware' => [Authenticate::class]],function(){
         Route::post('/open_crt_dead', [DeadController::class, 'open_crt_dead'])->name('open_crt_dead');
         Route::get('/file_pdf', [DeadController::class, 'file_pdf'])->name('file_pdf');
         Route::post('/get_helth_center', [DeadController::class, 'get_helth_center'])->name('get_helth_center');
+        Route::post('/get_hos_by_place', [DeadController::class, 'get_hos_by_place'])->name('get_hos_by_place');
 
 
     });
