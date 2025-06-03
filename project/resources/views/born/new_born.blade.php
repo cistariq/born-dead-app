@@ -2,6 +2,21 @@
 @section('title', 'إضافة مولود جديد')
 
 @section('content')
+<style>
+input[type=text] {
+color: black;
+font-weight: bold;
+}
+input[type=number] {
+color: black;
+font-weight: bold;
+}
+select {
+color: black;
+font-weight: bold;
+}
+
+</style>
 
     <form action="#" id="new_born_form">
         <!--begin::Card-->
@@ -432,7 +447,7 @@
                                 </div>
                                 <!--begin::Label-->
 
-                                <label class="col-lg-2 col-form-label  fw-bold fs-6">مهنة الأب</label>
+                                <label class="col-lg-2 col-form-label required fw-bold fs-6">مهنة الأب</label>
                                 <div class="col-lg-2 fv-row">
                                     <input class="form-control text-center" id="P_FATHER_JOB_NAME" type="hidden">
                                     <select id="P_FATHER_JOB_CD" data-control="select2" data-placeholder="المهنة"
@@ -452,7 +467,7 @@
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="f_Year_Edu" id="f_Year_Edu"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark">
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark" value="0">
                                     <!--end::Col-->
                                 </div>
                             </div>
@@ -601,7 +616,7 @@
                                 </div>
                                 <!--begin::Label-->
 
-                                <label class="col-lg-2 col-form-label  fw-bold fs-6">مهنة الأم</label>
+                                <label class="col-lg-2 col-form-label required fw-bold fs-6">مهنة الأم</label>
                                 <div class="col-lg-2 fv-row">
                                     <input class="form-control text-center" id="P_MOTHER_JOB_NAME" type="hidden">
                                     <select id="P_MOTHER_JOB_CD" data-control="select2" data-placeholder="المهنة"
@@ -621,7 +636,7 @@
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="m_Year_Edu" id="m_Year_Edu"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark">
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark" value="0">
                                     <!--end::Col-->
                                 </div>
                             </div>
@@ -750,8 +765,14 @@
                     getDataFatherInfoBy();
                     $('#P_MOTHER_ID').val(response.Data.MOTHER_ID);
                     getDataMotherInfoBy();
-                    $('#BORN_DETAILS_PARENTS_TEL_NO').val('0' + response.Data.MOBILENO);
-                    $('#P_mother_phone').val('0' + response.Data.MOBILENO);
+                  //  alert(response.Data.MOBILENO);
+                    var mobile =  response.Data.MOBILENO;
+                    if(response.Data.MOBILENO.startsWith("5")){
+                        mobile = '0' + mobile;
+                    }
+                    $('#BORN_DETAILS_PARENTS_TEL_NO').val(mobile);
+                    $('#P_mother_phone').val(mobile);
+
                     $('#BORN_DETAILS_REGION_CD').val(response.Data.region_cd).change();
                     $('#BORN_DETAILS_CITY_CD').val(response.Data.city_cd).change();
                     if (response.Data.BIRTH_TYPE == 6573) {
@@ -1447,6 +1468,7 @@
             } else {
                 save_born_father_info();
             }
+                            block_insert_born.release();
 
 
         }

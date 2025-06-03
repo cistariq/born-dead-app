@@ -2,6 +2,8 @@
 namespace App\Http\Traits;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+
 
 trait CitizenDataTrait {
     public function getPersonalInfo(Request $request)
@@ -10,6 +12,7 @@ trait CitizenDataTrait {
             'id_no' => 'required|numeric|digits:9',
         ];
         $data = $request->validate($role);
+        dd(1);
         try {
             $response = Http::timeout(10)->withHeaders([
                 'Accept' => 'application/json',
@@ -18,7 +21,7 @@ trait CitizenDataTrait {
                 'token' => 'fad4fx49kldsjfljre',
             ]);
             $data = $response->json();
-          //  dd($data);
+
             return $data;
         }catch (\Exception $exception){
             return [];

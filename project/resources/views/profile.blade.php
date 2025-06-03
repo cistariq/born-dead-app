@@ -33,7 +33,7 @@
                             <div class="col-lg-12 fv-row">
                                 <input type="text" name="user_name"
                                     class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                    value="{{ Auth()->user()->user_name }}" readonly />
+                                    value="{{ Auth()->user()->user_username }}" readonly />
                             </div>
                             <!--end::Col-->
                         </div>
@@ -55,7 +55,7 @@
                             <div class="col-lg-12 fv-row">
                                 <input type="text" name="name"
                                     class="form-control form-control-lg form-control-solid mb-3 mb-lg-0"
-                                    value="{{ Auth()->user()->name }}" />
+                                    value="{{ Auth()->user()->user_full_name }}" readonly />
                             </div>
                             <!--end::Col-->
                         </div>

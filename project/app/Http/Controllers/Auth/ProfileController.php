@@ -39,7 +39,8 @@ class ProfileController extends Controller
             )); // 400 being the HTTP code for an invalid request.
         }
         $user = Auth()->user();
-        if (!Hash::check($request->current_password, $user->password)) {
+       // dd($user);
+        if (!Hash::check($request->current_password, $user->user_password)) {
             return Response::json(array(
                 'success' => false,
                 'errors' => 'كلمة المرور الحالية خطأ'
@@ -47,7 +48,7 @@ class ProfileController extends Controller
             ));
         } else {
             $user->update([
-                'password' => Hash::make($request->new_password),
+                'user_password' => Hash::make($request->new_password),
             ]);
             return Response::json(array('success' => true,'results'=>'تمت عملية تعديل كلمة المرور'));
         }

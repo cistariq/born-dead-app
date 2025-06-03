@@ -16,6 +16,7 @@ class Authenticate
      */
     public function handle(Request $request, Closure $next): Response
     {
+       // dd(Auth());
         if(Auth::check()){
             try {
                 if($request->isMethod('get')){
@@ -36,7 +37,9 @@ class Authenticate
             }
             return $next($request);
         }
-        return redirect()->route('login');
+       // return redirect()->route('login');
+          return abort('404');
+
     }
 
 

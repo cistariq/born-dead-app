@@ -48,7 +48,7 @@ class ReportController extends Controller
         $result['data']=$query;
 
         $result['old_record'] = $request->all();
-        $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
         // dd($result['old_record']);
         // $respdf= Pdf::view('Report.Distribution_Death_Place', $result)
         // ->format('a4')
@@ -62,7 +62,7 @@ class ReportController extends Controller
     public function Distribution_Region_Ages(Request $request)
     {
         $result['old_record'] = $request->all();
-        $result['user_name'] = Auth()->user()->name;
+        $result['user_name'] = Auth()->user()->user_full_name;
 
         $data1['user_id'] = Auth()->id();
         $data1['ip'] = request()->ip();
@@ -274,7 +274,7 @@ public function GET_Distribution_Death_Place_Kids(Request $request)
 //  dd(Auth());
     $result['data']=$query;
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     // dd($result['old_record']);
     return view('Report.Distribution_Death_Place_Kids',$result);
 
@@ -285,7 +285,7 @@ public function GET_Distribution_Region_Kids(Request $request)
     // ini_set('max_execution_time', -1);
     // ini_set('memory_limit',-1);
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $request->merge([
         'Age_From' => 0,
         'Age_To' => 365,
@@ -336,7 +336,7 @@ public function GET_Distribution_Region_Ages1(Request $request)
 {
 
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $request->merge([
         'Age_From' => 20,
         'Age_To' => 60,
@@ -396,7 +396,7 @@ public function GET_Distribution_Region_Ages2(Request $request)
 {
 
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
 
     $request->merge([
         'Age_From' => 20,
@@ -455,7 +455,7 @@ public function GET_Distribution_Death_Hosp(Request $request)
     // ini_set('max_execution_time', -1);
     // ini_set('memory_limit',-1);
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $request->merge([
         'Age_From' => 0,
         'Age_To' => 1500,
@@ -483,7 +483,7 @@ public function GET_Distribution_Region_Ages3(Request $request)
     // ini_set('max_execution_time', -1);
     // ini_set('memory_limit',-1);
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $request->merge([
         'Age_From' => 0,
         'Age_To' => 18,
@@ -512,7 +512,7 @@ public function GET_Distribution_Death_Hos_Kids(Request $request)
     // ini_set('max_execution_time', -1);
     // ini_set('memory_limit',-1);
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $request->merge([
         'Age_From' => 0,
         'Age_To' => 1,
@@ -540,7 +540,7 @@ public function GET_Distribution_sex_D(Request $request)
     // ini_set('max_execution_time', -1);
     // ini_set('memory_limit',-1);
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $request->merge([
         'Age_From' => 1,
         'Age_To' => 300,
@@ -593,7 +593,7 @@ public function GET_Daily_Dead_Rep_2(Request $request)
     Log::create($data1);
 //  dd(Auth());
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     // dd($result['old_record']);
     return view('Report.Daily_Dead_Rep_2',$result);
 
@@ -756,7 +756,7 @@ public function GET_Daily_Report_D(Request $request)
     Log::create($data1);
 //  dd(Auth());
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     // dd($result['old_record']);
     return view('Report.Daily_Report_D',$result);
 
@@ -767,7 +767,7 @@ public function GET_Distribution_Diagnosis(Request $request)
     // ini_set('max_execution_time', -1);
     // ini_set('memory_limit',-1);
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $result['data'] = DEADS_TB::GET_Distribution_Diagnosis($request->all());
   //dd($result['data']);
     $data1['user_id'] = Auth()->id();
@@ -791,7 +791,7 @@ public function GET_Deads_non_Diagnosable(Request $request)
     // ini_set('max_execution_time', -1);
     // ini_set('memory_limit',-1);
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
 
     // dd($result['old_record']);
     return view('Report.Deads_non_Diagnosable',$result);
@@ -802,7 +802,7 @@ public function GET_Deads_non_Diagnosable(Request $request)
 public function GET_Deads_non_Diagnosable_all(Request $request)
 {
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
 
  $query= DEADS_TB::GET_DEATHS_DIAGNOSED_LIMIT($request->all());
 
@@ -843,7 +843,7 @@ public function GET_Total_In_Diagnosis(Request $request)
     // ini_set('max_execution_time', -1);
     // ini_set('memory_limit',-1);
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
 
     $result['data'] = DEADS_TB::GET_Total_In_Diagnosis($request->all());
  // dd($query);
@@ -867,7 +867,7 @@ public function GET_Unknown_Region_Deaths(Request $request)
     // ini_set('max_execution_time', -1);
     // ini_set('memory_limit',-1);
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
 
     return view('Report.Unknown_Region_Deaths',$result);
 
@@ -878,7 +878,7 @@ public function GET_Unknown_Region_Deaths_ALL(Request $request)
 {
 
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
 
  $query= DEADS_TB::GET_DEATHS_UNKNOWN_REG_LIMIT($request->all());
 
@@ -921,7 +921,7 @@ public function GET_Unknown_Region_Deaths_ALL(Request $request)
 public function GET_Distribution_ICD_Ages(Request $request)
 {
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     if (!$request->has('ICD_OPTN')){
         $request->merge([
             'ICD_OPTN' => 1,
@@ -1122,7 +1122,7 @@ public function GET_Distribution_MS_D(Request $request)
     // ini_set('max_execution_time', -1);
     // ini_set('memory_limit',-1);
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
 
     $result['data'] = DEADS_TB::GET_Distribution_MS_D($request->all());
     $result['data1'] = DEADS_TB::GET_DEADS_BY_MS_TOTAL($request->all());
@@ -1149,10 +1149,12 @@ public function GET_Distribution_ICD_Ages_sample2(Request $request)
 {
     // ini_set('max_execution_time', -1);
     // ini_set('memory_limit',-1);
-    $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
-    $result['data'] = DEADS_TB::GET_ICD_CODE($request->all());
 
+    $result['old_record'] = $request->all();
+    $result['user_name'] = Auth()->user()->user_full_name;
+
+    $result['data'] = DEADS_TB::GET_ICD_CODE($request->all());
+//dd($result['data']);
    // $result['data2'] = DEADS_TB::GET_DEADS_REGION_TOTAL2($request->all());
 
  // dd($query);
@@ -1178,7 +1180,7 @@ public function GET_Scanned_files_rep(Request $request)
 
     $result['list_user'] = DEADS_TB::GET_USER_PROFILE();
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
 
  // dd($query);
     $data1['user_id'] = Auth()->id();
@@ -1203,7 +1205,7 @@ public function get_scanned_file_rep(Request $request)
     $result['list_user'] = DEADS_TB::GET_USER_PROFILE();
 
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $query = DEADS_TB::GET_Scanned_files_rep($request->all());
 
     $data1['user_id'] = Auth()->id();
@@ -1267,7 +1269,7 @@ public function GET_Death_updated_rep(Request $request)
     Log::create($data1);
 //  dd(Auth());
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     // dd($result['old_record']);
     return view('Report.Death_updated_rep',$result);
 
@@ -1282,7 +1284,7 @@ public function get_updated_file_rep(Request $request)
     $result['list_user'] = DEADS_TB::GET_USER_PROFILE();
 
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $query = DEADS_TB::GET_Death_updated_rep($request->all());
 
     $data1['user_id'] = Auth()->id();
@@ -1346,7 +1348,7 @@ public function GET_NotScanned_files_rep(Request $request)
     Log::create($data1);
 //  dd(Auth());
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+    $result['user_name'] = Auth()->user()->user_full_name;
     // dd($result['old_record']);
     return view('Report.NotScanned_files_rep',$result);
 
@@ -1359,7 +1361,8 @@ public function get_unscanned_file_rep(Request $request)
     $result['list_user'] = DEADS_TB::GET_USER_PROFILE();
 
     $result['old_record'] = $request->all();
-    $result['user_name'] = Auth()->user()->name;
+
+    $result['user_name'] = Auth()->user()->user_full_name;
     $query = DEADS_TB::GET_NotScanned_files_rep($request->all());
 
     $data1['user_id'] = Auth()->id();
@@ -1407,30 +1410,18 @@ echo json_encode($json_data);
 public function Daily_Born(Request $request)
 {
     $result['old_record'] = $request->all();
-    $user_name=Auth()->user()->user_name;
-    $result['user_name'] = Auth()->user()->name;
+    $user_name=Auth()->user()->user_username;
+    $result['user_name'] = Auth()->user()->user_full_name;
+    //dd($user_name);
     $result['ROW'] = BORNS_INFO_TB::GET_USER_PROFILE($user_name);
+
 $request->merge([
     'U_CODE' => $result['ROW'][0]['USER_DREF_CD'] ,
     'S' => 0,
     'E' => 42,
 ]);
 
-//     $result['list_born'] = BORNS_INFO_TB::GET_BORNS($request->all());
-//     $result['entry_borns'] = BORNS_INFO_TB::GET_BORNS_LIMIT($request->all());
-//     //dd($result['entry_borns']);
 
-
-//  // dd($query);
-//     $data1['user_id'] = Auth()->id();
-//     $data1['ip'] = request()->ip();
-//     $data1['id_no'] = Auth()->id();
-//     $data1['table_name'] = 'BORN_INFO_TB';
-//     $data1['column_name'] = ' ';
-//    // $data1['old_record'] = $request->all();
-//     $data1['type_action'] = 'DL';
-//     Log::create($data1);
-// //  dd(Auth());
 
     // dd($result['old_record']);
     return view('Report.Daily_Born',$result);
@@ -1438,8 +1429,8 @@ $request->merge([
 }
 public function get_Daily_Born(Request $request)
 {
-    $user_name=Auth()->user()->user_name;
-    $result['user_name'] = Auth()->user()->name;
+    $user_name=Auth()->user()->user_username;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $result['ROW'] = BORNS_INFO_TB::GET_USER_PROFILE($user_name);
     $result['old_record'] = $request->all();
 
@@ -1485,8 +1476,8 @@ echo json_encode($json_data);
 //----------------------------------------------------------------------------
 public function Daily_Report_Birth_Place(Request $request)
 {
-    $user_name=Auth()->user()->user_name;
-    $result['user_name'] = Auth()->user()->name;
+    $user_name=Auth()->user()->user_username;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $result['ROW'] = BORNS_INFO_TB::GET_USER_PROFILE($user_name);
     $result['old_record'] = $request->all();
 
@@ -1514,8 +1505,8 @@ $request->merge([
 //----------------------------------------------------------------------------
 public function Daily_Born_Delivery(Request $request)
 {
-    $user_name=Auth()->user()->user_name;
-    $result['user_name'] = Auth()->user()->name;
+    $user_name=Auth()->user()->user_username;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $result['ROW'] = BORNS_INFO_TB::GET_USER_PROFILE($user_name);
     $result['old_record'] = $request->all();
 
@@ -1530,8 +1521,8 @@ $request->merge([
 //----------------------------------------------------------------------------
 public function Daily_Born_Delivery_Print(Request $request)
 {
-    $user_name=Auth()->user()->user_name;
-    $result['user_name'] = Auth()->user()->name;
+    $user_name=Auth()->user()->user_username;
+    $result['user_name'] = Auth()->user()->user_full_name;
     $result['ROW'] = BORNS_INFO_TB::GET_USER_PROFILE($user_name);
     $result['old_record'] = $request->all();
 

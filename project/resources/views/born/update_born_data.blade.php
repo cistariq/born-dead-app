@@ -2,6 +2,21 @@
 @section('title', 'تعديل بيانات مولود')
 
 @section('content')
+<style>
+input[type=text] {
+color: black;
+font-weight: bold;
+}
+input[type=number] {
+color: black;
+font-weight: bold;
+}
+select {
+color: black;
+font-weight: bold;
+}
+
+</style>
 
     <form action="#" id="update_born_data" style="display: block;">
         <div class="card mb-7">

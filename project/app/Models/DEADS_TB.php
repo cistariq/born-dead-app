@@ -1451,6 +1451,7 @@ class DEADS_TB extends Model
         $sql = "begin DEAD_INFO_PKG.GET_NOTSCANNED_DEATHS_UP (:ID,:SEX,:DIAG_FROM,:DIAG_TO,:YEAR_FROM,:YEAR_TO,:DATE_FROM,:DATE_TO,:AGE_FROM,:AGE_TO,:USER_CD,:POINT_CD,:P_START,:P_LIMIT,:RESULT_COUNT,:DEADS); end;";
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
+            $RESULT_COUNT = 0;
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':ID', $data['Dead_ID']);

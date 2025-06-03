@@ -536,12 +536,12 @@ class BornController extends Controller
             'FATHER_FATHER_NAME_AR' => 'string|required',
             'FATHER_GRANDFATHER_NAME_AR' => 'string|required',
             'FATHER_LAST_NAME_AR' => 'string|required',
-            'FATHER_DOB' => 'required|date_format:m/d/Y',
+            'FATHER_DOB' => 'required|date_format:d/m/Y',
             'FATHER_BIRTH_PLACE' => 'string|required',
             'FATHER_FATHER_BIRTH_PLACE' => 'string|nullable',
-            'FATHER_JOB' => 'string|required',
+            'FATHER_JOB' => 'string|nullable',
             'FATHER_MARTIAL_STATUS_CD' => 'numeric|nullable',
-            'FATHER_YEAR_OF_EDUCATION' => 'numeric|required',
+            'FATHER_YEAR_OF_EDUCATION' => 'numeric|nullable',
             'FATHER_REGION_CD' => 'numeric|nullable',
             'FATHER_CITY_CD' => 'numeric|nullable',
             'FATHER_DATA_FRM_MOI' => 'numeric|nullable',
@@ -566,7 +566,7 @@ class BornController extends Controller
             $data1['id_no'] = Auth()->id();
             $data1['table_name'] = 'BORN_FATHER_TB';
             $data1['column_name'] = 'e';
-            $data['old_record'] = $request->all();
+          //  $data['old_record'] = $request->all();
             $data1['type_action'] = 'I';
             Log::create($data1);
         } catch (\Exception $exception) {
@@ -591,9 +591,9 @@ class BornController extends Controller
             'MOTHER_DOB' => 'required|date_format:d/m/Y',
             'MOTHER_BIRTH_PLACE' => 'string|required',
             'MOTHER_FATHER_BIRTH_PLACE' => 'string|required',
-            'MOTHER_JOB' => 'string|required',
+            'MOTHER_JOB' => 'string|nullable',
             'MOTHER_MARTIAL_STATUS_CD' => 'numeric|nullable',
-            'MOTHER_YEAR_OF_EDUCATION' => 'numeric|required',
+            'MOTHER_YEAR_OF_EDUCATION' => 'numeric|nullable',
             'MOTHER_REGION_CD' => 'numeric|nullable',
             'MOTHER_CITY_CD' => 'numeric|nullable',
             'MOTHER_TEL' => ['nullable', 'numeric', 'digits:10', new StartWith('059', '056')],
@@ -620,7 +620,7 @@ class BornController extends Controller
             $data1['id_no'] = Auth()->id();
             $data1['table_name'] = 'BORN_MOTHER_TB';
             $data1['column_name'] = 'e';
-            $data['old_record'] = $request->all();
+           // $data['old_record'] = $request->all();
             $data1['type_action'] = 'I';
             Log::create($data1);
         } catch (\Exception $exception) {
@@ -643,7 +643,7 @@ class BornController extends Controller
             'BORN_DETAILS_PARITY' => 'numeric|nullable',
             'BORN_DETAILS_ABORTION' => 'numeric|nullable',
             'BORN_DETAILS_GESTATIONAL_WEEKS' => 'numeric|nullable',
-            'BORN_DETAILS_DELIVERY_DATE' => 'string|required',
+            'BORN_DETAILS_DELIVERY_DATE' => 'required|date_format:d/m/Y H:i',
             'BORN_DETAILS_DELIVERY_CD' => 'numeric|nullable',
             'BORN_DETAILS_PLURALITY' => 'numeric|required',
             'BORN_DETAILS_DELIVERY_COMPLI_C' => 'numeric|nullable',
@@ -1118,7 +1118,7 @@ class BornController extends Controller
             'BORN_DETAILS_BLOOD_TRANS_CD' => 'numeric|nullable',
             'BORN_DETAILS_PLACENTA_COND_CD' => 'numeric|nullable',
             'BORN_DETAILS_MARRIAGE_DATE' => 'string|nullable',
-            'BORN_DETAILS_MARRIAGE_NUMBER' => 'numeric|required',
+            'BORN_DETAILS_MARRIAGE_NUMBER' => 'numeric|nullable',
             'BORN_DETAILS_CUR_MARRIAGE_LIVE' => 'numeric|nullable',
             'BORN_DETAILS_CUR_MARRIAGE_DEAD' => 'numeric|nullable',
             'BORN_DETAILS_PRE_MARRIAGE_LIVE' => 'numeric|nullable',

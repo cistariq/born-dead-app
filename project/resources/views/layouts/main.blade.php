@@ -4,7 +4,6 @@
 @include('layouts.header')
 <!--end::Head-->
 <!--begin::Body-->
-
 <body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="false"
     data-kt-app-sidebar-fixed="false" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true"
     data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true"
@@ -44,7 +43,7 @@
 
                     <!--begin::Logo-->
                     <div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0 me-lg-15">
-                        <a href="#">
+                        <a href="{{ route('welcome') }}">
                             <img alt="Logo" src={{ asset('assets/media/logos/logo_new.png') }}
                                 class="h-35px h-lg-50px" />
                             &nbsp;{{ config('app.name') }} - الخدمات الإلكترونية&nbsp;
@@ -314,9 +313,9 @@
                                             <!--begin::Username-->
                                             <div class="d-flex flex-column">
                                                 <div class="fw-bold d-flex align-items-center fs-5">
-                                                    {{ Auth::user()->name }}</div>
+                                                    {{ Auth::user()->user_full_name }}</div>
                                                 <a
-                                                    class="fw-semibold text-muted text-hover-primary fs-7">{{ Auth::user()->user_name }}</a>
+                                                    class="fw-semibold text-muted text-hover-primary fs-7">{{ Auth::user()->user_username }}</a>
                                             </div>
                                             <!--end::Username-->
                                         </div>

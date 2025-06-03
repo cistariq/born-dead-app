@@ -742,9 +742,9 @@ class DeadController extends Controller
 
         $result['data'] = $request->all();
 
-        $path_file =  Storage::path('uploaded_files\\' . $result['data']['Dead_ID'] . '.pdf');
+        $path_file =  Storage::path('uploaded_files/' . $result['data']['Dead_ID'] . '.pdf');
        // dd($path_file);
-        if (Storage::exists('uploaded_files\\' . $result['data']['Dead_ID'] . '.pdf')) {
+        if (Storage::exists('uploaded_files/' . $result['data']['Dead_ID'] . '.pdf')) {
 
         $file = File::get($path_file);
         $response = Response::make($file, 200);

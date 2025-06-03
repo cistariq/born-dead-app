@@ -19,12 +19,13 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\user\UserController;
 use App\Http\Middleware\Authenticate;
 use App\Models\CitizenData;
-use App\Models\Log;
+//use App\Models\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 use App\Http\Controllers\ICDCodeController;
 
@@ -43,9 +44,17 @@ Route::get('/test',function(){
 //         return "خطأ في الاتصال بقاعدة البيانات: " . $e->getMessage();
 //     }
 // });
-
+// Route::get('/test-log', function () {
+//     Log::channel('citizen')->info('اختبار تسجيل في citizen_log.log');
+//     return 'تم التسجيل!';
+// });
 Route::get('/login',[LoginController::class, 'index'])->name('login');
 Route::post('/login',[LoginController::class, 'login'])->name('login.check');
+Route::group(['prefix' => 'login','as'=>'login.'], function () {
+   Route::get('/login_from_perm/{id}', [LoginController::class, 'login_from_perm'])->name('login_from_perm');
+ });
+
+
 Route::group(['middleware' => [Authenticate::class]],function(){
     Route::get('/profile',[ProfileController::class, 'index'])->name('profile.index');
     Route::post('/update-password',[ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
