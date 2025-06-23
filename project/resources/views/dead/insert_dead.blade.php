@@ -927,7 +927,6 @@
     </div>
 @endsection
 @push('scripts')
-    <script src="{{ asset('assets/js/scripts.bundle.js') }}"></script>
 
 
     <script>
@@ -2034,7 +2033,11 @@
 
                 $('#P_advertiser_Rel').val(response.results[0]['DEAD_D_RELATIONSHIP']);
                 $('#P_advertiser_Address').val(response.results[0]['DEAD_D_REPORTER_ADDRESS']);
-                $('#P_advertiser_Phone').val(response.results[0]['DEAD_D_REPORTER_MOBILE']);
+                var mobile = response.results[0]['DEAD_D_REPORTER_MOBILE'];
+                if(mobile.startsWith("5")){
+                    mobile = '0' + mobile;
+                }
+                $('#P_advertiser_Phone').val(mobile);
                 // $('#P_advertise_Date').val(response.results[0]['DEAD_DATE_OF_REPORT']);
                 // $('#P_advertise_receive_Date').val(response.results[0]['DEAD_D_RECEIVE_DATE']);
                 $('#P_receive_emp_Name').val(response.results[0]['DEAD_D_RECEIVER_NAME']);
@@ -2089,6 +2092,7 @@
                 cache: false,
                 processData: false,
                 contentType: false,
+                async: true,
                 data: form_date,
             }).done(function(response) {
                 // alert('Nareen');
@@ -2106,21 +2110,29 @@
                     $('#P_FLAG').val('وفاة عادية (غير شهيد)');
                     $('#P_SOURSE').val(0);
                     P_DEAD_DATE.setDate(new Date(response.event_date));
-                    if (response.event_region_cd == 1) {
-                        $('#P_DEATH_PLACE_CD').val(5).change();
-                    } else if (response.event_region_cd == 2) {
-                        $('#P_DEATH_PLACE_CD').val(1).change();
-                    } else if (response.event_region_cd == 3) {
-                        $('#P_DEATH_PLACE_CD').val(7).change();
-                    } else if (response.event_region_cd == 4) {
-                        $('#P_DEATH_PLACE_CD').val(8).change();
-                    } else if (response.event_region_cd == 5) {
-                        $('#P_DEATH_PLACE_CD').val(6).change();
+                    // if (response.event_region_cd == 1) {
+                    //     $('#P_DEATH_PLACE_CD').val(5).change();
+                    // } else if (response.event_region_cd == 2) {
+                    //     $('#P_DEATH_PLACE_CD').val(1).change();
+                    // } else if (response.event_region_cd == 3) {
+                    //     $('#P_DEATH_PLACE_CD').val(7).change();
+                    // } else if (response.event_region_cd == 4) {
+                    //     $('#P_DEATH_PLACE_CD').val(8).change();
+                    // } else if (response.event_region_cd == 5) {
+                    //     $('#P_DEATH_PLACE_CD').val(6).change();
 
-                    } else {
-                        $('#P_DEATH_PLACE_CD').val('').change();
-                    }
+                    // } else {
+                    //     $('#P_DEATH_PLACE_CD').val('').change();
+                    // }
                   //  $('#P_DEATH_PLACE_CD').val(response.event_region_cd).change();
+                  //  alert(response.dref_cd);
+                    if (response.dref_cd==125) {
+                        $('#P_DEATH_PLACE_CD').val(2).change();
+                    }else if (response.dref_cd==138 || response.dref_cd==166 || response.dref_cd==167 || response.dref_cd==173 || response.dref_cd==174 || response.dref_cd==175 || response.dref_cd==176 ) {
+                        $('#P_DEATH_PLACE_CD').val(3).change();
+                    }else{
+                        $('#P_DEATH_PLACE_CD').val(1).change();
+                    }
                     $('#P_hospital_id').val(response.dref_cd).change();
                     $('#P_COMMITTE_OPINION').val(response.notes);
                   //  $('#save_btn').show();
@@ -2134,19 +2146,12 @@
                         $('#P_SOURSE').val(0);
                     }
                     P_DEAD_DATE.setDate(new Date(response.event_date));
-                    if (response.event_region_cd == 1) {
-                        $('#P_DEATH_PLACE_CD').val(5).change();
-                    } else if (response.event_region_cd == 2) {
+                      if (response.dref_cd==125) {
+                        $('#P_DEATH_PLACE_CD').val(2).change();
+                    }else if (response.dref_cd==138 || response.dref_cd==166 || response.dref_cd==167 || response.dref_cd==173 || response.dref_cd==174 || response.dref_cd==175 || response.dref_cd==176 ) {
+                        $('#P_DEATH_PLACE_CD').val(3).change();
+                    }else{
                         $('#P_DEATH_PLACE_CD').val(1).change();
-                    } else if (response.event_region_cd == 3) {
-                        $('#P_DEATH_PLACE_CD').val(7).change();
-                    } else if (response.event_region_cd == 4) {
-                        $('#P_DEATH_PLACE_CD').val(8).change();
-                    } else if (response.event_region_cd == 5) {
-                        $('#P_DEATH_PLACE_CD').val(6).change();
-
-                    } else {
-                        $('#P_DEATH_PLACE_CD').val('').change();
                     }
                     $('#P_hospital_id').val(response.dref_cd).change();
 
@@ -2202,19 +2207,12 @@
                     let $select4 = $("#DIAG4_NAME");
 
                     $("#DEAD_DETAILS_CD").val(4).change();
-                    if (response.event_region_cd == 1) {
-                        $('#P_DEATH_PLACE_CD').val(5).change();
-                    } else if (response.event_region_cd == 2) {
+                    if (response.dref_cd==125) {
+                        $('#P_DEATH_PLACE_CD').val(2).change();
+                    }else if (response.dref_cd==138 || response.dref_cd==166 || response.dref_cd==167 || response.dref_cd==173 || response.dref_cd==174 || response.dref_cd==175 || response.dref_cd==176 ) {
+                        $('#P_DEATH_PLACE_CD').val(3).change();
+                    }else{
                         $('#P_DEATH_PLACE_CD').val(1).change();
-                    } else if (response.event_region_cd == 3) {
-                        $('#P_DEATH_PLACE_CD').val(7).change();
-                    } else if (response.event_region_cd == 4) {
-                        $('#P_DEATH_PLACE_CD').val(8).change();
-                    } else if (response.event_region_cd == 5) {
-                        $('#P_DEATH_PLACE_CD').val(6).change();
-
-                    } else {
-                        $('#P_DEATH_PLACE_CD').val('').change();
                     }
                     $('#P_hospital_id').val(response.dref_cd).change();
 
@@ -2529,5 +2527,8 @@
             });
 
         });
+
+
+
     </script>
 @endpush

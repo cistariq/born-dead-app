@@ -13,91 +13,102 @@
             text-align: center;
         }
     </style>
+@php
+    $hasFilterData = !empty($old_record['Death_date_frm']) ||
+                     !empty($old_record['Death_date_to']) ||
+                     !empty($old_record['Diag_From']) ||
+                     !empty($old_record['Diag_To']) ||
+                     !empty($old_record['Age_From']) ||
+                     !empty($old_record['Age_To']) ||
+                     !empty($old_record['Year_From']) ||
+                     !empty($old_record['Year_To']) ||
+                     isset($old_record['Sex']);
+@endphp
 
-<div class="card  mb-7">
-    <!--begin::Card body-->
-    <div class="card-body">
+@if ($hasFilterData)
+    <div class="card  mb-7">
+        <!--begin::Card body-->
+        <div class="card-body" >
 
-        <table id="result_tb" class="table table-striped dt-responsive table-row-bordered gy-5 gs-7" style="width:472px">
-            @if ($old_record['Death_date_frm'] != '' || $old_record['Death_date_frm'] != '')
-                <tr>
-                    <th width="50px" scope="col">من تاريخ:</th>
-                    <th width="50px" scope="col">
-                        {{ $old_record['Death_date_frm'] }}
-                    </th>
+                @if ($old_record['Death_date_frm'] != '' || $old_record['Death_date_frm'] != '')
+                    <tr>
+                        <th width="50px" scope="col">من تاريخ:</th>
+                        <th width="50px" scope="col">
+                            {{ $old_record['Death_date_frm'] }}
+                        </th>
 
-                    <th width="50px" scope="col">إلى:</th>
-                    <th width="50px" height="34" scope="col">
-                        {{ $old_record['Death_date_to'] }}
-                    </th>
+                        <th width="50px" scope="col">إلى:</th>
+                        <th width="50px" height="34" scope="col">
+                            {{ $old_record['Death_date_to'] }}
+                        </th>
 
-                </tr>
-            @endif
+                    </tr>
+                @endif
 
-            @if ($old_record['Diag_From'] != '' || $old_record['Diag_To'] != '')
-                <tr>
-                    <th width="50px" scope="col"> من تشخيص:</th>
-                    <th width="50px" scope="col">{{ $old_record['Diag_From'] }}</th>
+                @if ($old_record['Diag_From'] != '' || $old_record['Diag_To'] != '')
+                    <tr>
+                        <th width="50px" scope="col"> من تشخيص:</th>
+                        <th width="50px" scope="col">{{ $old_record['Diag_From'] }}</th>
 
-                    <th width="50px" scope="col">إلى:</th>
-                    <th width="50px" scope="col">{{ $old_record['Diag_To'] }}</th>
+                        <th width="50px" scope="col">إلى:</th>
+                        <th width="50px" scope="col">{{ $old_record['Diag_To'] }}</th>
 
-                </tr>
-            @endif
-            @if ($old_record['Age_From'] != '' || $old_record['Age_To'] != '')
-                <tr>
-                    <th scope="col">من عمر:</th>
-                    <th scope="col">
-                        {{ $old_record['Age_From'] }}
-                    </th>
+                    </tr>
+                @endif
+                @if ($old_record['Age_From'] != '' || $old_record['Age_To'] != '')
+                    <tr>
+                        <th scope="col">من عمر:</th>
+                        <th scope="col">
+                            {{ $old_record['Age_From'] }}
+                        </th>
 
-                    <th scope="col">إلى:</th>
-                    <th scope="col">
-                        {{ $old_record['Age_To'] }}
-                    </th>
+                        <th scope="col">إلى:</th>
+                        <th scope="col">
+                            {{ $old_record['Age_To'] }}
+                        </th>
 
-                </tr>
-            @endif
-            @if ($old_record['Year_From'] != '' || $old_record['Year_To'] != '')
-                <tr>
-                    <th scope="col">من السنة:</th>
-                    <th scope="col">
-                        {{ $old_record['Year_From'] }}
-                    </th>
+                    </tr>
+                @endif
+                @if ($old_record['Year_From'] != '' || $old_record['Year_To'] != '')
+                    <tr>
+                        <th scope="col">من السنة:</th>
+                        <th scope="col">
+                            {{ $old_record['Year_From'] }}
+                        </th>
 
-                    <th scope="col">إلى:</th>
-                    <th scope="col">
-                        {{ $old_record['Year_To'] }}
-                    </th>
+                        <th scope="col">إلى:</th>
+                        <th scope="col">
+                            {{ $old_record['Year_To'] }}
+                        </th>
 
-                </tr>
-            @endif
-            @php
-                if ($old_record['Sex'] == 0) {
-                    $sex1 = 'غير معروف';
-                } elseif ($old_record['Sex'] == 1) {
-                    $sex1 = 'ذكر';
-                } elseif ($old_record['Sex'] == 2) {
-                    $sex1 = 'أنثى';
-                }
-            @endphp
-            @if ($old_record['Sex'] != '')
-                <tr>
-                    <th scope="col">الجنس:</th>
-                    <th scope="col">
-                        {{ $sex1 }}
-                    </th>
+                    </tr>
+                @endif
+                @php
+                    if ($old_record['Sex'] == 0) {
+                        $sex1 = 'غير معروف';
+                    } elseif ($old_record['Sex'] == 1) {
+                        $sex1 = 'ذكر';
+                    } elseif ($old_record['Sex'] == 2) {
+                        $sex1 = 'أنثى';
+                    }
+                @endphp
+                @if ($old_record['Sex'] != '')
+                    <tr>
+                        <th scope="col">الجنس:</th>
+                        <th scope="col">
+                            {{ $sex1 }}
+                        </th>
 
-                </tr>
-            @endif
+                    </tr>
+                @endif
 
-        </table>
-        <P></P>
+            <P></P>
+        </div>
     </div>
-</div>
+    @endif
     <form action="#" id="dead_form">
         <!--begin::Card-->
-        <input type="hidden" id="d_from" name="d_from" value="{{$old_record['Death_date_frm']}}" />
+        <input type="hidden" id="d_from" name="d_from" value="{{ $old_record['Death_date_frm'] }}" />
         <input type="hidden" id="d_to" name="d_to" value=" {{ $old_record['Death_date_to'] }}" />
 
         <input type="hidden" id="dia_from" name="dia_from" value="{{ $old_record['Diag_From'] }}" />
@@ -109,8 +120,8 @@
         <input type="hidden" id="y_from" name="y_from" value="{{ $old_record['Year_From'] }}" />
         <input type="hidden" id="y_to" name="y_to" value=" {{ $old_record['Year_To'] }}" />
 
-        <input type="hidden" id="sex" name="sex" value="{{$old_record['Sex']}}" />
-        <input type="hidden" id="id" name="id" value="{{$old_record['Dead_ID']}}" />
+        <input type="hidden" id="sex" name="sex" value="{{ $old_record['Sex'] }}" />
+        <input type="hidden" id="id" name="id" value="{{ $old_record['Dead_ID'] }}" />
 
         <div class="card  mb-7">
             <!--begin::Card body-->
@@ -223,7 +234,8 @@
 
                 <div class="float-end">
                     @if (IsPermissionBtn(21))
-                        <button type="button" class="btn btn-primary me-5" onclick="Get_Daily_Dead_Rep();">استعلام</button>
+                        <button type="button" class="btn btn-primary me-5"
+                            onclick="Get_Daily_Dead_Rep();">استعلام</button>
                     @endif
 
                 </div>
@@ -288,7 +300,10 @@
 
 
             var url = "{{ route('Report.Get_Daily_Dead_Result') }}";
-            $('#result_tb').DataTable().destroy();
+            //  $('#result_tb').DataTable().destroy();
+            if ($.fn.DataTable.isDataTable('#result_tb')) {
+                $('#result_tb').DataTable().clear().destroy();
+            }
             $.fn.dataTable.ext.errMode = 'none';
             $('#result_tb').on('error.dt', function(e, settings, techNote, message) {
                 console.log('An error has been reported by DataTables: ', message);
@@ -296,12 +311,12 @@
             block_search_dead.block();
             $("#result_tb").DataTable({
                 dom: 'Bfrtip',
-            buttons: [  {
-                        extend: 'excelHtml5',
-                        title: 'تقرير خاص بالوفيات حسب تاريخ الادخال',
-                        text:'تحميل ملف اكسل'
+                buttons: [{
+                    extend: 'excelHtml5',
+                    title: 'تقرير خاص بالوفيات حسب تاريخ الادخال',
+                    text: 'تحميل ملف اكسل'
 
-                    }],
+                }],
                 serverSide: true,
                 paging: true,
                 ordering: false,
@@ -325,9 +340,48 @@
                         BORN_DETAILS_HEALTH_CENTER_CD2: $('#BORN_DETAILS_HEALTH_CENTER_CD2').val(),
                     },
                 },
+                columns: [{
+                        data: 0
+                    },
+                    {
+                        data: 1
+                    },
+                    {
+                        data: 2
+                    },
+                    {
+                        data: 3
+                    },
+                    {
+                        data: 4
+                    },
+                    {
+                        data: 5
+                    },
+                    {
+                        data: 6
+                    },
+                    {
+                        data: 7
+                    },
+                    {
+                        data: 8
+                    },
+                    {
+                        data: 9
+                    },
+                    {
+                        data: 10
+                    },
+                    {
+                        data: 11
+                    },
+                    {
+                        data: 12
+                    },
+                ],
                 initComplete: function(data) {
                     block_search_dead.release();
-                    // document.getElementById("excel_btn").style.display = 'block';
                     console.log(data);
 
                 },

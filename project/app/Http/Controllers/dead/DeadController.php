@@ -739,16 +739,11 @@ class DeadController extends Controller
     //----------------------------------------------------------------------------
     public function file_pdf(Request $request)
     {
-
         $result['data'] = $request->all();
-
         $path_file =  Storage::path('uploaded_files/' . $result['data']['Dead_ID'] . '.pdf');
-       // dd($path_file);
         if (Storage::exists('uploaded_files/' . $result['data']['Dead_ID'] . '.pdf')) {
-
-        $file = File::get($path_file);
-        $response = Response::make($file, 200);
-        $response->header('Content-Type', 'application/pdf');
+       $file = File::get($path_file);
+       $response =   response()->download( $path_file,$result['data']['Dead_ID'] . '.pdf',['Content-Type' => 'application/pdf']);
         return $response;
         }
         else{

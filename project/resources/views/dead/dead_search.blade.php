@@ -620,7 +620,7 @@
                 block_search_dead.block();
                 $("#result_tb").DataTable({
 
-                    serverSide: true,
+                    serverSide: false,
                     paging: true,
                     ordering: false,
                     ajax: {
@@ -670,9 +670,11 @@
                         "zeroRecords": "No matching records found",
 
                     },
+                    'pageLength': 10,
+
                     lengthMenu: [
                         [10, 25, 50, -1],
-                        ['10', '25', '50', 'All']
+                        [10, 25, 50, 'all']
                     ],
 
                     "searching": true,

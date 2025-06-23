@@ -15,11 +15,11 @@
         }
     </style>
 <body>
-    <div class="row m-12">
+    {{-- <div class="row m-12">
             <h1 class="text-center">أهلا وسهلا بك في نظام إدارة المواليد و الوفيات</h1>
 
 
-    </div>
+    </div> --}}
 
 </body>
 @endsection

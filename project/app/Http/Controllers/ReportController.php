@@ -601,6 +601,7 @@ public function GET_Daily_Dead_Rep_2(Request $request)
 //----------------------------------------------------------------------------
 public function Get_Daily_Dead_Result(Request $request)
 {
+  //  dd($request->all());
     $role = [
         'Sex' => 'nullable|numeric',
         'Dead_ID' => 'nullable|numeric|digits:9',
@@ -622,6 +623,7 @@ public function Get_Daily_Dead_Result(Request $request)
     $data = $request->validate($role);
 
     $query = DEADS_TB::GET_Daily_Dead_Rep_2($request->all());
+    //dd($query);
     $data1['user_id'] = Auth()->id();
     $data1['ip'] = request()->ip();
     $data1['id_no'] = Auth()->id();
@@ -644,16 +646,16 @@ public function Get_Daily_Dead_Result(Request $request)
                 $key + 1,
                 $value['DEAD_ID'],
                 $value['DEAD_DOB'],
-                 $value['DEAD_DOD'],
+                $value['DEAD_DOD'],
                 $value['DEAD_SEX'],
                 $value['DEAD_NAME'],
                 $value['DEAD_HOS'],
                 $value['DEAD_REG'],
-                 $value['DIAG'],
+                $value['DIAG'],
                 $value['D_ICD'],
-                 $value['DIAG1'],
+                $value['DIAG1'],
                 $value['D_ICD1'],
-                 $value['DEAD_IS_SCAN'],
+                $value['DEAD_IS_SCAN'],
 
             );
         }
@@ -665,7 +667,9 @@ public function Get_Daily_Dead_Result(Request $request)
         "data"            => $result['data']
 
          );
-echo json_encode($json_data);
+//echo json_encode($json_data);
+return response()->json($json_data);
+
 
 }
 
