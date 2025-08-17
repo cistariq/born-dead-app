@@ -33,7 +33,8 @@
                                     class="ki-duotone ki-magnifier fs-3 text-gray-500 position-absolute top-50 translate-middle ms-6"><span
                                         class="path1"></span><span class="path2"></span></i>
                                 <input type="text" class="form-control form-control ps-10" name="search" id="P_ID"
-                                    value="" placeholder="رقم الهوية">
+                                    value="" placeholder="رقم الهوية" maxLength="9"
+                                            oninput="this.value=this.value.slice(0,this.maxLength)"  onchange="get_dead_data()">
 
                             </div>
                         </div>
@@ -282,7 +283,7 @@
                         <div class="row mb-4">
                             <div class="col-lg-10">
                                 <select class="form-select" data-control="select2" id="P_Entry_employee"
-                                    data-placeholder="موظف الإدخال"  data-allow-clear="true">
+                                    data-placeholder="موظف الإدخال" data-allow-clear="true">
                                     <option></option>
                                     @foreach ($entry_employee as $entry_employees)
                                         <option value="{{ $entry_employees['id'] }}">
@@ -379,9 +380,10 @@
                             <th scope="col" width="20" style="text-align: center">اسم المتوفى</th>
                             <th scope="col" width="20" style="text-align: center">المستشفى</th>
                             {{-- <th  scope="col" width="10" style="text-align: center">منطقة السكن</th> --}}
-                            <th scope="col" width="20" style="text-align: center">سبب الوفاة</th>
+                            <th scope="col" width="20" style="text-align: center">ICD10</th>
                             {{-- <th width="5" style="text-align: center">كود سبب الوفاة</th> --}}
-                            <th scope="col" width="20" style="text-align: center">المرض الاصلي</th>
+                            <th scope="col" width="20" style="text-align: center">سبب الوفاة</th>
+                            <th scope="col" width="20" style="text-align: center">مدخل الاشعار</th>
                             {{-- <th width="5" style="text-align: center">كود ICD</th> --}}
                             <th scope="col" width="30" style="text-align: center">الإجراءات</th>
                         </tr>
@@ -518,9 +520,10 @@
                     '') && ($(
                         '#P_ENTER_TO').val() == null || $('#P_ENTER_TO').val() == undefined || $('#P_ENTER_TO')
                     .val() ==
-                    '')
-                    && ($(
-                        '#P_Entry_employee').val() == null || $('#P_Entry_employee').val() == undefined || $('#P_Entry_employee')
+                    '') &&
+                ($(
+                        '#P_Entry_employee').val() == null || $('#P_Entry_employee').val() == undefined || $(
+                        '#P_Entry_employee')
                     .val() ==
                     '')
 
@@ -561,16 +564,17 @@
                             '#P_Entry_point').val() == null || $('#P_Entry_point').val() == undefined || $('#P_Entry_point')
                         .val() ==
                         '') && ($(
-                        '#P_ENTER_FROM').val() == null || $('#P_ENTER_FROM').val() == undefined || $('#P_ENTER_FROM')
-                    .val() ==
-                    '') && ($(
-                        '#P_ENTER_TO').val() == null || $('#P_ENTER_TO').val() == undefined || $('#P_ENTER_TO')
-                    .val() ==
-                    '')
-                    && ($(
-                        '#P_Entry_employee').val() == null || $('#P_Entry_employee').val() == undefined || $('#P_Entry_employee')
-                    .val() ==
-                    '')
+                            '#P_ENTER_FROM').val() == null || $('#P_ENTER_FROM').val() == undefined || $('#P_ENTER_FROM')
+                        .val() ==
+                        '') && ($(
+                            '#P_ENTER_TO').val() == null || $('#P_ENTER_TO').val() == undefined || $('#P_ENTER_TO')
+                        .val() ==
+                        '') &&
+                    ($(
+                            '#P_Entry_employee').val() == null || $('#P_Entry_employee').val() == undefined || $(
+                            '#P_Entry_employee')
+                        .val() ==
+                        '')
                 )
 
             )
@@ -635,8 +639,8 @@
                             P_LAST_NAME: P_LAST_NAME,
                             P_DATE_FROM: P_DATE_FROM,
                             P_DATE_TO: P_DATE_TO,
-                            P_ENTER_FROM:P_ENTER_FROM,
-                            P_ENTER_TO:P_ENTER_TO,
+                            P_ENTER_FROM: P_ENTER_FROM,
+                            P_ENTER_TO: P_ENTER_TO,
                             P_SEX_NO: P_SEX_NO,
                             P_REGION_NO: P_REGION_NO,
                             P_CITY_NO: P_CITY_NO,
@@ -645,7 +649,7 @@
                             DIAG4_NAME: DIAG4_NAME,
                             P_DEATH_PLACE: P_DEATH_PLACE,
                             P_ENTRY_POINT: P_ENTRY_POINT,
-                            P_ENTRY_EMPLOYEE:P_ENTRY_EMPLOYEE,
+                            P_ENTRY_EMPLOYEE: P_ENTRY_EMPLOYEE,
 
                         },
                     },
@@ -709,6 +713,9 @@
                 DIAG4_NAME: $('#DIAG4_NAME').val(),
                 P_DEATH_PLACE: $('#P_Death_Place').val(),
                 P_ENTRY_POINT: $('#P_Entry_point').val(),
+                P_ENTER_FROM: $('#P_ENTER_FROM').val(),
+                P_ENTER_TO: $('#P_ENTER_TO').val(),
+                P_ENTRY_EMPLOYEE: $('#P_Entry_employee').val(),
 
             }
             var base_url = "{{ URL::to('dead/export_excel') }}?" + $.param(query)
@@ -797,6 +804,76 @@
             });
 
         }
+        /***************************************************************************************************************************/
+        function delete_crt_dead(P_DEAD_NUMBER) {
+
+            var url = "{{ route('dead.getDeadInfoByIdNo') }}";
+
+            $.ajax({
+                url: url,
+                method: 'post',
+                data: {
+                    P_DEAD_NUMBER: P_DEAD_NUMBER
+                },
+            }).done(function(response) {
+                console.log(response);
+                if (response.success != true) {
+                    Swal.fire({
+                        title: 'يوجد خطأ في عملية الإدخال !',
+                        text: $message,
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+                } else {
+
+                    Swal.fire({
+                        title: "هل تريد بالفعل حذف إشعار الوفاة",
+                        showDenyButton: true,
+                        confirmButtonText: "موافق",
+                        denyButtonText: `إلغاء`
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+                            var red_url = "{{ route('dead.delete_dead') }}";
+                            $.ajax({
+                                url: red_url,
+                                type: 'json',
+                                method: 'get',
+                                data: {
+                                    'P_DEAD_NUMBER': P_DEAD_NUMBER,
+                                },
+                            }).done(function(response) {
+                                if (response.success) {
+                                    if (response.success == 1) {
+                                        Swal.fire({
+                                            title: 'تمت عملية حذف إشعار الوفاة بنجاح !',
+                                            text: response.results.message,
+                                            icon: "success",
+                                            confirmButtonText: 'موافق'
+                                        });
+
+                                    } else {
+
+                                        toastr["error"](response.results.message);
+                                    }
+
+                                } else {
+                                    console.log(response);
+
+                                    Swal.fire({
+                                        title: 'يوجد خطأ في عملية الإدخال !',
+                                        text: response.errors,
+                                        icon: 'error',
+                                        confirmButtonText: 'Ok'
+                                    });
+                                }
+                            });
+                        }
+                    });
+                }
+            });
+
+        }
 
         /**************************************************************************************************************************************************************************************************/
         function clear_form() {
@@ -867,8 +944,8 @@
                         }
                         var base_url = "{{ URL::to('dead/file_pdf') }}?" + $.param(query);
                         console.log(base_url);
-                     //   window.title=P_DEAD_ID;
-                       window.open(base_url, true, "width=900,height=700 ,left=450,top=200");
+                        //   window.title=P_DEAD_ID;
+                        window.open(base_url, true, "width=900,height=700 ,left=450,top=200");
 
                     }
                 });

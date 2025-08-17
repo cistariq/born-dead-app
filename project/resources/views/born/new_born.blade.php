@@ -2,21 +2,22 @@
 @section('title', 'إضافة مولود جديد')
 
 @section('content')
-<style>
-input[type=text] {
-color: black;
-font-weight: bold;
-}
-input[type=number] {
-color: black;
-font-weight: bold;
-}
-select {
-color: black;
-font-weight: bold;
-}
+    <style>
+        input[type=text] {
+            color: black;
+            font-weight: bold;
+        }
 
-</style>
+        input[type=number] {
+            color: black;
+            font-weight: bold;
+        }
+
+        select {
+            color: black;
+            font-weight: bold;
+        }
+    </style>
 
     <form action="#" id="new_born_form">
         <!--begin::Card-->
@@ -35,16 +36,16 @@ font-weight: bold;
                         <!--begin::Col-->
                         <input type="number" name="P_BI_ID" id="P_BI_ID" maxLength="9"
                             oninput="this.value=this.value.slice(0,this.maxLength)"
-                            class="form-control form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark" onchange="">
+                            class="form-control form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark"
+                            onchange="">
                         <!--end::Col-->
                     </div>
                     <!--end::Input group-->
 
                     <!--begin:Action-->
                     <div class="d-flex">
-                       @if (IsPermissionBtn(42))
-
-                        <button type="button" class="btn btn-primary me-5" onclick="check_born_id();">استعلام</button>
+                        @if (IsPermissionBtn(42))
+                            <button type="button" class="btn btn-primary me-5" onclick="check_born_id();">استعلام</button>
                         @endif
 
                         <button type="button" class="btn btn-outline-danger me-5" onclick="clear_form();">جديد</button>
@@ -101,7 +102,8 @@ font-weight: bold;
                             <label class="col-form-label fw-bold col-lg-1">هوية رقم</label>
                             <div class="col-lg-2">
                                 <input id="P_BI_NO" type="text" value=""
-                                    class="form-control form-control-solid ps-8 required form-control-solid border border-1 border border-dark" onchange="check_born_id();" />
+                                    class="form-control form-control-solid ps-8 required form-control-solid border border-1 border border-dark"
+                                    onchange="check_born_id();" />
                             </div>
                             <label class="col-form-label fw-bold col-lg-2 required">اسم المولود الاول</label>
                             <div class="col-lg-2">
@@ -190,12 +192,15 @@ font-weight: bold;
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">تاريخ وساعة الولادة</label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="BORN_DETAILS_DELIVERY_DATE">
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="BORN_DETAILS_DELIVERY_DATE">
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">مكان الولادة</label>
                                 <div class="col-lg-2 fv-row">
                                     <select id="BORN_DETAILS_BIRTH_PLACE_CD" data-control="select2"
-                                        data-placeholder="مكان الولادة" class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
+                                        data-placeholder="مكان الولادة"
+                                        class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
                                         {{-- <option value="0" selected="selected">غير معرف</option>
                                         <option value="9">مستشفى الهلال الإماراتي</option>
                                         <option value="3">مستشفى ناصر الطبي</option>
@@ -250,14 +255,17 @@ font-weight: bold;
                                 <div class="col-lg-2 fv-row">
 
                                     <select id="BORN_DETAILS_HEALTH_CENTER_CD" data-control="select2"
-                                        data-placeholder="المركز الصحي" class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
+                                        data-placeholder="المركز الصحي"
+                                        class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
 
                                     </select>
                                 </div>
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">رقم منزل الوالدين</label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="BORN_DETAILS_HOME_NO">
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="BORN_DETAILS_HOME_NO">
                                 </div>
                             </div>
 
@@ -265,18 +273,23 @@ font-weight: bold;
                                 <label class="col-lg-2 col-form-label  fw-bold fs-6">تاريخ الزواج </label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="BORN_DETAILS_MARRIAGE_DATE">
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="BORN_DETAILS_MARRIAGE_DATE">
                                 </div>
                                 <label class="col-lg-2 col-form-label  fw-bold fs-6">رقم زواج الأم </label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="BORN_DETAILS_MARRIAGE_NUMBER"
-                                        value="1">
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="BORN_DETAILS_MARRIAGE_NUMBER" value="1">
                                 </div>
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">رقم تليفون الوالدين </label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="BORN_DETAILS_PARENTS_TEL_NO">
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="BORN_DETAILS_PARENTS_TEL_NO">
                                 </div>
                             </div>
                             <div class="row mb-6">
@@ -288,8 +301,8 @@ font-weight: bold;
                                 <div class="col-lg-1 fv-row">
                                     <input type="number" name="BORN_DETAILS_PLURALITY" id="BORN_DETAILS_PLURALITY"
                                         maxLength="9" oninput="this.value=this.value.slice(0,this.maxLength)"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark" value="1"
-                                        onchange="get_twins();">
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark"
+                                        value="1" onchange="get_twins();">
 
                                 </div>
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">توأم</label>
@@ -310,7 +323,9 @@ font-weight: bold;
                                     الحالي</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="BORN_DETAILS_CUR_MARRIAGE_LIVE">
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="BORN_DETAILS_CUR_MARRIAGE_LIVE">
                                 </div>
                             </div>
                             <div class="row mb-6">
@@ -318,21 +333,25 @@ font-weight: bold;
                                     الحالي</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="BORN_DETAILS_CUR_MARRIAGE_DEAD">
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="BORN_DETAILS_CUR_MARRIAGE_DEAD">
                                 </div>
                                 <label class="col-lg-3 col-form-label  fw-bold fs-6">عدد المواليد الأحياء من الزواج
                                     السابق</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="BORN_DETAILS_PRE_MARRIAGE_LIVE"
-                                        value="0">
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="BORN_DETAILS_PRE_MARRIAGE_LIVE" value="0">
                                 </div>
                                 <label class="col-lg-3 col-form-label  fw-bold fs-6">عدد المواليد الموتى من الزواج
                                     السابق</label>
                                 <!--end::Label-->
                                 <div class="col-lg-1 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="BORN_DETAILS_PRE_MARRIAGE_DEAD"
-                                        value="0">
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="BORN_DETAILS_PRE_MARRIAGE_DEAD" value="0">
                                 </div>
                             </div>
                         </div>
@@ -346,7 +365,8 @@ font-weight: bold;
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
                                     <select id="f_type_id" name="f_type_id" data-control="select2"
-                                        data-placeholder="اختر ..." class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
+                                        data-placeholder="اختر ..."
+                                        class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
                                         <option></option>
                                         <option value="1" selected>هوية </option>
                                         <option value="2">جواز سفر </option>
@@ -408,7 +428,9 @@ font-weight: bold;
                                 <!--begin::Label-->
                                 <label class="col-lg-2 col-form-label  fw-bold fs-6">تاريخ ميلاد الأب</label>
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="P_FATHER_BIRTH_DATE" disabled>
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="P_FATHER_BIRTH_DATE" disabled>
                                 </div>
 
                                 <!--begin::Label-->
@@ -416,14 +438,16 @@ font-weight: bold;
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="P_birth_state" id="P_birth_state"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark" disabled>
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark"
+                                        disabled>
                                     <!--end::Col-->
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">مكان ميلاد والد الأب</label>
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="f_birth_state" id="f_birth_state"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark" disabled>
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark"
+                                        disabled>
                                     <!--end::Col-->
                                 </div>
 
@@ -432,11 +456,13 @@ font-weight: bold;
                                 <!--begin::Label-->
                                 <label class="col-lg-2 col-form-label fw-bold fs-6">الحالة الاجتماعية للأب</label>
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="P_social_status_name" disabled
-                                        type="hidden">
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="P_social_status_name" disabled type="hidden">
 
                                     <select id="P_social_status_id" data-control="select2"
-                                        data-placeholder="الحالة الاجتماعية" class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
+                                        data-placeholder="الحالة الاجتماعية"
+                                        class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
                                         <option></option>
                                         @foreach ($marital_status as $item)
                                             <option value="{{ $item->ms_code }}">{{ $item->ms_name_ar }}
@@ -467,7 +493,8 @@ font-weight: bold;
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="f_Year_Edu" id="f_Year_Edu"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark" value="0">
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark"
+                                        value="0">
                                     <!--end::Col-->
                                 </div>
                             </div>
@@ -515,7 +542,8 @@ font-weight: bold;
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
                                     <select id="P_type_id" name="m_type_id" data-control="select2"
-                                        data-placeholder="اختر ..." class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
+                                        data-placeholder="اختر ..."
+                                        class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
                                         <option></option>
                                         <option value="1" selected>هوية </option>
                                         <option value="2">جواز سفر </option>
@@ -577,7 +605,9 @@ font-weight: bold;
                                 <!--begin::Label-->
                                 <label class="col-lg-2 col-form-label  fw-bold fs-6">تاريخ ميلاد الأم</label>
                                 <div class="col-lg-2 fv-row">
-                                    <input class="form-control text-center form-control-solid border border-1 border border-dark" id="M_BIRTH_DATE" disabled>
+                                    <input
+                                        class="form-control text-center form-control-solid border border-1 border border-dark"
+                                        id="M_BIRTH_DATE" disabled>
                                 </div>
 
                                 <!--begin::Label-->
@@ -585,14 +615,16 @@ font-weight: bold;
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="m_birth_state" id="m_birth_state"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark" disabled>
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark"
+                                        disabled>
                                     <!--end::Col-->
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">مكان ميلاد والد الأم</label>
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="mf_birth_state" id="mf_birth_state"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark" disabled>
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark"
+                                        disabled>
                                     <!--end::Col-->
                                 </div>
 
@@ -604,7 +636,8 @@ font-weight: bold;
                                     <input class="form-control text-center" id="m_social_status_name" disabled
                                         type="hidden">
                                     <select id="m_social_status_id" data-control="select2"
-                                        data-placeholder="الحالة الاجتماعية" class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
+                                        data-placeholder="الحالة الاجتماعية"
+                                        class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
                                         <option></option>
                                         @foreach ($marital_status as $item)
                                             <option value="{{ $item->ms_code }}">{{ $item->ms_name_ar }}
@@ -636,7 +669,8 @@ font-weight: bold;
                                 <div class="col-lg-2">
                                     <!--begin::Col-->
                                     <input type="text" name="m_Year_Edu" id="m_Year_Edu"
-                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark" value="0">
+                                        class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark"
+                                        value="0">
                                     <!--end::Col-->
                                 </div>
                             </div>
@@ -697,9 +731,8 @@ font-weight: bold;
                         <!--begin:Action-->
                         <div class="d-flex justify-content-center">
                             @if (IsPermissionBtn(43))
-
-                            <button type="button" class="btn btn-primary me-5"
-                                onclick="save_born_details_info();">حفظ</button>
+                                <button type="button" class="btn btn-primary me-5"
+                                    onclick="save_born_details_info();">حفظ</button>
                             @endif
                         </div>
                         <!--end:Action-->
@@ -765,9 +798,9 @@ font-weight: bold;
                     getDataFatherInfoBy();
                     $('#P_MOTHER_ID').val(response.Data.MOTHER_ID);
                     getDataMotherInfoBy();
-                  //  alert(response.Data.MOBILENO);
-                    var mobile =  response.Data.MOBILENO;
-                    if(response.Data.MOBILENO.startsWith("5")){
+                    //  alert(response.Data.MOBILENO);
+                    var mobile = response.Data.MOBILENO;
+                    if (response.Data.MOBILENO.startsWith("5")) {
                         mobile = '0' + mobile;
                     }
                     $('#BORN_DETAILS_PARENTS_TEL_NO').val(mobile);
@@ -785,7 +818,8 @@ font-weight: bold;
 
                     }
 
-                    $('#BORN_DETAILS_BIRTH_PLACE_CD').val(response.Data.dref_cd).change();
+                    //$('#BORN_DETAILS_BIRTH_PLACE_CD').val(response.Data.dref_cd).change();
+                    $('#BORN_DETAILS_BIRTH_PLACE_CD').val("{{ $hos_no }}").change();
 
                     //  alert(response.Data.delivery_cd);
                     $('#BORN_DETAILS_DELIVERY_CD').val(response.Data.delivery_cd);
@@ -1439,7 +1473,7 @@ font-weight: bold;
                             }).then((result) => {
                                 /* Read more about isConfirmed, isDenied below */
                                 if (result.isConfirmed) {
-                                        clear_form();
+                                    clear_form();
 
                                 }
                             });
@@ -1468,7 +1502,7 @@ font-weight: bold;
             } else {
                 save_born_father_info();
             }
-                            block_insert_born.release();
+            block_insert_born.release();
 
 
         }

@@ -63,7 +63,7 @@ class DEADS_TB extends Model
     public static function GET_DEAD_INFO($data)
     {
         //dd($data);
-        $sql = "begin DEAD_INFO_PKG.GET_DEADS_DATA (:P_DEAD_CODE,:P_ID,:P_FIRST_NAME,:P_SECOND_NAME,:P_THIRD_NAME,:P_LAST_NAME,:P_DATE_FROM,:P_DATE_TO,:P_SEX_NO,:P_REGION_NO,:P_CITY_NO,:P_HOS_NO,:DIAG1_NAME,:DIAG4_NAME,:P_DEATH_PLACE,:P_ENTRY_POINT,:P_START,:P_LIMIT,:RESULT_COUNT,:DEADS); end;";
+        $sql = "begin DEAD_INFO_PKG.GET_DEADS_DATA (:P_DEAD_CODE,:P_ID,:P_FIRST_NAME,:P_SECOND_NAME,:P_THIRD_NAME,:P_LAST_NAME,:P_DATE_FROM,:P_DATE_TO,:P_SEX_NO,:P_REGION_NO,:P_CITY_NO,:P_HOS_NO,:DIAG1_NAME,:DIAG4_NAME,:P_DEATH_PLACE,:P_ENTRY_POINT,:P_ENTER_FROM,:P_ENTER_TO,:P_ENTRY_EMPLOYEE,:P_START,:P_LIMIT,:RESULT_COUNT,:DEADS); end;";
 
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
@@ -86,6 +86,9 @@ class DEADS_TB extends Model
             $stmt->bindParam(':DIAG4_NAME', $data['DIAG4_NAME']);
             $stmt->bindParam(':P_DEATH_PLACE', $data['P_DEATH_PLACE']);
             $stmt->bindParam(':P_ENTRY_POINT', $data['P_ENTRY_POINT']);
+            $stmt->bindParam(':P_ENTER_FROM', $data['P_ENTER_FROM']);
+            $stmt->bindParam(':P_ENTER_TO', $data['P_ENTER_TO']);
+            $stmt->bindParam(':P_ENTRY_EMPLOYEE', $data['P_ENTRY_EMPLOYEE']);
             $stmt->bindParam(':P_START', $data['start']);
             $stmt->bindParam(':P_LIMIT', $data['limit']);
             $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT, 11);
@@ -109,10 +112,12 @@ class DEADS_TB extends Model
                            :P_REPORT_CREATED_BY_CD,:P_BIRTH_DATE,:P_DATE_DEATH,:P_NATIONALITY_CD,:P_MARTIAL_STATUS_CD,:P_DEATH_COUNTRY,:P_DEATH_REGION_PLACE,:P_DEATH_CITY_PLACE,
                            :P_BIRTH_PLACE,:P_RELEGION_CD,:P_JOB_CD,:P_BURIAL_PLACE,:P_BURIAL_CODE,:P_PREGNANCY_CD,:P_GESTATIONAL_WEEK,:P_AFTER_DELIVERY_CD,:P_PARTNER_ID,:P_PARTNER_NAME,
                            :P_DOC_SPECIALIST,:P_DOC_ADDRESS,:P_TREATMENT_DATE,:P_PREVIEW_DATE,:P_SEEING_CORPSE_DATE,:P_CORPSE_DISSECTION_CD,:P_CORPSE_DESSECTION_DATE,:P_REPORTER_SEX_CD,
-                           :P_REPORTER_NATIONALITY_CD,:P_RELATIONSHIP,:P_REPORTER_ADDRESS,:P_REPORTER_MOBILE,:P_RECEIVE_DATE,:P_RECEIVER_NAME,:P_REGISTER_DATE,:P_REGISTER_NAME,:P_REGISTER_PLACE_CD,:P_SOURSE,:P_QR_CD,:P_DEAD_NUMBER,:P_RESULT); end;";
+                           :P_REPORTER_NATIONALITY_CD,:P_RELATIONSHIP,:P_REPORTER_ADDRESS,:P_REPORTER_MOBILE,:P_RECEIVE_DATE,:P_RECEIVER_NAME,:P_REGISTER_DATE,:P_REGISTER_NAME,:P_REGISTER_PLACE_CD,:P_SOURSE,:P_QR_CD,:P_DEAD_NUMBER,:P_RESULT,:QR_CODE,:P_ID); end;";
         return DB::transaction(function ($conn) use ($sql_dead, $data) {
             $P_RESULT = 0;
             $P_DEAD_NUMBER = 0;
+            $QR_CODE = 0;
+            $P_ID_NO = $data['P_ID_NO'];
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql_dead);
             $stmt->bindParam(':P_ID_NO', $data['P_ID_NO']);
@@ -180,9 +185,14 @@ class DEADS_TB extends Model
             $stmt->bindParam(':P_QR_CD', $data['P_QR_CD']);
             $stmt->bindParam(':P_DEAD_NUMBER', $P_DEAD_NUMBER, PDO::PARAM_INT);
             $stmt->bindParam(':P_RESULT', $P_RESULT, PDO::PARAM_INT, 1);
+            $stmt->bindParam(':QR_CODE', $QR_CODE, PDO::PARAM_INT);
+            $stmt->bindParam(':P_ID', $P_ID_NO, PDO::PARAM_INT);
+
             $stmt->execute();
             $data['P_DEAD_NUMBER'] = $P_DEAD_NUMBER;
             $data['P_RESULT'] = $P_RESULT;
+            $data['QR_CODE'] = $QR_CODE;
+            $data['P_ID'] = $P_ID_NO;
             return $data;
         });
     }
@@ -286,7 +296,7 @@ class DEADS_TB extends Model
     :P_UPDATED_BY,:P_BIRTH_DATE,:P_DATE_DEATH,:P_NATIONALITY_CD,:P_MARTIAL_STATUS_CD,:P_DEATH_COUNTRY,:P_DEATH_REGION_PLACE,:P_DEATH_CITY_PLACE,
     :P_BIRTH_PLACE,:P_RELEGION_CD,:P_JOB_CD,:P_BURIAL_PLACE,:P_BURIAL_CODE,:P_PREGNANCY_CD,:P_GESTATIONAL_WEEK,:P_AFTER_DELIVERY_CD,:P_PARTNER_ID,:P_PARTNER_NAME,
     :P_DOC_SPECIALIST,:P_DOC_ADDRESS,:P_TREATMENT_DATE,:P_PREVIEW_DATE,:P_SEEING_CORPSE_DATE,:P_CORPSE_DISSECTION_CD,:P_CORPSE_DESSECTION_DATE,:P_REPORTER_SEX_CD,
-    :P_REPORTER_NATIONALITY_CD,:P_RELATIONSHIP,:P_REPORTER_ADDRESS,:P_REPORTER_MOBILE,:P_RECEIVE_DATE,:P_RECEIVER_NAME,:P_REGISTER_DATE,:P_REGISTER_NAME,:P_REGISTER_PLACE_CD,:P_COMMITTE_OPINION,:P_RESULT); end;";
+    :P_REPORTER_NATIONALITY_CD,:P_RELATIONSHIP,:P_REPORTER_ADDRESS,:P_REPORTER_MOBILE,:P_RECEIVE_DATE,:P_RECEIVER_NAME,:P_REGISTER_DATE,:P_REGISTER_NAME,:P_REGISTER_PLACE_CD,:P_COMMITTE_OPINION,:P_SOURCE,:P_RESULT); end;";
         return DB::transaction(function ($conn) use ($sql_dead, $data) {
             $lista = [];
             $P_RESULT = 0;
@@ -358,6 +368,7 @@ class DEADS_TB extends Model
             $stmt->bindParam(':P_REGISTER_NAME', $data['P_REGISTER_NAME']);
             $stmt->bindParam(':P_REGISTER_PLACE_CD', $data['P_REGISTER_PLACE_CD']);
             $stmt->bindParam(':P_COMMITTE_OPINION', $data['P_COMMITTE_OPINION']);
+            $stmt->bindParam(':P_SOURCE', $data['P_SOURCE']);
             $stmt->bindParam(':P_RESULT', $P_RESULT, PDO::PARAM_INT, 1);
             $stmt->execute();
             $data['P_DEAD_NUMBER'] = $P_DEAD_NUMBER;
@@ -549,14 +560,17 @@ class DEADS_TB extends Model
         });
     }
 
-    public static function GET_COUNT_DEAD()
+    public static function GET_COUNT_DEAD($data)
     {
-        $sql = "begin DEAD_INFO_PKG.GET_COUNT_DEAD (:DEAD_COUNT); end;";
+        $sql = "begin DEAD_INFO_PKG.GET_COUNT_DEAD (:DATE_FROM,:DATE_TO,:DEAD_COUNT); end;";
 
-        return DB::transaction(function ($conn) use ($sql) {
+        return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
+
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['Death_date_frm']);
+            $stmt->bindParam(':DATE_TO', $data['Death_date_to']);
             $stmt->bindParam(':DEAD_COUNT', $lista, PDO::PARAM_STMT);
             $stmt->execute();
             oci_execute($lista, OCI_DEFAULT);
@@ -940,12 +954,15 @@ class DEADS_TB extends Model
 
     public static function GET_Daily_Report_D($data)
     {
+        //$sql = "begin DEAD_INFO_PKG.GET_DEATHS_LIMIT (:ID,:SEX,:DIAG_FROM,:DIAG_TO,:YEAR_FROM,:YEAR_TO,:DATE_FROM,:DATE_TO,:AGE_FROM,:AGE_TO,:PLACE_CD,:HOS_CD,:USER_CD,:POINT_CD,:P_START,:P_LIMIT,:RESULT_COUNT,:DEADS); end;";
         $sql = "begin DEAD_INFO_PKG.GET_DEATHS_LIMIT (:ID,:SEX,:DIAG_FROM,:DIAG_TO,:YEAR_FROM,:YEAR_TO,:DATE_FROM,:DATE_TO,:AGE_FROM,:AGE_TO,:PLACE_CD,:HOS_CD,:USER_CD,:POINT_CD,:P_START,:P_LIMIT,:RESULT_COUNT,:DEADS); end;";
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
             $RESULT_COUNT = 0;
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
+            //$data['Death_date_frm'] = date('d/m/Y', strtotime($data['Death_date_frm']));
+           // $data['Death_date_to'] = date('d/m/Y', strtotime($data['Death_date_to']));
             $stmt->bindParam(':ID', $data['Dead_ID']);
             $stmt->bindParam(':SEX', $data['Sex']);
             $stmt->bindParam(':DIAG_FROM', $data['Diag_From']);
@@ -1564,6 +1581,24 @@ class DEADS_TB extends Model
 
         });
 
+    }
+    //delete data
+
+    public static function DELETE_DEAD_DATA($data)
+    {
+        //dd($data);
+        $sql_dead = "begin DEAD_INFO_PKG.DELETE_DEAD_INFO(:P_DEAD_NUMBER,:P_RESULT); end;";
+        return DB::transaction(function ($conn) use ($sql_dead, $data) {
+            $lista = [];
+            $P_RESULT = 0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql_dead);
+            $stmt->bindParam(':P_DEAD_NUMBER', $data['P_DEAD_NUMBER']);
+            $stmt->bindParam(':P_RESULT', $P_RESULT, PDO::PARAM_INT, 1);
+            $stmt->execute();
+            $data['P_RESULT'] = $P_RESULT;
+            return $data;
+        });
     }
 
 }

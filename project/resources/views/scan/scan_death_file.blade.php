@@ -63,10 +63,10 @@
 
                         <div class="col-lg-4">
                             <!--begin::Col-->
-                            @if (IsPermissionBtn(6))
+                            {{-- @if (IsPermissionBtn(6)) --}}
                             <input type="hidden" name="scan_yes" id="scan_yes" value="0" />
                                 <button type="button" class="btn btn-primary me-2" onclick="Simple_AcquireImage()">مسح ضوئي</button>
-                            @endif
+                            {{-- @endif --}}
                             <button type="button" class="btn btn-dark me-2" onclick="()">مسح البيانات</button>
 
                             <!--end::Col-->

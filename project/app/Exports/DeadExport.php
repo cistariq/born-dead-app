@@ -56,7 +56,9 @@ class DeadExport implements FromCollection, WithHeadings, WithMapping, WithChunk
             $data['ICD4_NAME'],
             $data['DEAD_ICD4'],
             $data['DREF_NAME_AR'],
-            $data['DEATH_TYPE']
+            $data['DEATH_TYPE'],
+            $data['USER_FULL_NAME'],
+            $data['ENTERY_POINT']
 
         ];
     }
@@ -75,7 +77,9 @@ class DeadExport implements FromCollection, WithHeadings, WithMapping, WithChunk
             'المرض الأصلي',
             'كود المرض الأصلي',
             'المستشفى',
-            'نوع الوفاة '
+            'نوع الوفاة ',
+            'المستخدم',
+            'نقطة الإدخال '
 
         ];
     }

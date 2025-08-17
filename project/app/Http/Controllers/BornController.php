@@ -22,12 +22,13 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use App\Models\User;
 
 use Illuminate\Http\Request;
 
 class BornController extends Controller
 {
-    use CitizenDataTrait,BornDataTrait;
+    use CitizenDataTrait, BornDataTrait;
 
     public function insert_new_born()
     {
@@ -67,7 +68,7 @@ class BornController extends Controller
     //     return abort(404);
     // }
 
-        public function update_born($P_BI_CODE = null)
+    public function update_born($P_BI_CODE = null)
     {
         if ($P_BI_CODE) {
             $data['P_BI_CODE'] = $P_BI_CODE;
@@ -112,13 +113,16 @@ class BornController extends Controller
 
     public function add_new_born()
     {
+        $user_id = Auth()->id();
+        $data['hos_no'] = User::where('id', $user_id)->value('user_dref_cd');
+        //dd($data['hos_no']);
         $data['region'] = C_REGION_TB::get();
         $data['city'] = C_CITY_TB::get();
         $data['marital_status'] = C_MARTIAL_STATUS_TB::get();
         $data['jobs'] = C_JOB_TB::get();
         $data['religion'] = C_RELEGION_TB::get();
         $data['hospitals'] = C_DETAILS_REFERRAL_TB::get();
-      //  dd($data['hospitals']);
+        //  dd($data['hospitals']);
 
         return view('born.new_born', $data);
     }
@@ -133,8 +137,8 @@ class BornController extends Controller
             'P_SECOND_NAME' => 'string|nullable',
             'P_THIRD_NAME' => 'string|nullable',
             'P_LAST_NAME' => 'string|nullable',
-            'P_DATE_FROM' => 'nullable|date_format:d/m/Y|before:' . date('d/m/Y'),
-            'P_DATE_TO' => 'nullable|date_format:d/m/Y|before:' . date('d/m/Y'),
+            'P_DATE_FROM' => 'nullable|date_format:d/m/Y|before_or_equal:' . date('d/m/Y'),
+            'P_DATE_TO' => 'nullable|date_format:d/m/Y|before_or_equal:' . date('d/m/Y'),
             'P_SEX_NO' => 'numeric|nullable',
             'P_REGION_NO' => 'numeric|nullable',
             'P_CITY_NO' => 'numeric|nullable',
@@ -151,18 +155,20 @@ class BornController extends Controller
         if ($query['data']) {
             $action = '';
             foreach ($query['data'] as $key => $value) {
+                $action = '<div class="d-flex justify-content-center gap-1">';
                 // $action = '<button type="button" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-3"
                 //             onclick=""  title="طباعة صورة إشعار الولادة">
                 //             <i class="fonticon-printer fs-3"></i>
                 //         </button>';
-                $action = '<button type="button" class="btn btn-icon btn-bg-light btn-active-color-warning btn-sm me-3"
+                $action .= '<button type="button" class="btn btn-icon btn-active-color-warning"
                         onclick="update_born_notic(' . $value['BI_CODE'] . ');"  title="تعديل بيانات اشعار الولادة">
-                         <i class="fa-solid fa-pen-to-square fs-3"></i>
+        <i class="fa-solid fa-pen-to-square"></i>
                     </button>';
                 // $action .= '<button type="button" class="btn btn-icon btn-bg-light btn-active-color-danger btn-sm me-3"
                 //     onclick=""  title="حذف إشعار الولادة">
                 //     <i class="fas fa-trash-alt fs-3"></i>
                 // </button>';
+                $action .= '</div>';
                 $result['data'][] = array(
                     $key + 1,
                     $value['BI_CODE'],
@@ -446,11 +452,10 @@ class BornController extends Controller
         //dd($request->all());
         $validator = Validator::make($request->all(), $role);
         if ($validator->fails()) {
-            return Response::json(array(
+            return Response::json([
                 'success' => false,
-                'errors' => $validator->getMessageBag()->toArray()
-
-            )); // 400 being the HTTP code for an invalid request.
+                'errors'  => $validator->errors()
+            ], 422);
         }
         $request->merge(["P_FATHER_MODIFIED_BY" => Auth()->id()]);
         try {
@@ -500,11 +505,10 @@ class BornController extends Controller
         //dd($request->all());
         $validator = Validator::make($request->all(), $role);
         if ($validator->fails()) {
-            return Response::json(array(
+            return Response::json([
                 'success' => false,
-                'errors' => $validator->getMessageBag()->toArray()
-
-            )); // 400 being the HTTP code for an invalid request.
+                'errors'  => $validator->errors()
+            ], 422);
         }
         $request->merge(["P_MOTHER_MODIFIED_BY" => Auth()->id()]);
         try {
@@ -552,11 +556,10 @@ class BornController extends Controller
 
         $validator = Validator::make($request->all(), $role);
         if ($validator->fails()) {
-            return Response::json(array(
+            return Response::json([
                 'success' => false,
-                'errors' => $validator->getMessageBag()->toArray()
-
-            )); // 400 being the HTTP code for an invalid request.
+                'errors'  => $validator->errors()
+            ], 422);
         }
         //$request->merge(["P_FATHER_CREATED_BY" => Auth()->id()]);
         try {
@@ -566,7 +569,7 @@ class BornController extends Controller
             $data1['id_no'] = Auth()->id();
             $data1['table_name'] = 'BORN_FATHER_TB';
             $data1['column_name'] = 'e';
-          //  $data['old_record'] = $request->all();
+            //  $data['old_record'] = $request->all();
             $data1['type_action'] = 'I';
             Log::create($data1);
         } catch (\Exception $exception) {
@@ -606,11 +609,10 @@ class BornController extends Controller
 
         $validator = Validator::make($request->all(), $role);
         if ($validator->fails()) {
-            return Response::json(array(
+            return Response::json([
                 'success' => false,
-                'errors' => $validator->getMessageBag()->toArray()
-
-            )); // 400 being the HTTP code for an invalid request.
+                'errors'  => $validator->errors()
+            ], 422);
         }
         //$request->merge(["P_MOTHER_CREATED_BY" => Auth()->id()]);
         try {
@@ -620,7 +622,7 @@ class BornController extends Controller
             $data1['id_no'] = Auth()->id();
             $data1['table_name'] = 'BORN_MOTHER_TB';
             $data1['column_name'] = 'e';
-           // $data['old_record'] = $request->all();
+            // $data['old_record'] = $request->all();
             $data1['type_action'] = 'I';
             Log::create($data1);
         } catch (\Exception $exception) {
@@ -636,7 +638,7 @@ class BornController extends Controller
     function save_born_details_info(Request $request)
     {
         $role = [
-           // 'F_ID' =>'numeric|digits:9|required',
+            // 'F_ID' =>'numeric|digits:9|required',
             //'M_ID' =>'numeric|digits:9|required',
             'BORN_DETAILS_REASON_CD' => 'numeric|nullable',
             'BORN_DETAILS_GRAVID' => 'numeric|nullable',
@@ -684,8 +686,8 @@ class BornController extends Controller
 
         try {
             $query = BORNS_INFO_TB::ADD_BORN_DETAILS_DATA($request->all());
-            $result['B_CODE']=$query['BI_NUMBER'];
-           // dd($result['B_CODE']);
+            $result['B_CODE'] = $query['BI_NUMBER'];
+            // dd($result['B_CODE']);
             $data1['user_id'] = Auth()->id();
             $data1['ip'] = request()->ip();
             $data1['id_no'] = Auth()->id();
@@ -694,16 +696,13 @@ class BornController extends Controller
             $data['old_record'] = $request->all();
             $data1['type_action'] = 'I';
             Log::create($data1);
-
-
         } catch (\Exception $exception) {
 
             //DB::rollBack();
-                       return Response::json(array('success' => false, 'results' => ['message' => $exception->getMessage(), 400]));
+            return Response::json(array('success' => false, 'results' => ['message' => $exception->getMessage(), 400]));
             //$exception->getTraceAsString()
         }
-        return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية الإدخال بنجاح'],$result));
-
+        return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية الإدخال بنجاح'], $result));
     }
 
     public function GET_BORNS_DATE(Request $request)
@@ -826,14 +825,15 @@ class BornController extends Controller
     {
         $role = [
             'P_BORN_CODE' => 'nullable|numeric',
+            'P_BORN_ID' => 'nullable|numeric|digits:9',
             'P_FATHER_ID' => 'nullable|numeric|digits:9',
             'P_MOTHER_ID' => 'nullable|numeric|digits:9',
             'P_FIRST_NAME' => 'string|nullable',
             'P_SECOND_NAME' => 'string|nullable',
             'P_THIRD_NAME' => 'string|nullable',
             'P_LAST_NAME' => 'string|nullable',
-            'P_DATE_FROM' => 'nullable|date_format:d/m/Y|before:' . date('d/m/Y'),
-            'P_DATE_TO' => 'nullable|date_format:d/m/Y|before:' . date('d/m/Y'),
+            'P_DATE_FROM' => 'nullable|date_format:d/m/Y|before_or_equal:' . date('d/m/Y'),
+            'P_DATE_TO' => 'nullable|date_format:d/m/Y|before_or_equal:' . date('d/m/Y'),
             'P_SEX_NO' => 'numeric|nullable',
             'P_REGION_NO' => 'numeric|nullable',
             'P_CITY_NO' => 'numeric|nullable',
@@ -857,13 +857,14 @@ class BornController extends Controller
         if ($query['data']) {
             $action = '';
             foreach ($query['data'] as $key => $value) {
+                $action = '<div class="d-flex justify-content-center gap-1">';
                 // $action = '<button type="button" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-3"
                 //             onclick=""  title="طباعة صورة إشعار الولادة">
                 //             <i class="fonticon-printer fs-3"></i>
                 //         </button>';
                 if (IsPermissionBtn(29)) {
 
-                    $action = '<button type="button" class="btn btn-icon btn-bg-light btn-active-color-warning btn-sm me-3"
+                    $action .= '<button type="button" class="btn btn-icon btn-active-color-warning"
                         onclick="update_born_notic(' . $value['BI_CODE'] . ');"  title="تعديل بيانات اشعار الولادة">
                          <i class="fa-solid fa-pen-to-square fs-3"></i>
                     </button>';
@@ -872,6 +873,7 @@ class BornController extends Controller
                 //     onclick=""  title="حذف إشعار الولادة">
                 //     <i class="fas fa-trash-alt fs-3"></i>
                 // </button>';
+                $action .= '</div>';
                 $result['data'][] = array(
                     $key + 1,
                     $value['BI_CODE'],
@@ -900,7 +902,7 @@ class BornController extends Controller
         $request->merge(["start" => null]);
         $request->merge(["limit" => null]);
         $data_res = BORNS_INFO_TB::GET_BORN_DATA($request->all());
-      //  dd($data_res);
+        //  dd($data_res);
         $data1['user_id'] = Auth()->id();
         $data1['ip'] = request()->ip();
         $data1['id_no'] = Auth()->id();
@@ -1098,7 +1100,7 @@ class BornController extends Controller
             return Response::json(array('success' => false, 'results' =>  "تم الانتهاء من ادخال المواليد للولادة الحالية!!!"));
         }
     }
-//add all born data
+    //add all born data
     function save_all_born_info(Request $request)
     {
         $role = [
@@ -1153,16 +1155,15 @@ class BornController extends Controller
 
         $validator = Validator::make($request->all(), $role);
         if ($validator->fails()) {
-            return Response::json(array(
+            return Response::json([
                 'success' => false,
-                'errors' => $validator->getMessageBag()->toArray()
-
-            )); // 400 being the HTTP code for an invalid request.
+                'errors'  => $validator->errors()
+            ], 422);
         }
 
         try {
             $query = BORNS_INFO_TB::ADD_BORN_DETAILS_DATA($request->all());
-            $result['B_CODE']=$query['BI_NUMBER'];
+            $result['B_CODE'] = $query['BI_NUMBER'];
 
             $request->merge(["P_BI_NOTIFICATION_CREATED_BY" => Auth()->id()]);
             $request->merge(["P_BI_NOTIFICATION_CREATED_ON" => date('d/m/Y h:i')]);
@@ -1170,7 +1171,7 @@ class BornController extends Controller
 
             $query1 = BORNS_INFO_TB::ADD_BORN_DATA($request->all());
 
-           // dd($result['B_CODE']);
+            // dd($result['B_CODE']);
             $data1['user_id'] = Auth()->id();
             $data1['ip'] = request()->ip();
             $data1['id_no'] = Auth()->id();
@@ -1179,15 +1180,12 @@ class BornController extends Controller
             $data['old_record'] = $request->all();
             $data1['type_action'] = 'I';
             Log::create($data1);
-
-
         } catch (\Exception $exception) {
 
             //DB::rollBack();
-                       return Response::json(array('success' => false, 'results' => ['message' => $exception->getMessage(), 400]));
+            return Response::json(array('success' => false, 'results' => ['message' => $exception->getMessage(), 400]));
             //$exception->getTraceAsString()
         }
-        return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية الإدخال بنجاح'],$result));
-
+        return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية الإدخال بنجاح'], $result));
     }
 }

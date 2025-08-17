@@ -93,11 +93,11 @@
             cellpadding="0">
             <tr style="background-color:#eee ">
                 <td style="text-align: center; font-weight:bold" colspan="5">
-                    @if(isset($data[0]['SOURCE'])  && $data[0]['SOURCE'] == 1)
+                    {{-- @if(isset($data[0]['SOURCE'])  && $data[0]['SOURCE'] == 1)
                     بيانات المتوفي (شهيد)
-                @else
+                @else --}}
                     بيانات المتوفي
-                @endif
+                {{-- @endif --}}
 
                 </td>
             </tr>
@@ -282,6 +282,13 @@
                     ختم الطبيب
 
                 </td>
+            </tr>
+              <tr>
+
+                <td colspan="3" width="90%">
+                {{ $data[0]['COMMITTE_OPINION'] ? " سبب التعديل :" . $data[0]['COMMITTE_OPINION'] : '' }}
+            </td>
+
             </tr>
             @endif
             <tr>

@@ -8,7 +8,6 @@
 
     <body>
 
-
         <table width="508" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
                 <th width="95">
@@ -18,35 +17,31 @@
                 <th width="95">
                     <div align="right">{{ $old_record['date_F'] }}</div>
                 </th>
-                <th width="275">:توزيع المواليد حسب التوائم من تاريخ</th>
+                <th width="275">:توزيع المواليد حسب الجنس من تاريخ</th>
             </tr>
         </table>
-        <P></P>
 
-    @php
-        $total = collect($twinsData)->sum('COUNTER');
-    @endphp
+        <br>
 
-    <table class="sortable" id="anyid" width="443" border="1" align="center" bordercolor="#666666">
+    <table class="sortable" width="456" border="1" align="center">
         <tr>
             <th bgcolor="#91B641">النسبة المئوية</th>
             <th bgcolor="#91B641">العدد</th>
-            <th width="195" bgcolor="#91B641"><div align="center"><strong>التوائم</strong></div></th>
+            <th bgcolor="#91B641">الجنس</th>
         </tr>
-
-        @foreach($twinsData as $entry)
-            <tr>
-                <td align="center">
-                    {{ number_format(($entry['COUNTER'] / $total) * 100, 2, '.', '') }}%
-                </td>
-                <td align="center">{{ $entry['COUNTER'] }}</td>
-                <td align="center">{{ $entry['C'] }}</td>
-            </tr>
-        @endforeach
-
+        <tr>
+            <td align="center">{{ number_format(($born_sex_only[0]['MALE'] / $born_sex_only[0]['TOTAL']) * 100, 2) }}%</td>
+            <td align="center">{{ $born_sex_only[0]['MALE'] }}</td>
+            <td align="center" class="style21">الذكور</td>
+        </tr>
+        <tr>
+            <td align="center">{{ number_format(($born_sex_only[0]['FEMALE'] / $born_sex_only[0]['TOTAL']) * 100, 2) }}%</td>
+            <td align="center">{{ $born_sex_only[0]['FEMALE'] }}</td>
+            <td align="center" class="style21">الاناث</td>
+        </tr>
         <tr class="sortbottom">
             <td align="center">100%</td>
-            <td align="center">{{ $total }}</td>
+            <td align="center">{{ $born_sex_only[0]['TOTAL'] }}</td>
             <td align="center"><strong>المجموع</strong></td>
         </tr>
     </table>
@@ -64,4 +59,5 @@
 
 
 </body>
-</html>
+
+</div>

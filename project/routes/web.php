@@ -8,6 +8,8 @@ use App\Http\Controllers\ConstantController;
 use App\Http\Controllers\dead\DeadController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\BornController;
+use App\Http\Controllers\QuoteBornController;
+
 use App\Http\Controllers\dead\ImportExcelDeadController;
 use App\Http\Controllers\dead\RecipientController;
 use App\Http\Controllers\PersonalInfoController;
@@ -62,11 +64,14 @@ Route::group(['middleware' => [Authenticate::class]],function(){
 
     Route::post('/check_records', [DeadController::class, 'check_records'])->name('check_records');
     Route::post('/check_record_born', [BornController::class, 'check_record_born'])->name('check_record_born');
+    Route::post('/Send_SMS', [DeadController::class, 'Send_SMS'])->name('Send_SMS');
+    Route::post('/check_record_quata', [QuoteBornController::class, 'check_record_quata'])->name('check_record_quata');
 
 
     Route::get('/welcome', [DashboardController::class, 'welcome'])->name('welcome');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/getStatistics', [DashboardController::class, 'getStatistics'])->name('dashboard.getStatistics');
 
     Route::group(['prefix' => 'dead','as'=>'dead.'], function () {
         //Route::get('/', [DeadController::class, 'index'])->name('index');
@@ -101,6 +106,8 @@ Route::group(['middleware' => [Authenticate::class]],function(){
         Route::get('/file_pdf', [DeadController::class, 'file_pdf'])->name('file_pdf');
         Route::post('/get_helth_center', [DeadController::class, 'get_helth_center'])->name('get_helth_center');
         Route::post('/get_hos_by_place', [DeadController::class, 'get_hos_by_place'])->name('get_hos_by_place');
+       // Route::post('/delete_dead', [DeadController::class, 'delete_dead'])->name('delete_dead');
+        Route::get('/delete_dead', [DeadController::class, 'delete_dead'])->name('delete_dead');
 
 
     });
@@ -137,6 +144,10 @@ Route::group(['middleware' => [Authenticate::class]],function(){
             Route::get('/GET_Death_updated_rep',[ReportController::class,'GET_Death_updated_rep'])->name('GET_Death_updated_rep');
             Route::get('/GET_NotScanned_files_rep',[ReportController::class,'GET_NotScanned_files_rep'])->name('GET_NotScanned_files_rep');
             Route::get('/Icd_Search',[ReportController::class,'Icd_Search'])->name('Icd_Search');
+            Route::get('/icd-section/{code}', [ReportController::class, 'show'])->name('icd.show');
+            Route::get('/icd-search/{code}', [ReportController::class, 'search']);
+            Route::get('/icd-autocomplete/{term}', [ReportController::class, 'autocomplete'])->name('icd-autocomplete');
+
             Route::post('/get_unscanned_file_rep',[ReportController::class,'get_unscanned_file_rep'])->name('get_unscanned_file_rep');
 
             Route::get('/Daily_Born',[ReportController::class,'Daily_Born'])->name('Daily_Born');
@@ -146,6 +157,16 @@ Route::group(['middleware' => [Authenticate::class]],function(){
             Route::post('/get_Daily_Born',[ReportController::class,'get_Daily_Born'])->name('get_Daily_Born');
             Route::post('/Daily_Born_Delivery_Print',[ReportController::class,'Daily_Born_Delivery_Print'])->name('Daily_Born_Delivery_Print');
             Route::post('/Get_Daily_Dead_Result',[ReportController::class,'Get_Daily_Dead_Result'])->name('Get_Daily_Dead_Result');
+            Route::get('/Distribution_Ages',[ReportController::class,'Distribution_Ages'])->name('Distribution_Ages');
+            Route::get('/Distribution_sex',[ReportController::class,'Distribution_sex'])->name('Distribution_sex');
+            Route::get('/Distribution_Weight',[ReportController::class,'Distribution_Weight'])->name('Distribution_Weight');
+            Route::get('/Distribution_Clinics',[ReportController::class,'Distribution_Clinics'])->name('Distribution_Clinics');
+            Route::get('/Distribution_Twins',[ReportController::class,'Distribution_Twins'])->name('Distribution_Twins');
+            Route::get('/Distribution_Region',[ReportController::class,'Distribution_Region'])->name('Distribution_Region');
+            Route::get('/Distribution_Years',[ReportController::class,'Distribution_Years'])->name('Distribution_Years');
+            Route::get('/Distribution_SexOnly',[ReportController::class,'Distribution_SexOnly'])->name('Distribution_SexOnly');
+            Route::get('/Distribution_Job',[ReportController::class,'Distribution_Job'])->name('Distribution_Job');
+
 
 
     });
@@ -164,6 +185,8 @@ Route::group(['middleware' => [Authenticate::class]],function(){
             Route::post('/insert_user', [UserController::class, 'insert_user'])->name('insert_user');
             Route::post('/update', [UserController::class, 'update'])->name('update');
             Route::post('/update_password', [UserController::class, 'update_password'])->name('update_password');
+            Route::post('/delete', [UserController::class, 'delete'])->name('delete');
+
         });
         Route::group(['prefix' => 'personl-info','as'=>'personl_info.'], function () {
             Route::get('/', [PersonalInfoController::class, 'index'])->name('index');
@@ -243,7 +266,15 @@ Route::group(['middleware' => [Authenticate::class]],function(){
             Route::post('/check_record_born', [BornController::class, 'check_record_born'])->name('check_record_born');
 
             Route::post('/save_all_born_info', [BornController::class, 'save_all_born_info'])->name('save_all_born_info');
-
+            Route::get('/new_order_quote', [QuoteBornController::class,'new_order_quote'])->name('new_order_quote');
+            Route::get('/approve_quote_request', [QuoteBornController::class,'approve_quote_request'])->name('approve_quote_request');
+            Route::get('/release_requests', [QuoteBornController::class,'release_requests'])->name('release_requests');
+            Route::post('/store', [QuoteBornController::class, 'store'])->name('store');
+            Route::get('/search', [QuoteBornController::class, 'search'])->name('search');
+            Route::post('/approve', [QuoteBornController::class, 'approve'])->name('approve');
+            Route::post('/cancel', [QuoteBornController::class, 'cancel'])->name('cancel');
+            Route::get('/search_release', [QuoteBornController::class, 'search_release'])->name('search_release');
+            Route::post('/release', [QuoteBornController::class, 'release'])->name('release');
 
 
 
@@ -262,6 +293,7 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/icd-codes', [ICDCodeController::class, 'index'])->name('icd.index');
 Route::get('/icd-codes/children/{id}', [ICDCodeController::class, 'fetchChildren'])->name('icd.fetchChildren');
+
 
 
 

@@ -108,6 +108,8 @@
                 <form class="form fv-plugins-bootstrap5 fv-plugins-framework mx-auto" novalidate="novalidate"
                     id="insert_dead_form">
                     <input type="hidden" value="{{ @$dead_number }}" id="P_DEAD_NUMBER" name="P_DEAD_NUMBER">
+                    <input type="hidden" value="{{ @$qr_code }}" id="QR_CODE" name="QR_CODE">
+                    <input type="hidden" value="{{ @$P_ID }}" id="P_ID" name="P_ID">
                     <!--begin::Group-->
                     <div class="mb-6">
                         <!--begin::Step 1-->
@@ -168,19 +170,23 @@
                                         <div class="row">
                                             <div class="col-lg-3">
                                                 <input type="text" id="P_FIRST_NAME"
-                                                    class="form-control form-control-lg mb-3" placeholder="الاسم الأول" readonly="readonly">
+                                                    class="form-control form-control-lg mb-3" placeholder="الاسم الأول"
+                                                    readonly="readonly">
                                             </div>
                                             <div class="col-lg-3">
                                                 <input type="text" id="P_FATHER_NAME"
-                                                    class="form-control form-control-lg mb-3" placeholder="اسم الأب" readonly="readonly">
+                                                    class="form-control form-control-lg mb-3" placeholder="اسم الأب"
+                                                    readonly="readonly">
                                             </div>
                                             <div class="col-lg-3">
                                                 <input type="text" id="P_GRAND_FATHER_NAME"
-                                                    class="form-control form-control-lg mb-3" placeholder="اسم الجد" readonly="readonly">
+                                                    class="form-control form-control-lg mb-3" placeholder="اسم الجد"
+                                                    readonly="readonly">
                                             </div>
                                             <div class="col-lg-3">
                                                 <input type="text" id="P_FAMILY_NAME"
-                                                    class="form-control form-control-lg mb-3" placeholder="العائلة" readonly="readonly">
+                                                    class="form-control form-control-lg mb-3" placeholder="العائلة"
+                                                    readonly="readonly">
                                             </div>
                                         </div>
                                     </div>
@@ -458,7 +464,7 @@
                                     </div>
                                     <label class="col-lg-2 col-form-label  fw-bold fs-6">مكان الدفن</label>
                                     <div class="col-lg-4 fv-row">
-                                        <input class="form-control" id="P_Burial_Place" />
+                                        <input class="form-control" id="P_Burial_Place" autocomplete="on" />
                                     </div>
                                 </div>
                                 <div class="row mb-6">
@@ -651,7 +657,7 @@
                                     <!--begin::Col-->
                                     <div class="col-lg-3">
                                         <input type="text" name="P_Doctor_Name" id="P_Doctor_Name"
-                                            class="form-control form-control-lg mb-3 mb-lg-0">
+                                            class="form-control form-control-lg mb-3 mb-lg-0" autocomplete="on">
                                     </div>
                                     <!--begin::Label-->
                                     <label class="col-lg-2 col-form-label fw-bold fs-6">التخصص</label>
@@ -659,7 +665,7 @@
                                     <!--begin::Col-->
                                     <div class="col-lg-4">
                                         <input type="text" name="P_Special" id="P_Special"
-                                            class="form-control form-control-lg mb-3 mb-lg-0">
+                                            class="form-control form-control-lg mb-3 mb-lg-0" autocomplete="on">
                                     </div>
                                 </div>
                                 <!--begin::Input group-->
@@ -670,7 +676,7 @@
                                     <!--begin::Col-->
                                     <div class="col-lg-9">
                                         <input type="text" name="P_Doctor_Address" id="P_Doctor_Address"
-                                            class="form-control form-control-lg mb-3 mb-lg-0">
+                                            class="form-control form-control-lg mb-3 mb-lg-0" autocomplete="on">
                                     </div>
 
                                 </div>
@@ -790,7 +796,8 @@
                                     <label class="col-lg-2 col-form-label fw-bold fs-6">العنوان</label>
                                     <div class="col-lg-4">
                                         <input type="text" name="P_advertiser_Address" id="P_advertiser_Address"
-                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center">
+                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center"
+                                            autocomplete="on">
                                     </div>
                                 </div>
                                 <div class="row mb-8">
@@ -805,7 +812,8 @@
                                     <!--begin::Col-->
                                     <div class="col-lg-4">
                                         <input type="text" name="P_advertise_Date" id="P_advertise_Date"
-                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center" value="{{ date('d/m/Y H:i') }}">
+                                            class="form-control form-control-lg mb-3 mb-lg-0 text-center"
+                                            value="{{ date('d/m/Y H:i') }}">
                                     </div>
                                 </div>
                                 <div class="row mb-8">
@@ -927,14 +935,13 @@
     </div>
 @endsection
 @push('scripts')
-
-
     <script>
         var block_insert_dead = document.querySelector("#insert_dead_form");
         var block_insert_dead = new KTBlockUI(block_insert_dead);
     </script>
     <script>
         $(document).ready(function() {
+            $('#P_Issuing_notice_place').val("{{ $hos_no }}").change();
 
             /*  $("select").select2({
                   tags: "true",
@@ -1553,13 +1560,18 @@
                                 icon: "success",
                                 confirmButtonText: 'موافق'
                             }).then((result) => {
-                            /* Read more about isConfirmed, isDenied below */
-                            if (result.isConfirmed) {
-                            $('#P_DEAD_NUMBER').val(response[0]['P_DEAD_NUMBER']);
-                            print_crt_dead(response[0]['P_DEAD_NUMBER']);
-                            }
-                        });
-                          //  alert(response[0]['P_DEAD_NUMBER']);
+                                /* Read more about isConfirmed, isDenied below */
+                                if (result.isConfirmed) {
+                                    $('#P_DEAD_NUMBER').val(response[0]['P_DEAD_NUMBER']);
+                                    //alert(response[0]['QR_CODE']);
+                                    $('#QR_CODE').val(response[0]['QR_CODE']);
+                                    $('#P_ID').val(response[0]['P_ID']);
+
+                                    send_sms();
+                                    //print_crt_dead(response[0]['P_DEAD_NUMBER']);
+                                }
+                            });
+                            //  alert(response[0]['P_DEAD_NUMBER']);
 
 
                         } else {
@@ -1789,6 +1801,7 @@
             var P_REGISTER_NAME = '';
             var P_REGISTER_PLACE_CD = $('#P_Issuing_notice_place').val();
             var P_COMMITTE_OPINION = $('#P_COMMITTE_OPINION').val();
+            var P_SOURCE = $('#P_SOURSE').val();
 
 
 
@@ -1857,6 +1870,7 @@
                     'P_REGISTER_PLACE_CD': P_REGISTER_PLACE_CD,
                     'P_BURIAL_PLACE': P_BURIAL_PLACE,
                     'P_BURIAL_CODE': P_BURIAL_CODE,
+                    'P_SOURCE': P_SOURCE,
                     'P_COMMITTE_OPINION': P_COMMITTE_OPINION
 
                 },
@@ -2034,19 +2048,19 @@
                 $('#P_advertiser_Rel').val(response.results[0]['DEAD_D_RELATIONSHIP']);
                 $('#P_advertiser_Address').val(response.results[0]['DEAD_D_REPORTER_ADDRESS']);
                 var mobile = response.results[0]['DEAD_D_REPORTER_MOBILE'];
-                if(mobile.startsWith("5")){
+                if (mobile.startsWith("5")) {
                     mobile = '0' + mobile;
                 }
                 $('#P_advertiser_Phone').val(mobile);
                 // $('#P_advertise_Date').val(response.results[0]['DEAD_DATE_OF_REPORT']);
                 // $('#P_advertise_receive_Date').val(response.results[0]['DEAD_D_RECEIVE_DATE']);
                 $('#P_receive_emp_Name').val(response.results[0]['DEAD_D_RECEIVER_NAME']);
-               // $('#P_registery_Date').val(response.results[0]['DEAD_D_REGISTER_DATE']);
+                // $('#P_registery_Date').val(response.results[0]['DEAD_D_REGISTER_DATE']);
                 $('#P_regisery_emp_Name').val(response.results[0]['DEAD_D_REGISTER_NAME']);
                 $('#P_Issuing_notice_place').val(response.results[0]['DEAD_REGISTER_PLACE_CD']).change();
 
                 if (response.results[0]['DEAD_DATE_OF_REPORT'] != null) {
-                DEAD_DATE_OF_REPORT.setDate(new Date(response.results[0]['DEAD_DATE_OF_REPORT']));
+                    DEAD_DATE_OF_REPORT.setDate(new Date(response.results[0]['DEAD_DATE_OF_REPORT']));
                 }
 
                 if (response.results[0]['DEAD_D_RECEIVE_DATE'] != null) {
@@ -2102,137 +2116,142 @@
                 if (response.exist == 0) {
                     $('#P_FLAG').val('وفاة عادية (غير شهيد)');
                     $('#P_SOURSE').val(0);
-                  //  $('#save_btn').show();
-                }
-                else{
-                  //  alert(response.status_cd);
-                if (response.status_cd == 3) {
-                    $('#P_FLAG').val('وفاة عادية (غير شهيد)');
-                    $('#P_SOURSE').val(0);
-                    P_DEAD_DATE.setDate(new Date(response.event_date));
-                    // if (response.event_region_cd == 1) {
-                    //     $('#P_DEATH_PLACE_CD').val(5).change();
-                    // } else if (response.event_region_cd == 2) {
-                    //     $('#P_DEATH_PLACE_CD').val(1).change();
-                    // } else if (response.event_region_cd == 3) {
-                    //     $('#P_DEATH_PLACE_CD').val(7).change();
-                    // } else if (response.event_region_cd == 4) {
-                    //     $('#P_DEATH_PLACE_CD').val(8).change();
-                    // } else if (response.event_region_cd == 5) {
-                    //     $('#P_DEATH_PLACE_CD').val(6).change();
-
-                    // } else {
-                    //     $('#P_DEATH_PLACE_CD').val('').change();
-                    // }
-                  //  $('#P_DEATH_PLACE_CD').val(response.event_region_cd).change();
-                  //  alert(response.dref_cd);
-                    if (response.dref_cd==125) {
-                        $('#P_DEATH_PLACE_CD').val(2).change();
-                    }else if (response.dref_cd==138 || response.dref_cd==166 || response.dref_cd==167 || response.dref_cd==173 || response.dref_cd==174 || response.dref_cd==175 || response.dref_cd==176 ) {
-                        $('#P_DEATH_PLACE_CD').val(3).change();
-                    }else{
-                        $('#P_DEATH_PLACE_CD').val(1).change();
-                    }
-                    $('#P_hospital_id').val(response.dref_cd).change();
-                    $('#P_COMMITTE_OPINION').val(response.notes);
-                  //  $('#save_btn').show();
-                } else if (response.status_cd == 0) {
-
-                    if ($('#source').is(':checked') && ($('#P_ID_NO').val() != null || $('#P_ID_NO').val() != '')) {
-                        $('#P_FLAG').val('متوفي لجنة');
-                        $('#P_SOURSE').val(2);
-                    } else {
+                    //  $('#save_btn').show();
+                } else {
+                    //  alert(response.status_cd);
+                    if (response.status_cd == 3) {
                         $('#P_FLAG').val('وفاة عادية (غير شهيد)');
                         $('#P_SOURSE').val(0);
-                    }
-                    P_DEAD_DATE.setDate(new Date(response.event_date));
-                      if (response.dref_cd==125) {
-                        $('#P_DEATH_PLACE_CD').val(2).change();
-                    }else if (response.dref_cd==138 || response.dref_cd==166 || response.dref_cd==167 || response.dref_cd==173 || response.dref_cd==174 || response.dref_cd==175 || response.dref_cd==176 ) {
-                        $('#P_DEATH_PLACE_CD').val(3).change();
-                    }else{
-                        $('#P_DEATH_PLACE_CD').val(1).change();
-                    }
-                    $('#P_hospital_id').val(response.dref_cd).change();
+                        P_DEAD_DATE.setDate(new Date(response.event_date));
+                        // if (response.event_region_cd == 1) {
+                        //     $('#P_DEATH_PLACE_CD').val(5).change();
+                        // } else if (response.event_region_cd == 2) {
+                        //     $('#P_DEATH_PLACE_CD').val(1).change();
+                        // } else if (response.event_region_cd == 3) {
+                        //     $('#P_DEATH_PLACE_CD').val(7).change();
+                        // } else if (response.event_region_cd == 4) {
+                        //     $('#P_DEATH_PLACE_CD').val(8).change();
+                        // } else if (response.event_region_cd == 5) {
+                        //     $('#P_DEATH_PLACE_CD').val(6).change();
+
+                        // } else {
+                        //     $('#P_DEATH_PLACE_CD').val('').change();
+                        // }
+                        //  $('#P_DEATH_PLACE_CD').val(response.event_region_cd).change();
+                        //  alert(response.dref_cd);
+                        if (response.dref_cd == 125) {
+                            $('#P_DEATH_PLACE_CD').val(2).change();
+                        } else if (response.dref_cd == 138 || response.dref_cd == 166 || response.dref_cd == 167 ||
+                            response.dref_cd == 173 || response.dref_cd == 174 || response.dref_cd == 175 ||
+                            response.dref_cd == 176) {
+                            $('#P_DEATH_PLACE_CD').val(3).change();
+                        } else {
+                            $('#P_DEATH_PLACE_CD').val(1).change();
+                        }
+                        $('#P_hospital_id').val(response.dref_cd).change();
+                        $('#P_COMMITTE_OPINION').val(response.notes);
+                        //  $('#save_btn').show();
+                    } else if (response.status_cd == 0) {
+
+                        if ($('#source').is(':checked') && ($('#P_ID_NO').val() != null || $('#P_ID_NO').val() !=
+                                '')) {
+                            $('#P_FLAG').val('متوفي لجنة');
+                            $('#P_SOURSE').val(2);
+                        } else {
+                            $('#P_FLAG').val('وفاة عادية (غير شهيد)');
+                            $('#P_SOURSE').val(0);
+                        }
+                        P_DEAD_DATE.setDate(new Date(response.event_date));
+                        if (response.dref_cd == 125) {
+                            $('#P_DEATH_PLACE_CD').val(2).change();
+                        } else if (response.dref_cd == 138 || response.dref_cd == 166 || response.dref_cd == 167 ||
+                            response.dref_cd == 173 || response.dref_cd == 174 || response.dref_cd == 175 ||
+                            response.dref_cd == 176) {
+                            $('#P_DEATH_PLACE_CD').val(3).change();
+                        } else {
+                            $('#P_DEATH_PLACE_CD').val(1).change();
+                        }
+                        $('#P_hospital_id').val(response.dref_cd).change();
 
 
-                    $('#P_COMMITTE_OPINION').val(response.notes);
-                   // $('#save_btn').show();
+                        $('#P_COMMITTE_OPINION').val(response.notes);
+                        // $('#save_btn').show();
+                    } else if (response.status_cd == 1) {
+                        let dead_date = new Date(response.event_date);
+                        let formattedDate = dead_date.toLocaleString('en-GB', {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: false
+                        }).replace(',', '');
+
+                        $('#P_FLAG').val('تبليغ ذوي الشهداء');
+                        $('#P_SOURSE').val(1);
+                        $('#P_Date_dead').val(formattedDate);
+
+                        Swal.fire({
+                            text: ' يرجى مراجعة نظم المعلومات او اللجنة القضائية   !',
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        }).then(() => {
+                            let P_FLAG_value = $('#P_FLAG').val(); // Store the value before reset
+                            $('#insert_dead_form')[0].reset(); // Reset the form
+                            $('#P_FLAG').val(P_FLAG_value); // Restore the value after reset
+                            //$('#insert_dead_form .form-select').val('').trigger('change'); // Reset select fields
+                            block_insert_dead.release(); // Unblock if necessary
+                            $('#P_FLAG').val('');
+                            $('#save_btn').hide(); // Show save button if needed
+                        });
+
+                        block_insert_dead.release();
+                        $('#save_btn').show();
+                        //}
+
+                    } else if (response.status_cd == 2) {
+                        // alert('Tariq');
+                        $('#P_FLAG').val('شهيد معتمد');
+                        $('#P_SOURSE').val(1);
+                        P_DEAD_DATE.setDate(new Date(response.event_date));
+
+                        //   $('#P_Date_dead').val(response.event_date); /// by Nareen
+                        $('#P_COMMITTE_OPINION').val(response.notes);
+
+                        let $select = $("#DEAD_ICD1_CD");
+                        let $select2 = $("#DEAD_ICD4_CD");
+                        let $select3 = $("#DIAG1_NAME");
+                        let $select4 = $("#DIAG4_NAME");
+
+                        $("#DEAD_DETAILS_CD").val(4).change();
+                        if (response.dref_cd == 125) {
+                            $('#P_DEATH_PLACE_CD').val(2).change();
+                        } else if (response.dref_cd == 138 || response.dref_cd == 166 || response.dref_cd == 167 ||
+                            response.dref_cd == 173 || response.dref_cd == 174 || response.dref_cd == 175 ||
+                            response.dref_cd == 176) {
+                            $('#P_DEATH_PLACE_CD').val(3).change();
+                        } else {
+                            $('#P_DEATH_PLACE_CD').val(1).change();
+                        }
+                        $('#P_hospital_id').val(response.dref_cd).change();
+
+
+
+                        // Clear existing options
+                        $select.empty();
+                        // Append the new constant option
+                        $select.append('<option value="22921" selected>Y36</option>');
+                        $select2.empty();
+                        // Append the new constant option
+                        $select2.append('<option value="22921" selected>Y36</option>');
+                        $select3.empty();
+                        // Append the new constant option
+                        $select3.append('<option value="22921" selected>Operations of war</option>');
+                        $select4.empty();
+                        // Append the new constant option
+                        $select4.append('<option value="22921" selected>Operations of war</option>');
+                    }
                 }
-                 else if (response.status_cd == 1) {
-                    let dead_date = new Date(response.event_date);
-                    let formattedDate = dead_date.toLocaleString('en-GB', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        hour12: false
-                    }).replace(',', '');
-
-                    $('#P_FLAG').val('تبليغ ذوي الشهداء');
-                    $('#P_SOURSE').val(1);
-                    $('#P_Date_dead').val(formattedDate);
-
-                    Swal.fire({
-                        text: ' يرجى مراجعة نظم المعلومات او اللجنة القضائية   !',
-                        icon: 'error',
-                        confirmButtonText: 'Ok'
-                    }).then(() => {
-                        let P_FLAG_value = $('#P_FLAG').val(); // Store the value before reset
-                        $('#insert_dead_form')[0].reset(); // Reset the form
-                        $('#P_FLAG').val(P_FLAG_value); // Restore the value after reset
-                        //$('#insert_dead_form .form-select').val('').trigger('change'); // Reset select fields
-                        block_insert_dead.release(); // Unblock if necessary
-                        $('#P_FLAG').val('');
-                        $('#save_btn').hide(); // Show save button if needed
-                    });
-
-                    block_insert_dead.release();
-                    $('#save_btn').show();
-                    //}
-
-                } else if (response.status_cd == 2) {
-                   // alert('Tariq');
-                    $('#P_FLAG').val('شهيد معتمد');
-                    $('#P_SOURSE').val(1);
-                    P_DEAD_DATE.setDate(new Date(response.event_date));
-
-                 //   $('#P_Date_dead').val(response.event_date); /// by Nareen
-                    $('#P_COMMITTE_OPINION').val(response.notes);
-
-                    let $select = $("#DEAD_ICD1_CD");
-                    let $select2 = $("#DEAD_ICD4_CD");
-                    let $select3 = $("#DIAG1_NAME");
-                    let $select4 = $("#DIAG4_NAME");
-
-                    $("#DEAD_DETAILS_CD").val(4).change();
-                    if (response.dref_cd==125) {
-                        $('#P_DEATH_PLACE_CD').val(2).change();
-                    }else if (response.dref_cd==138 || response.dref_cd==166 || response.dref_cd==167 || response.dref_cd==173 || response.dref_cd==174 || response.dref_cd==175 || response.dref_cd==176 ) {
-                        $('#P_DEATH_PLACE_CD').val(3).change();
-                    }else{
-                        $('#P_DEATH_PLACE_CD').val(1).change();
-                    }
-                    $('#P_hospital_id').val(response.dref_cd).change();
-
-
-
-                    // Clear existing options
-                    $select.empty();
-                    // Append the new constant option
-                    $select.append('<option value="22921" selected>Y36</option>');
-                    $select2.empty();
-                    // Append the new constant option
-                    $select2.append('<option value="22921" selected>Y36</option>');
-                    $select3.empty();
-                    // Append the new constant option
-                    $select3.append('<option value="22921" selected>Operations of war</option>');
-                    $select4.empty();
-                    // Append the new constant option
-                    $select4.append('<option value="22921" selected>Operations of war</option>');
-                }
-            }
 
                 var foo = document.getElementById('div_input');
 
@@ -2458,7 +2477,7 @@
             }
         }
 
-               function print_crt_dead(P_DEAD_NUMBER) {
+        function print_crt_dead(P_DEAD_NUMBER) {
 
 
             var url = "{{ route('dead.print_crt_dead') }}";
@@ -2528,7 +2547,56 @@
 
         });
 
+        function send_sms() {
+            // block_insert_dead.block();
+            var form_date = new FormData($('#insert_dead_form')[0]);
+            var url = "{{ route('Send_SMS') }}";
+            // var P_advertiser_Phone = $('#P_advertiser_Phone').val();
+            // var QR_CODE = $('#QR_CODE').val();
+            // var P_ID = $('#P_ID').val();
+
+            $.ajax({
+                url: url,
+                type: 'json',
+                method: 'post',
+                cache: false,
+                processData: false,
+                contentType: false,
+                async: true,
+                data: form_date,
+            }).done(function(response) {
+
+                console.log(response);
+                if (response) {
+                    Swal.fire({
+                        title: 'تم إرسال رسالة بنجاح !',
+                        text: response.Message,
+                        icon: "success",
+                        confirmButtonText: 'موافق'
+                    }).then((result) => {
+                        /* Read more about isConfirmed, isDenied below */
+                        if (result.isConfirmed) {
+
+                            print_crt_dead($('#P_DEAD_NUMBER').val());
+                        }
+                    });
 
 
+                } else {
+                    // alert(response.Message);
+                    Swal.fire({
+                        title: 'خطأ !',
+                        text: response.Message,
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+                    clear_form();
+
+                }
+                //  block_insert_dead.release();
+
+
+            });
+        }
     </script>
 @endpush

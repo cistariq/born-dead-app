@@ -20,7 +20,7 @@ class BORNS_INFO_TB extends Model
 
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
-            $RESULT_COUNT=0;
+            $RESULT_COUNT = 0;
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':P_BORN_CODE', $data['P_BORN_CODE']);
@@ -38,7 +38,7 @@ class BORNS_INFO_TB extends Model
             $stmt->bindParam(':P_HOS_NO', $data['P_HOS_NO']);
             $stmt->bindParam(':P_START', $data['start']);
             $stmt->bindParam(':P_LIMIT', $data['length']);
-            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT,11);
+            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT, 11);
 
             $stmt->bindParam(':BORNS', $lista, PDO::PARAM_STMT);
             $stmt->execute();
@@ -53,14 +53,15 @@ class BORNS_INFO_TB extends Model
     public static function GET_BORN_DATA2($data)
     {
 
-        $sql = "begin BORN_INFO_PKG.GET_BORNS_INFO_PR (:P_BORN_CODE,:P_FATHER_ID,:P_MOTHER_ID, :P_FIRST_NAME, :P_SECOND_NAME,:P_THIRD_NAME,:P_LAST_NAME,:P_DATE_FROM,:P_DATE_TO,:P_SEX_NO, :P_REGION_NO, :P_CITY_NO,:P_HOS_NO,:P_START,:P_LIMIT,:RESULT_COUNT,:BORNS); end;";
+        $sql = "begin BORN_INFO_PKG.GET_BORNS_INFO_PR (:P_BORN_CODE,:P_BORN_ID,:P_FATHER_ID,:P_MOTHER_ID, :P_FIRST_NAME, :P_SECOND_NAME,:P_THIRD_NAME,:P_LAST_NAME,:P_DATE_FROM,:P_DATE_TO,:P_SEX_NO, :P_REGION_NO, :P_CITY_NO,:P_HOS_NO,:P_START,:P_LIMIT,:RESULT_COUNT,:BORNS); end;";
 
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
-            $RESULT_COUNT=0;
+            $RESULT_COUNT = 0;
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':P_BORN_CODE', $data['P_BORN_CODE']);
+            $stmt->bindParam(':P_BORN_ID', $data['P_BORN_ID']);
             $stmt->bindParam(':P_FATHER_ID', $data['P_FATHER_ID']);
             $stmt->bindParam(':P_MOTHER_ID', $data['P_MOTHER_ID']);
             $stmt->bindParam(':P_FIRST_NAME', $data['P_FIRST_NAME']);
@@ -75,7 +76,7 @@ class BORNS_INFO_TB extends Model
             $stmt->bindParam(':P_HOS_NO', $data['P_HOS_NO']);
             $stmt->bindParam(':P_START', $data['start']);
             $stmt->bindParam(':P_LIMIT', $data['length']);
-            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT,11);
+            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT, 11);
 
             $stmt->bindParam(':BORNS', $lista, PDO::PARAM_STMT);
             $stmt->execute();
@@ -91,14 +92,15 @@ class BORNS_INFO_TB extends Model
     public static function GET_BORN_DATA($data)
     {
 
-        $sql = "begin BORN_INFO_PKG.GET_BORNS_INFO_PR (:P_BORN_CODE,:P_FATHER_ID,:P_MOTHER_ID, :P_FIRST_NAME, :P_SECOND_NAME,:P_THIRD_NAME,:P_LAST_NAME,:P_DATE_FROM,:P_DATE_TO,:P_SEX_NO, :P_REGION_NO, :P_CITY_NO,:P_HOS_NO,:P_START,:P_LIMIT,:RESULT_COUNT,:BORNS); end;";
+        $sql = "begin BORN_INFO_PKG.GET_BORNS_INFO_PR (:P_BORN_CODE,:P_BORN_ID,:P_FATHER_ID,:P_MOTHER_ID, :P_FIRST_NAME, :P_SECOND_NAME,:P_THIRD_NAME,:P_LAST_NAME,:P_DATE_FROM,:P_DATE_TO,:P_SEX_NO, :P_REGION_NO, :P_CITY_NO,:P_HOS_NO,:P_START,:P_LIMIT,:RESULT_COUNT,:BORNS); end;";
 
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
-            $RESULT_COUNT=0;
+            $RESULT_COUNT = 0;
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':P_BORN_CODE', $data['P_BORN_CODE']);
+            $stmt->bindParam(':P_BORN_ID', $data['P_BORN_ID']);
             $stmt->bindParam(':P_FATHER_ID', $data['P_FATHER_ID']);
             $stmt->bindParam(':P_MOTHER_ID', $data['P_MOTHER_ID']);
             $stmt->bindParam(':P_FIRST_NAME', $data['P_FIRST_NAME']);
@@ -113,7 +115,7 @@ class BORNS_INFO_TB extends Model
             $stmt->bindParam(':P_HOS_NO', $data['P_HOS_NO']);
             $stmt->bindParam(':P_START', $data['start']);
             $stmt->bindParam(':P_LIMIT', $data['length']);
-            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT,11);
+            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT, 11);
 
             $stmt->bindParam(':BORNS', $lista, PDO::PARAM_STMT);
             $stmt->execute();
@@ -168,96 +170,94 @@ class BORNS_INFO_TB extends Model
         });
     }
     public static function IS_FATHER_FOUND($P_FATHER_NO)
-{
-    //لفحص هذا رقم الهوية موجود أم لا
-    $sql_check ="begin BORN_INFO_PKG.IS_FATHER_FOUND(:P_FATHER_NO,:FOUND); end;";
+    {
+        //لفحص هذا رقم الهوية موجود أم لا
+        $sql_check = "begin BORN_INFO_PKG.IS_FATHER_FOUND(:P_FATHER_NO,:FOUND); end;";
 
-    return DB::transaction(function ($conn) use ($sql_check,$P_FATHER_NO) {
-        $FOUND = 0;
-        $pdo = $conn->getPdo();
-        $stmt = $pdo->prepare($sql_check);
-        $stmt->bindParam(':P_FATHER_NO', $P_FATHER_NO);
+        return DB::transaction(function ($conn) use ($sql_check, $P_FATHER_NO) {
+            $FOUND = 0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql_check);
+            $stmt->bindParam(':P_FATHER_NO', $P_FATHER_NO);
 
-        $stmt->bindParam(':FOUND', $FOUND, PDO::PARAM_INT, 1);
-        $stmt->execute();
-        $data['FOUND'] = $FOUND;
-        return $data;
-    });
+            $stmt->bindParam(':FOUND', $FOUND, PDO::PARAM_INT, 1);
+            $stmt->execute();
+            $data['FOUND'] = $FOUND;
+            return $data;
+        });
+    }
+    public static function IS_MOTHER_FOUND($P_MOTHER_ID)
+    {
+        //لفحص هذا رقم الهوية موجود أم لا
+        $sql_check = "begin BORN_INFO_PKG.IS_MOTHER_FOUND(:P_MOTHER_ID,:FOUND); end;";
 
-}
-public static function IS_MOTHER_FOUND($P_MOTHER_ID)
-{
-    //لفحص هذا رقم الهوية موجود أم لا
-    $sql_check ="begin BORN_INFO_PKG.IS_MOTHER_FOUND(:P_MOTHER_ID,:FOUND); end;";
+        return DB::transaction(function ($conn) use ($sql_check, $P_MOTHER_ID) {
+            $FOUND = 0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql_check);
+            $stmt->bindParam(':P_MOTHER_ID', $P_MOTHER_ID);
 
-    return DB::transaction(function ($conn) use ($sql_check,$P_MOTHER_ID) {
-        $FOUND = 0;
-        $pdo = $conn->getPdo();
-        $stmt = $pdo->prepare($sql_check);
-        $stmt->bindParam(':P_MOTHER_ID', $P_MOTHER_ID);
-
-        $stmt->bindParam(':FOUND', $FOUND, PDO::PARAM_INT, 1);
-        $stmt->execute();
-        $data['FOUND'] = $FOUND;
-        return $data;
-    });
-
-}
-public static function GET_FATHER_CITZN_BY_ID($P_FATHER_NO)
-{
-// لجلب بيانات الوالد من الداخلية
+            $stmt->bindParam(':FOUND', $FOUND, PDO::PARAM_INT, 1);
+            $stmt->execute();
+            $data['FOUND'] = $FOUND;
+            return $data;
+        });
+    }
+    public static function GET_FATHER_CITZN_BY_ID($P_FATHER_NO)
+    {
+        // لجلب بيانات الوالد من الداخلية
         $sql_citzn = "begin CITZN_INFO_PAC.GET_SHIFA_CITZN_INFO_PR(:P_FATHER_NO ,:FATHER_FIRST_NAME_AR , :FATHER_FATHER_NAME_AR ,:FATHER_GRANDFATHER_NAME_AR ,:FATHER_LAST_NAME_AR , :SEX , :REGION , :CITY , :STR ,:FATHER_DOB, :FATHER_MARTIAL_STATUS ,:DEATH_DT, :FATHER_REGION_CD, :FATHER_CITY_CD, :FATHER_PERSONALITY_CODE_CD , :FATHER_JOB_CD ,:BIRTH_MCODE_CD,:BIRTH_CODE_CD,:BIRTH_MCODE,:BIRTH_CODE); end;";
 
         return DB::transaction(function ($conn) use ($sql_citzn, $P_FATHER_NO) {
 
-//بيانات الداخلية
-$FATHER_FIRST_NAME_AR = '';
-$FATHER_FATHER_NAME_AR = '';
-$FATHER_GRANDFATHER_NAME_AR = '';
-$FATHER_LAST_NAME_AR = '';
-$SEX = '';
-$REGION = '';
-$CITY = '';
-$STR = '';
-$FATHER_DOB = '';
-$FATHER_MARTIAL_STATUS = '';
-$DEATH_DT = '';
-$FATHER_REGION_CD = 0;
-$FATHER_CITY_CD = 0;
-$FATHER_PERSONALITY_CODE_CD = 0;
-$FATHER_JOB_CD = '';
-$BIRTH_MCODE_CD = 0;
-$BIRTH_CODE_CD = 0;
-$BIRTH_MCODE = '';
-$BIRTH_CODE = '';
-$FATHER_SEX_CD = 0;
-$pdo = $conn->getPdo();
-$stmt = $pdo->prepare($sql_citzn);
-            $stmt->bindParam(':P_FATHER_NO', $P_FATHER_NO, PDO::PARAM_INT,11);
-            $stmt->bindParam(':FATHER_FIRST_NAME_AR', $FATHER_FIRST_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':FATHER_FATHER_NAME_AR', $FATHER_FATHER_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':FATHER_GRANDFATHER_NAME_AR', $FATHER_GRANDFATHER_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':FATHER_LAST_NAME_AR', $FATHER_LAST_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':SEX', $SEX, PDO::PARAM_STR,200);
-            $stmt->bindParam(':REGION', $REGION, PDO::PARAM_STR,200);
-            $stmt->bindParam(':CITY', $CITY, PDO::PARAM_STR,200);
-            $stmt->bindParam(':STR', $STR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':FATHER_DOB', $FATHER_DOB, PDO::PARAM_STR,200);
+            //بيانات الداخلية
+            $FATHER_FIRST_NAME_AR = '';
+            $FATHER_FATHER_NAME_AR = '';
+            $FATHER_GRANDFATHER_NAME_AR = '';
+            $FATHER_LAST_NAME_AR = '';
+            $SEX = '';
+            $REGION = '';
+            $CITY = '';
+            $STR = '';
+            $FATHER_DOB = '';
+            $FATHER_MARTIAL_STATUS = '';
+            $DEATH_DT = '';
+            $FATHER_REGION_CD = 0;
+            $FATHER_CITY_CD = 0;
+            $FATHER_PERSONALITY_CODE_CD = 0;
+            $FATHER_JOB_CD = '';
+            $BIRTH_MCODE_CD = 0;
+            $BIRTH_CODE_CD = 0;
+            $BIRTH_MCODE = '';
+            $BIRTH_CODE = '';
+            $FATHER_SEX_CD = 0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql_citzn);
+            $stmt->bindParam(':P_FATHER_NO', $P_FATHER_NO, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':FATHER_FIRST_NAME_AR', $FATHER_FIRST_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':FATHER_FATHER_NAME_AR', $FATHER_FATHER_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':FATHER_GRANDFATHER_NAME_AR', $FATHER_GRANDFATHER_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':FATHER_LAST_NAME_AR', $FATHER_LAST_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':SEX', $SEX, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':REGION', $REGION, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':CITY', $CITY, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':STR', $STR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':FATHER_DOB', $FATHER_DOB, PDO::PARAM_STR, 200);
             $stmt->bindParam(':FATHER_MARTIAL_STATUS', $FATHER_MARTIAL_STATUS, PDO::PARAM_STR, 200);
-            $stmt->bindParam(':DEATH_DT', $DEATH_DT, PDO::PARAM_STR,200);
-            $stmt->bindParam(':FATHER_REGION_CD', $FATHER_REGION_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':FATHER_CITY_CD', $FATHER_CITY_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':FATHER_PERSONALITY_CODE_CD', $FATHER_PERSONALITY_CODE_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':FATHER_JOB_CD', $FATHER_JOB_CD, PDO::PARAM_STR,200);
-            $stmt->bindParam(':BIRTH_MCODE_CD', $BIRTH_MCODE_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':BIRTH_CODE_CD', $BIRTH_CODE_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':BIRTH_MCODE', $BIRTH_MCODE, PDO::PARAM_STR,200);
-            $stmt->bindParam(':BIRTH_CODE', $BIRTH_CODE, PDO::PARAM_STR,200);
+            $stmt->bindParam(':DEATH_DT', $DEATH_DT, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':FATHER_REGION_CD', $FATHER_REGION_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':FATHER_CITY_CD', $FATHER_CITY_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':FATHER_PERSONALITY_CODE_CD', $FATHER_PERSONALITY_CODE_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':FATHER_JOB_CD', $FATHER_JOB_CD, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':BIRTH_MCODE_CD', $BIRTH_MCODE_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':BIRTH_CODE_CD', $BIRTH_CODE_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':BIRTH_MCODE', $BIRTH_MCODE, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':BIRTH_CODE', $BIRTH_CODE, PDO::PARAM_STR, 200);
             $stmt->execute();
             if ($SEX == 'أنثى')
-            $FATHER_SEX_CD = 2;
-        else
-            $FATHER_SEX_CD = 1;
+                $FATHER_SEX_CD = 2;
+            else
+                $FATHER_SEX_CD = 1;
             $data['P_FATHER_NO'] = $P_FATHER_NO;
             $data['FIRST_NAME_AR'] = $FATHER_FIRST_NAME_AR;
             $data['FATHER_NAME_AR'] = $FATHER_FATHER_NAME_AR;
@@ -278,54 +278,53 @@ $stmt = $pdo->prepare($sql_citzn);
 
             return $data;
         });
-
-}
+    }
 
 
     public static function GET_FATHER_DATA_BY_ID($P_FATHER_NO)
     {
-//لجلب البيانات من جدول الوالد في قاعدة البيانات
+        //لجلب البيانات من جدول الوالد في قاعدة البيانات
         $sql = "begin BORN_INFO_PKG.GET_FATHER_DATA (:P_FATHER_NO,:P_FATHER_ID,:FATHER_NUMBER,:FIRST_NAME_AR,:FATHER_NAME_AR,:GRANDFATHER_NAME_AR,:LAST_NAME_AR,:DOB,:FATHER_BIRTH_PLACE
         ,:FATHER_FATHER_BIRTH_PLACE,:JOB_CD,:JOB_NAME,:MARTIAL_STATUS_CD,:MS_NAME,:YEAR_OF_EDUCATION,:REGION_CD,:CITY_CD,:DATA_FRM_MOI); end;";
 
         return DB::transaction(function ($conn) use ($sql, $P_FATHER_NO) {
-            $P_FATHER_ID=0;
+            $P_FATHER_ID = 0;
             $FATHER_NUMBER = 0;
-            $FIRST_NAME_AR='';
-            $FATHER_NAME_AR='';
-            $GRANDFATHER_NAME_AR='';
-            $LAST_NAME_AR='';
-            $DOB='';
-            $FATHER_BIRTH_PLACE='';
-            $FATHER_FATHER_BIRTH_PLACE='';
-            $JOB_CD=0;
-            $JOB_NAME='';
-            $MARTIAL_STATUS_CD=0;
-            $MS_NAME='';
-            $YEAR_OF_EDUCATION=0;
-            $REGION_CD=0;
-            $CITY_CD=0;
-            $DATA_FRM_MOI=0;
+            $FIRST_NAME_AR = '';
+            $FATHER_NAME_AR = '';
+            $GRANDFATHER_NAME_AR = '';
+            $LAST_NAME_AR = '';
+            $DOB = '';
+            $FATHER_BIRTH_PLACE = '';
+            $FATHER_FATHER_BIRTH_PLACE = '';
+            $JOB_CD = 0;
+            $JOB_NAME = '';
+            $MARTIAL_STATUS_CD = 0;
+            $MS_NAME = '';
+            $YEAR_OF_EDUCATION = 0;
+            $REGION_CD = 0;
+            $CITY_CD = 0;
+            $DATA_FRM_MOI = 0;
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':P_FATHER_NO', $P_FATHER_NO);
-            $stmt->bindParam(':P_FATHER_ID', $P_FATHER_ID, PDO::PARAM_INT,11);
-            $stmt->bindParam(':FATHER_NUMBER', $FATHER_NUMBER, PDO::PARAM_INT,11);
-            $stmt->bindParam(':FIRST_NAME_AR', $FIRST_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':FATHER_NAME_AR', $FATHER_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':GRANDFATHER_NAME_AR', $GRANDFATHER_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':LAST_NAME_AR', $LAST_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':DOB', $DOB, PDO::PARAM_STR,200);
-            $stmt->bindParam(':FATHER_BIRTH_PLACE', $FATHER_BIRTH_PLACE, PDO::PARAM_STR,200);
-            $stmt->bindParam(':FATHER_FATHER_BIRTH_PLACE', $FATHER_FATHER_BIRTH_PLACE, PDO::PARAM_STR,200);
-            $stmt->bindParam(':JOB_CD', $JOB_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':JOB_NAME', $JOB_NAME, PDO::PARAM_STR,200);
-            $stmt->bindParam(':MARTIAL_STATUS_CD', $MARTIAL_STATUS_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':MS_NAME', $MS_NAME, PDO::PARAM_STR,200);
-            $stmt->bindParam(':YEAR_OF_EDUCATION', $YEAR_OF_EDUCATION, PDO::PARAM_INT,11);
-            $stmt->bindParam(':REGION_CD', $REGION_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':CITY_CD', $CITY_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':DATA_FRM_MOI', $DATA_FRM_MOI, PDO::PARAM_INT,11);
+            $stmt->bindParam(':P_FATHER_ID', $P_FATHER_ID, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':FATHER_NUMBER', $FATHER_NUMBER, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':FIRST_NAME_AR', $FIRST_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':FATHER_NAME_AR', $FATHER_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':GRANDFATHER_NAME_AR', $GRANDFATHER_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':LAST_NAME_AR', $LAST_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':DOB', $DOB, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':FATHER_BIRTH_PLACE', $FATHER_BIRTH_PLACE, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':FATHER_FATHER_BIRTH_PLACE', $FATHER_FATHER_BIRTH_PLACE, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':JOB_CD', $JOB_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':JOB_NAME', $JOB_NAME, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':MARTIAL_STATUS_CD', $MARTIAL_STATUS_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':MS_NAME', $MS_NAME, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':YEAR_OF_EDUCATION', $YEAR_OF_EDUCATION, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':REGION_CD', $REGION_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':CITY_CD', $CITY_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':DATA_FRM_MOI', $DATA_FRM_MOI, PDO::PARAM_INT, 11);
 
             $stmt->execute();
             $data['P_FATHER_ID'] = $P_FATHER_ID;
@@ -352,61 +351,61 @@ $stmt = $pdo->prepare($sql_citzn);
     }
 
 
-public static function GET_MOTHER_CITZN_BY_ID($P_MOTHER_ID)
-{
-// لجلب بيانات الوالد من الداخلية
+    public static function GET_MOTHER_CITZN_BY_ID($P_MOTHER_ID)
+    {
+        // لجلب بيانات الوالد من الداخلية
         $sql_citzn = "begin CITZN_INFO_PAC.GET_SHIFA_CITZN_INFO_PR(:P_MOTHER_ID ,:MOTHER_FIRST_NAME_AR , :MOTHER_FATHER_NAME_AR ,:MOTHER_GRANDFATHER_NAME_AR ,:MOTHER_LAST_NAME_AR , :SEX , :REGION , :CITY , :STR ,:MOTHER_DOB, :MOTHER_MARTIAL_STATUS ,:DEATH_DT, :MOTHER_REGION_CD, :MOTHER_CITY_CD, :MOTHER_PERSONALITY_CODE_CD , :MOTHER_JOB_CD ,:BIRTH_MCODE_CD,:BIRTH_CODE_CD,:BIRTH_MCODE,:BIRTH_CODE); end;";
 
         return DB::transaction(function ($conn) use ($sql_citzn, $P_MOTHER_ID) {
 
-//بيانات الداخلية
-$MOTHER_FIRST_NAME_AR = '';
-$MOTHER_FATHER_NAME_AR = '';
-$MOTHER_GRANDFATHER_NAME_AR = '';
-$MOTHER_LAST_NAME_AR = '';
-$SEX = '';
-$REGION = '';
-$CITY = '';
-$STR = '';
-$MOTHER_DOB = '';
-$MOTHER_MARTIAL_STATUS = '';
-$DEATH_DT = '';
-$MOTHER_REGION_CD = 0;
-$MOTHER_CITY_CD = 0;
-$MOTHER_PERSONALITY_CODE_CD = 0;
-$MOTHER_JOB_CD = '';
-$BIRTH_MCODE_CD = 0;
-$BIRTH_CODE_CD = 0;
-$BIRTH_MCODE = '';
-$BIRTH_CODE = '';
-$MOTHER_SEX_CD = 0;
-$pdo = $conn->getPdo();
-$stmt = $pdo->prepare($sql_citzn);
-            $stmt->bindParam(':P_MOTHER_ID', $P_MOTHER_ID, PDO::PARAM_INT,11);
-            $stmt->bindParam(':MOTHER_FIRST_NAME_AR', $MOTHER_FIRST_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':MOTHER_FATHER_NAME_AR', $MOTHER_FATHER_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':MOTHER_GRANDFATHER_NAME_AR', $MOTHER_GRANDFATHER_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':MOTHER_LAST_NAME_AR', $MOTHER_LAST_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':SEX', $SEX, PDO::PARAM_STR,200);
-            $stmt->bindParam(':REGION', $REGION, PDO::PARAM_STR,200);
-            $stmt->bindParam(':CITY', $CITY, PDO::PARAM_STR,200);
-            $stmt->bindParam(':STR', $STR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':MOTHER_DOB', $MOTHER_DOB, PDO::PARAM_STR,200);
+            //بيانات الداخلية
+            $MOTHER_FIRST_NAME_AR = '';
+            $MOTHER_FATHER_NAME_AR = '';
+            $MOTHER_GRANDFATHER_NAME_AR = '';
+            $MOTHER_LAST_NAME_AR = '';
+            $SEX = '';
+            $REGION = '';
+            $CITY = '';
+            $STR = '';
+            $MOTHER_DOB = '';
+            $MOTHER_MARTIAL_STATUS = '';
+            $DEATH_DT = '';
+            $MOTHER_REGION_CD = 0;
+            $MOTHER_CITY_CD = 0;
+            $MOTHER_PERSONALITY_CODE_CD = 0;
+            $MOTHER_JOB_CD = '';
+            $BIRTH_MCODE_CD = 0;
+            $BIRTH_CODE_CD = 0;
+            $BIRTH_MCODE = '';
+            $BIRTH_CODE = '';
+            $MOTHER_SEX_CD = 0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql_citzn);
+            $stmt->bindParam(':P_MOTHER_ID', $P_MOTHER_ID, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':MOTHER_FIRST_NAME_AR', $MOTHER_FIRST_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':MOTHER_FATHER_NAME_AR', $MOTHER_FATHER_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':MOTHER_GRANDFATHER_NAME_AR', $MOTHER_GRANDFATHER_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':MOTHER_LAST_NAME_AR', $MOTHER_LAST_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':SEX', $SEX, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':REGION', $REGION, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':CITY', $CITY, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':STR', $STR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':MOTHER_DOB', $MOTHER_DOB, PDO::PARAM_STR, 200);
             $stmt->bindParam(':MOTHER_MARTIAL_STATUS', $MOTHER_MARTIAL_STATUS, PDO::PARAM_STR, 200);
-            $stmt->bindParam(':DEATH_DT', $DEATH_DT, PDO::PARAM_STR,200);
-            $stmt->bindParam(':MOTHER_REGION_CD', $MOTHER_REGION_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':MOTHER_CITY_CD', $MOTHER_CITY_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':MOTHER_PERSONALITY_CODE_CD', $MOTHER_PERSONALITY_CODE_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':MOTHER_JOB_CD', $MOTHER_JOB_CD, PDO::PARAM_STR,200);
-            $stmt->bindParam(':BIRTH_MCODE_CD', $BIRTH_MCODE_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':BIRTH_CODE_CD', $BIRTH_CODE_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':BIRTH_MCODE', $BIRTH_MCODE, PDO::PARAM_STR,200);
-            $stmt->bindParam(':BIRTH_CODE', $BIRTH_CODE, PDO::PARAM_STR,200);
+            $stmt->bindParam(':DEATH_DT', $DEATH_DT, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':MOTHER_REGION_CD', $MOTHER_REGION_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':MOTHER_CITY_CD', $MOTHER_CITY_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':MOTHER_PERSONALITY_CODE_CD', $MOTHER_PERSONALITY_CODE_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':MOTHER_JOB_CD', $MOTHER_JOB_CD, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':BIRTH_MCODE_CD', $BIRTH_MCODE_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':BIRTH_CODE_CD', $BIRTH_CODE_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':BIRTH_MCODE', $BIRTH_MCODE, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':BIRTH_CODE', $BIRTH_CODE, PDO::PARAM_STR, 200);
             $stmt->execute();
             if ($SEX == 'ذكر')
-            $MOTHER_SEX_CD = 1;
-        else
-            $MOTHER_SEX_CD = 2;
+                $MOTHER_SEX_CD = 1;
+            else
+                $MOTHER_SEX_CD = 2;
             $data['P_MOTHER_ID'] = $P_MOTHER_ID;
             $data['FIRST_NAME_AR'] = $MOTHER_FIRST_NAME_AR;
             $data['FATHER_NAME_AR'] = $MOTHER_FATHER_NAME_AR;
@@ -427,8 +426,7 @@ $stmt = $pdo->prepare($sql_citzn);
 
             return $data;
         });
-
-}
+    }
     public static function GET_MOTHER_DATA_BY_ID($P_MOTHER_ID)
     {
 
@@ -437,44 +435,44 @@ $stmt = $pdo->prepare($sql_citzn);
                                                     ,:REGION_CD,:CITY_CD,:TEL,:FAMILY_NAME,:DATA_FRM_MOI); end;";
         return DB::transaction(function ($conn) use ($sql, $P_MOTHER_ID) {
             $MOTHER_NUMBER = 0;
-            $FIRST_NAME_AR='';
-            $FATHER_NAME_AR='';
-            $GRANDFATHER_NAME_AR='';
-            $LAST_NAME_AR='';
-            $DOB='';
-            $BIRTH_PLACE='';
-            $FATHER_BIRTH_PLACE1='';
-            $JOB_CD=0;
-            $JOB_NAME='';
-            $MARTIAL_STATUS_CD=0;
-            $MS_NAME='';
-            $YEAR_OF_EDUCATION=0;
-            $REGION_CD=0;
-            $CITY_CD=0;
-            $TEL=0;
-            $FAMILY_NAME='';
-            $DATA_FRM_MOI=0;
+            $FIRST_NAME_AR = '';
+            $FATHER_NAME_AR = '';
+            $GRANDFATHER_NAME_AR = '';
+            $LAST_NAME_AR = '';
+            $DOB = '';
+            $BIRTH_PLACE = '';
+            $FATHER_BIRTH_PLACE1 = '';
+            $JOB_CD = 0;
+            $JOB_NAME = '';
+            $MARTIAL_STATUS_CD = 0;
+            $MS_NAME = '';
+            $YEAR_OF_EDUCATION = 0;
+            $REGION_CD = 0;
+            $CITY_CD = 0;
+            $TEL = 0;
+            $FAMILY_NAME = '';
+            $DATA_FRM_MOI = 0;
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':P_MOTHER_ID', $P_MOTHER_ID);
-            $stmt->bindParam(':MOTHER_NUMBER', $MOTHER_NUMBER, PDO::PARAM_INT,11);
-            $stmt->bindParam(':FIRST_NAME_AR', $FIRST_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':FATHER_NAME_AR', $FATHER_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':GRANDFATHER_NAME_AR', $GRANDFATHER_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':LAST_NAME_AR', $LAST_NAME_AR, PDO::PARAM_STR,200);
-            $stmt->bindParam(':DOB', $DOB, PDO::PARAM_STR,200);
-            $stmt->bindParam(':BIRTH_PLACE', $BIRTH_PLACE, PDO::PARAM_STR,200);
-            $stmt->bindParam(':FATHER_BIRTH_PLACE1', $FATHER_BIRTH_PLACE1, PDO::PARAM_STR,200);
-            $stmt->bindParam(':JOB_CD', $JOB_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':JOB_NAME', $JOB_NAME, PDO::PARAM_STR,200);
-            $stmt->bindParam(':MARTIAL_STATUS_CD', $MARTIAL_STATUS_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':MS_NAME', $MS_NAME, PDO::PARAM_STR,200);
-            $stmt->bindParam(':YEAR_OF_EDUCATION', $YEAR_OF_EDUCATION, PDO::PARAM_INT,11);
-            $stmt->bindParam(':REGION_CD', $REGION_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':CITY_CD', $CITY_CD, PDO::PARAM_INT,11);
-            $stmt->bindParam(':TEL', $TEL, PDO::PARAM_INT,11);
-            $stmt->bindParam(':FAMILY_NAME', $FAMILY_NAME, PDO::PARAM_STR,200);
-            $stmt->bindParam(':DATA_FRM_MOI', $DATA_FRM_MOI, PDO::PARAM_INT,11);
+            $stmt->bindParam(':MOTHER_NUMBER', $MOTHER_NUMBER, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':FIRST_NAME_AR', $FIRST_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':FATHER_NAME_AR', $FATHER_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':GRANDFATHER_NAME_AR', $GRANDFATHER_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':LAST_NAME_AR', $LAST_NAME_AR, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':DOB', $DOB, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':BIRTH_PLACE', $BIRTH_PLACE, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':FATHER_BIRTH_PLACE1', $FATHER_BIRTH_PLACE1, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':JOB_CD', $JOB_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':JOB_NAME', $JOB_NAME, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':MARTIAL_STATUS_CD', $MARTIAL_STATUS_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':MS_NAME', $MS_NAME, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':YEAR_OF_EDUCATION', $YEAR_OF_EDUCATION, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':REGION_CD', $REGION_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':CITY_CD', $CITY_CD, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':TEL', $TEL, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':FAMILY_NAME', $FAMILY_NAME, PDO::PARAM_STR, 200);
+            $stmt->bindParam(':DATA_FRM_MOI', $DATA_FRM_MOI, PDO::PARAM_INT, 11);
 
             $stmt->execute();
             $data['P_MOTHER_ID'] = $P_MOTHER_ID;
@@ -725,7 +723,7 @@ $stmt = $pdo->prepare($sql_citzn);
 
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
-          //  dd($data);
+            //  dd($data);
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':F_ID', $data['F_ID']);
@@ -744,7 +742,7 @@ $stmt = $pdo->prepare($sql_citzn);
 
         return DB::transaction(function ($conn) use ($sql, $data) {
             $BORN_NUMBER = 0;
-          //  dd($data);
+            //  dd($data);
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':F_ID', $data['F_ID']);
@@ -756,95 +754,94 @@ $stmt = $pdo->prepare($sql_citzn);
         });
     }
     public static function IS_BORN_FOUND($P_BI_ADMISSION_CD)
-{
-    $sql_check ="begin BORN_INFO_PKG.IS_BORN_FOUND(:P_BI_ADMISSION_CD,:FOUND); end;";
+    {
+        $sql_check = "begin BORN_INFO_PKG.IS_BORN_FOUND(:P_BI_ADMISSION_CD,:FOUND); end;";
 
-    return DB::transaction(function ($conn) use ($sql_check,$P_BI_ADMISSION_CD) {
-        $FOUND = 0;
-        $pdo = $conn->getPdo();
-        $stmt = $pdo->prepare($sql_check);
-        $stmt->bindParam(':P_BI_ADMISSION_CD', $P_BI_ADMISSION_CD);
+        return DB::transaction(function ($conn) use ($sql_check, $P_BI_ADMISSION_CD) {
+            $FOUND = 0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql_check);
+            $stmt->bindParam(':P_BI_ADMISSION_CD', $P_BI_ADMISSION_CD);
 
-        $stmt->bindParam(':FOUND', $FOUND, PDO::PARAM_INT, 1);
-        $stmt->execute();
-        $data['FOUND'] = $FOUND;
-        return $data;
-    });
+            $stmt->bindParam(':FOUND', $FOUND, PDO::PARAM_INT, 1);
+            $stmt->execute();
+            $data['FOUND'] = $FOUND;
+            return $data;
+        });
+    }
 
-}
-
-public static function GET_BORN_DATA_BY_CODE($P_BI_ADMISSION_CD)
-{
-//لجلب البيانات من جدول الوالد في قاعدة البيانات
-    $sql = "begin BORN_INFO_PKG.GET_BORN_INFO (:P_BI_ADMISSION_CD,:V_BI_CODE,:V_BI_ID,:V_BI_ORDER,:V_BI_FIRST_NAME,:V_BI_WEIGHT_GM,
+    public static function GET_BORN_DATA_BY_CODE($P_BI_ADMISSION_CD)
+    {
+        //لجلب البيانات من جدول الوالد في قاعدة البيانات
+        $sql = "begin BORN_INFO_PKG.GET_BORN_INFO (:P_BI_ADMISSION_CD,:V_BI_CODE,:V_BI_ID,:V_BI_ORDER,:V_BI_FIRST_NAME,:V_BI_WEIGHT_GM,
                                                :V_BI_RELEGION_CD,:V_BI_SEX_CD,:V_BI_OUT_COME_CD,:V_BI_PRESENTATION_CD,
                                                :V_BI_PARTOGRAM_CD,:V_BI_ADMITTED_NICU_CD,:V_BI_EXAM_BEFORE_CD,:V_BI_EXAM_OUT_COME_CD,:V_BI_CONGENITAL_ANOMALIES_CD,
                                                :V_BI_ADMISSION_CD,:V_BI_APAGAR_1,:V_BI_APAGAR_5); end;";
 
-    return DB::transaction(function ($conn) use ($sql, $P_BI_ADMISSION_CD) {
-        $V_BI_CODE = 0;
-        $V_BI_ID=0;
-        $V_BI_ORDER=0;
-        $V_BI_FIRST_NAME='';
-        $V_BI_WEIGHT_GM=0;
-        $V_BI_RELEGION_CD=0;
-        $V_BI_SEX_CD=0;
-        $V_BI_OUT_COME_CD=0;
-        $V_BI_PRESENTATION_CD=0;
-        $V_BI_PARTOGRAM_CD=0;
-        $V_BI_ADMITTED_NICU_CD=0;
-        $V_BI_EXAM_BEFORE_CD=0;
-        $V_BI_EXAM_OUT_COME_CD=0;
-        $V_BI_CONGENITAL_ANOMALIES_CD=0;
-        $V_BI_ADMISSION_CD=0;
-        $V_BI_APAGAR_1=0;
-        $V_BI_APAGAR_5=0;
+        return DB::transaction(function ($conn) use ($sql, $P_BI_ADMISSION_CD) {
+            $V_BI_CODE = 0;
+            $V_BI_ID = 0;
+            $V_BI_ORDER = 0;
+            $V_BI_FIRST_NAME = '';
+            $V_BI_WEIGHT_GM = 0;
+            $V_BI_RELEGION_CD = 0;
+            $V_BI_SEX_CD = 0;
+            $V_BI_OUT_COME_CD = 0;
+            $V_BI_PRESENTATION_CD = 0;
+            $V_BI_PARTOGRAM_CD = 0;
+            $V_BI_ADMITTED_NICU_CD = 0;
+            $V_BI_EXAM_BEFORE_CD = 0;
+            $V_BI_EXAM_OUT_COME_CD = 0;
+            $V_BI_CONGENITAL_ANOMALIES_CD = 0;
+            $V_BI_ADMISSION_CD = 0;
+            $V_BI_APAGAR_1 = 0;
+            $V_BI_APAGAR_5 = 0;
 
-       $pdo = $conn->getPdo();
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':P_BI_ADMISSION_CD', $P_BI_ADMISSION_CD);
-      $stmt->execute();
-        $data['V_BI_CODE'] = $V_BI_CODE;
-        $data['V_BI_ID'] = $V_BI_ID;
-        $data['V_BI_ORDER'] = $V_BI_ORDER;
-        $data['V_BI_FIRST_NAME'] = $V_BI_FIRST_NAME;
-        $data['V_BI_WEIGHT_GM'] = $V_BI_WEIGHT_GM;
-        $data['V_BI_RELEGION_CD'] = $V_BI_RELEGION_CD;
-        $data['V_BI_SEX_CD'] = $V_BI_SEX_CD;
-        $data['V_BI_OUT_COME_CD'] = $V_BI_OUT_COME_CD;
-        $data['V_BI_PRESENTATION_CD'] = $V_BI_PRESENTATION_CD;
-        $data['V_BI_PARTOGRAM_CD'] = $V_BI_PARTOGRAM_CD;
-        $data['V_BI_ADMITTED_NICU_CD'] = $V_BI_ADMITTED_NICU_CD;
-        $data['V_BI_EXAM_BEFORE_CD'] = $V_BI_EXAM_BEFORE_CD;
-        $data['V_BI_EXAM_OUT_COME_CD'] = $V_BI_EXAM_OUT_COME_CD;
-        $data['V_BI_CONGENITAL_ANOMALIES_CD'] = $V_BI_CONGENITAL_ANOMALIES_CD;
-        $data['V_BI_ADMISSION_CD'] = $V_BI_ADMISSION_CD;
-        $data['V_BI_APAGAR_1'] = $V_BI_APAGAR_1;
-        $data['V_BI_APAGAR_5'] = $V_BI_APAGAR_5;
-     return $data;
-    });
-}
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':P_BI_ADMISSION_CD', $P_BI_ADMISSION_CD);
+            $stmt->execute();
+            $data['V_BI_CODE'] = $V_BI_CODE;
+            $data['V_BI_ID'] = $V_BI_ID;
+            $data['V_BI_ORDER'] = $V_BI_ORDER;
+            $data['V_BI_FIRST_NAME'] = $V_BI_FIRST_NAME;
+            $data['V_BI_WEIGHT_GM'] = $V_BI_WEIGHT_GM;
+            $data['V_BI_RELEGION_CD'] = $V_BI_RELEGION_CD;
+            $data['V_BI_SEX_CD'] = $V_BI_SEX_CD;
+            $data['V_BI_OUT_COME_CD'] = $V_BI_OUT_COME_CD;
+            $data['V_BI_PRESENTATION_CD'] = $V_BI_PRESENTATION_CD;
+            $data['V_BI_PARTOGRAM_CD'] = $V_BI_PARTOGRAM_CD;
+            $data['V_BI_ADMITTED_NICU_CD'] = $V_BI_ADMITTED_NICU_CD;
+            $data['V_BI_EXAM_BEFORE_CD'] = $V_BI_EXAM_BEFORE_CD;
+            $data['V_BI_EXAM_OUT_COME_CD'] = $V_BI_EXAM_OUT_COME_CD;
+            $data['V_BI_CONGENITAL_ANOMALIES_CD'] = $V_BI_CONGENITAL_ANOMALIES_CD;
+            $data['V_BI_ADMISSION_CD'] = $V_BI_ADMISSION_CD;
+            $data['V_BI_APAGAR_1'] = $V_BI_APAGAR_1;
+            $data['V_BI_APAGAR_5'] = $V_BI_APAGAR_5;
+            return $data;
+        });
+    }
 
-public static function GET_BORN_INFO_BY_CODE($P_BI_CODE)
-{
-    $sql = "begin BORN_INFO_PKG.GET_BORN_INFO_BY_CODE (:P_BI_CODE,:BORN_OUT_CUR); end;";
+    public static function GET_BORN_INFO_BY_CODE($P_BI_CODE)
+    {
+        $sql = "begin BORN_INFO_PKG.GET_BORN_INFO_BY_CODE (:P_BI_CODE,:BORN_OUT_CUR); end;";
 
-    return DB::transaction(function ($conn) use ($sql, $P_BI_CODE) {
-        $lista = [];
-        //dd($P_ICD_CODE);
-        $pdo = $conn->getPdo();
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':P_BI_CODE', $P_BI_CODE);
-        $stmt->bindParam(':BORN_OUT_CUR', $lista, PDO::PARAM_STMT);
-        $stmt->execute();
-        oci_execute($lista, OCI_DEFAULT);
-        oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
-        oci_free_cursor($lista);
-        return $array;
-    });
-}
+        return DB::transaction(function ($conn) use ($sql, $P_BI_CODE) {
+            $lista = [];
+            //dd($P_ICD_CODE);
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':P_BI_CODE', $P_BI_CODE);
+            $stmt->bindParam(':BORN_OUT_CUR', $lista, PDO::PARAM_STMT);
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
 
-public static function UPDATE_BORN_DATA($data)
+    public static function UPDATE_BORN_DATA($data)
     {
 
         $sql_born = "begin BORN_INFO_PKG.UPDATE_BORN_INFO(:P_BI_CODE,:F_NUMBER,:M_NUMBER,:BORN_D_DELIVERY_DATE ,
@@ -973,7 +970,7 @@ public static function UPDATE_BORN_DATA($data)
             return $array;
         });
     }
-        public static function GET_BORN_STATUS($BIRTH_STATUS_CODE)
+    public static function GET_BORN_STATUS($BIRTH_STATUS_CODE)
     {
         $sql = "begin BORN_INFO_PKG.GET_BORN_STATUS (:BIRTH_STATUS_CODE,:BOURN_STATUS_CUR); end;";
 
@@ -993,7 +990,7 @@ public static function UPDATE_BORN_DATA($data)
     }
     public static function GET_BORNS_LIMIT($data)
     {
-     //   dd($data);
+        //   dd($data);
         $sql = "begin BORN_INFO_PKG.GET_BORNS_LIMIT (:DATE_FROM,:DATE_TO,:U_CODE,:BORNS,:S,:E); end;";
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
@@ -1016,7 +1013,7 @@ public static function UPDATE_BORN_DATA($data)
 
     public static function GET_BORNS($data)
     {
-     //   dd($data);
+        //   dd($data);
         $sql = "begin BORN_INFO_PKG.GET_BORNS (:DATE_FROM,:DATE_TO,:U_CODE,:BORNS); end;";
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
@@ -1037,11 +1034,11 @@ public static function UPDATE_BORN_DATA($data)
 
     public static function GET_BORNS_ALL($data)
     {
-     //   dd($data);
+        //   dd($data);
         $sql = "begin BORN_INFO_PKG.GET_BORNS_ALL (:DATE_FROM,:DATE_TO,:U_CODE,:P_START,:P_LIMIT,:RESULT_COUNT,:BORNS); end;";
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
-            $RESULT_COUNT=0;
+            $RESULT_COUNT = 0;
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':DATE_FROM', $data['date_F']);
@@ -1049,7 +1046,7 @@ public static function UPDATE_BORN_DATA($data)
             $stmt->bindParam(':U_CODE', $data['U_CODE']);
             $stmt->bindParam(':P_START', $data['start']);
             $stmt->bindParam(':P_LIMIT', $data['length']);
-            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT,11);
+            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT, 11);
             $stmt->bindParam(':BORNS', $lista, PDO::PARAM_STMT);
 
             $stmt->execute();
@@ -1063,7 +1060,7 @@ public static function UPDATE_BORN_DATA($data)
     }
     public static function GET_PLACE_BORNS($data)
     {
-     //   dd($data);
+        //   dd($data);
         $sql = "begin BORN_INFO_PKG.GET_PLACE_BORNS (:DATE_FROM,:DATE_TO,:U_CODE,:BORN_INFO); end;";
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
@@ -1084,11 +1081,11 @@ public static function UPDATE_BORN_DATA($data)
 
     public static function GET_BORNS_ALL_DELIVERY($data)
     {
-     //   dd($data);
+        //   dd($data);
         $sql = "begin BORN_INFO_PKG.GET_BORNS_ALL_DELIVERY (:DATE_FROM,:DATE_TO,:U_CODE,:P_START,:P_LIMIT,:RESULT_COUNT,:BORNS); end;";
         return DB::transaction(function ($conn) use ($sql, $data) {
             $lista = [];
-            $RESULT_COUNT=0;
+            $RESULT_COUNT = 0;
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':DATE_FROM', $data['date_F']);
@@ -1096,7 +1093,7 @@ public static function UPDATE_BORN_DATA($data)
             $stmt->bindParam(':U_CODE', $data['U_CODE']);
             $stmt->bindParam(':P_START', $data['start']);
             $stmt->bindParam(':P_LIMIT', $data['length']);
-            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT,11);
+            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT, 11);
             $stmt->bindParam(':BORNS', $lista, PDO::PARAM_STMT);
 
             $stmt->execute();
@@ -1177,6 +1174,257 @@ public static function UPDATE_BORN_DATA($data)
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':P_HOS_CODE', $P_HOS_CODE);
             $stmt->bindParam(':HOS_OUT_CUR', $lista, PDO::PARAM_STMT);
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
+    public static function DISTRIBUTION_SEX($data)
+    {
+        //   dd($data);
+        $sql = "begin DISTRIBUTION_SEX.GET_BORNS_SEX(:DATE_FROM,:DATE_TO,:BORNS); end;";
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':BORNS', $lista, PDO::PARAM_STMT);
+
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
+    public static function GET_FATHERS_AGES($data)
+    {
+        //   dd($data);
+        $sql = "begin AGES_BIRTHS.GET_FATHERS_AGES(:DATE_FROM,:DATE_TO,:F_AGE_CURS); end;";
+        // dd($sql);
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':F_AGE_CURS', $lista, PDO::PARAM_STMT);
+
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            //   dd($array);
+            return $array;
+        });
+    }
+
+    public static function GET_FATHERS_COUNT($data)
+    {
+
+        $sql = "begin AGES_BIRTHS.GET_FATHERS_COUNT(:DATE_FROM,:DATE_TO,:F_CURS); end;";
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':F_CURS', $lista, PDO::PARAM_STMT);
+
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+              // dd($array);
+            return $array;
+        });
+    }
+    public static function GET_MOTHERS_AGES($data)
+    {
+        //   dd($data);
+        $sql = "begin AGES_BIRTHS.GET_MOTHERS_AGES(:DATE_FROM,:DATE_TO,:M_AGE_CURS); end;";
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':M_AGE_CURS', $lista, PDO::PARAM_STMT);
+
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
+    public static function GET_MOTHERS_COUNT($data)
+    {
+        //   dd($data);
+        $sql = "begin AGES_BIRTHS.GET_MOTHERS_COUNT(:DATE_FROM,:DATE_TO,:M_CURS); end;";
+
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':M_CURS', $lista, PDO::PARAM_STMT);
+
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+              // dd($array);
+            return $array;
+        });
+    }
+
+
+    public static function GET_BORNS_CLINIC_M($data)
+    {
+        //   dd($data);
+        $sql = "begin DISTRIBUTION_SEX.GET_BORNS_CLINIC_M(:DATE_FROM,:DATE_TO,:BORNS); end;";
+
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':BORNS', $lista, PDO::PARAM_STMT);
+
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+           //   dd($array);
+            return $array;
+        });
+    }
+    public static function GET_TWINS_NUMBER($data)
+    {
+        //   dd($data);
+        $sql = "begin  Distribution_Births.GET_TWINS_NUMBER(:DATE_FROM,:DATE_TO,:TWIN); end;";
+
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':TWIN', $lista, PDO::PARAM_STMT);
+
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+              // dd($array);
+            return $array;
+        });
+    }
+
+  public static function GET_FATHERS_YEARS($data)
+    {
+        //   dd($data);
+        $sql = "begin AGES_BIRTHS.GET_FATHERS_YEARS(:DATE_FROM,:DATE_TO,:FATHER); end;";
+        // dd($sql);
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':FATHER', $lista, PDO::PARAM_STMT);
+
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            //   dd($array);
+            return $array;
+        });
+    }
+
+
+    public static function GET_MOTHERS_YEARS($data)
+    {
+        //   dd($data);
+        $sql = "begin AGES_BIRTHS.GET_MOTHERS_YEARS(:DATE_FROM,:DATE_TO,:MOTHER); end;";
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':MOTHER', $lista, PDO::PARAM_STMT);
+
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
+
+    public static function GET_BORNS_SEXONLY($data)
+    {
+        //   dd($data);
+        $sql = "begin DISTRIBUTION_SEX.GET_BORNS_SEXONLY(:DATE_FROM,:DATE_TO,:SEX); end;";
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':SEX', $lista, PDO::PARAM_STMT);
+
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            return $array;
+        });
+    }
+
+  public static function GET_FATHERS_JOB($data)
+    {
+        //   dd($data);
+        $sql = "begin AGES_BIRTHS.GET_FATHERS_JOB(:DATE_FROM,:DATE_TO,:FATHER); end;";
+        // dd($sql);
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':FATHER', $lista, PDO::PARAM_STMT);
+
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            //   dd($array);
+            return $array;
+        });
+    }
+
+
+    public static function GET_MOTHERS_JOB($data)
+    {
+        //   dd($data);
+        $sql = "begin AGES_BIRTHS.GET_MOTHERS_JOB(:DATE_FROM,:DATE_TO,:MOTHER); end;";
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':DATE_FROM', $data['date_F']);
+            $stmt->bindParam(':DATE_TO', $data['date_T']);
+            $stmt->bindParam(':MOTHER', $lista, PDO::PARAM_STMT);
+
             $stmt->execute();
             oci_execute($lista, OCI_DEFAULT);
             oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);

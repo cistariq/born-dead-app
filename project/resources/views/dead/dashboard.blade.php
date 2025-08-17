@@ -7,6 +7,26 @@
             <a href="#" class="card bg-warning hoverable card-xl-stretch mb-xl-8">
                 <div class="card-body">
                     <div class="d-flex align-items-center p-6">
+                        <div class="col-lg-6">
+                            <div class="input-group">
+                                <label class="control-label col-md-2" style="margin-top: 20px;">ت.الادخال من</label>
+                                <div class="col-lg-4">
+
+                                    <input type="text" class="form-control text-center form-control-lg mb-3"
+                                        id="P_ENTER_FROM" name="P_DATE_FROM">
+                                </div>
+                                <div class="input-group-prepend">
+
+                                    <span class="input-group-text">إلى</span>
+                                </div>
+                                <div class="col-lg-4">
+                                    <input type="text" class="form-control text-center form-control-lg mb-3"
+                                        id="P_ENTER_TO" name="P_DATE_TO">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-center p-6">
                         <!--begin::Icon-->
                         <div class="mr-6">
                             <span class="svg-icon svg-icon-4x">
@@ -394,9 +414,9 @@
 
                     dataLabels: {
                         offsetX: 30,
-style:{
-    colors: [labelColor]
-},
+                        style: {
+                            colors: [labelColor]
+                        },
                         enabled: true
 
                     },

@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -23,8 +25,8 @@ class UserController extends Controller
         //$data['hospitals'] = Constant::where('parent_id',7)->get();
         $data['hospitals'] = C_DETAILS_REFERRAL_TB::get();
 
-//dd($data['hospitals']);
-        return view('user.index',$data);
+        //dd($data['hospitals']);
+        return view('user.index', $data);
     }
     public function insert_user(Request $request)
     {
@@ -36,16 +38,15 @@ class UserController extends Controller
         ];
 
         $validator = Validator::make($request->all(), $role);
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return Response::json(array(
                 'success' => false,
                 'errors' => $validator->getMessageBag()->toArray()
 
             )); // 400 being the HTTP code for an invalid request.
         }
-        try{
-           // $data['insert_user_id'] = Auth()->id();
+        try {
+            // $data['insert_user_id'] = Auth()->id();
             $data['user_full_name'] = $request->user_full_name;
             $data['user_username'] = $request->user_username;
             $data['user_dref_cd'] = $request->user_dref_cd;
@@ -55,13 +56,12 @@ class UserController extends Controller
             $data['updated_at'] = date('Y-m-d H:i:s');
             $data['STATUS'] = 1;
 
-           // dd(User::create($data));
+            // dd(User::create($data));
             User::create($data);
-
-        }catch (\Exception $exception){
-            return Response::json(array('success' => false,'results'=>['message' => $exception.'يوجد خطأ في عملية الإدخال']));
+        } catch (\Exception $exception) {
+            return Response::json(array('success' => false, 'results' => ['message' => $exception . 'يوجد خطأ في عملية الإدخال']));
         }
-        return Response::json(array('success' => true,'results'=>['message' => 'تمت عملية الإدخال بنجاح']));
+        return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية الإدخال بنجاح']));
     }
     public function update(Request $request)
     {
@@ -69,48 +69,51 @@ class UserController extends Controller
             'user_full_name' => 'required|unique:user_tb|max:255',
             'user_dref_cd' => 'nullable|exists:C_DETAILS_REFERRAL_TB,DREF_CODE',
             'user_username' => 'required|numeric|digits:9',
+            'status' => [
+                'required',
+                Rule::in(['1', '0']),
+            ],
         ];
 
         $validator = Validator::make($request->all(), $role);
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return Response::json(array(
                 'success' => false,
                 'errors' => $validator->getMessageBag()->toArray()
             )); // 400 being the HTTP code for an invalid request.
         }
-        try{
+        try {
             $user = User::findOrFail($request->id_user);
-          //  dd($user);
+            //  dd($user);
             $data['user_full_name'] = $request->user_full_name;
             $data['user_username'] = $request->user_username;
             $data['user_dref_cd'] = $request->user_dref_cd;
+            $data['status'] = $request->status;
             $data['updated_at'] = date('Y-m-d H:i:s');
 
 
             $user->update($data);
-        }catch (\Exception $exception){
-            return Response::json(array('success' => false,'results'=>['message' => $exception.'يوجد خطأ في عملية التعديل']));
+        } catch (\Exception $exception) {
+            return Response::json(array('success' => false, 'results' => ['message' => $exception . 'يوجد خطأ في عملية التعديل']));
         }
-        return Response::json(array('success' => true,'results'=>['message' => 'تمت عملية التعديل بنجاح']));
+        return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية التعديل بنجاح']));
     }
     public function update_password(Request $request)
     {
         $role = [
             'id_user' => 'required|numeric|exists:users,id',
-           'password' => 'required|min:8|confirmed', // password_confirmation
+            'password' => 'required|min:8|confirmed', // password_confirmation
         ];
 
         $validator = Validator::make($request->all(), $role);
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return Response::json(array(
                 'success' => false,
                 'errors' => $validator->getMessageBag()->toArray()
 
             )); // 400 being the HTTP code for an invalid request.
         }
-        try{
+        try {
             $user = User::findOrFail($request->id_user);
             $password  = $user->password;
             $user->password = Hash::make($request->password);
@@ -126,10 +129,33 @@ class UserController extends Controller
             // $data['new_value'] =$user->password;
             // $data['type_action'] = 'U';
             // Log::create($data);
-        }catch (\Exception $exception){
-            return Response::json(array('success' => false,'results'=>['message' => $exception.'يوجد خطأ في عملية التعديل']));
+        } catch (\Exception $exception) {
+            return Response::json(array('success' => false, 'results' => ['message' => $exception . 'يوجد خطأ في عملية التعديل']));
         }
-        return Response::json(array('success' => true,'results'=>['message' => 'تمت عملية تعديل كلمة المرور بنجاح']));
+        return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية تعديل كلمة المرور بنجاح']));
     }
+    public function delete(Request $request)
+    {
+        try {
+            // البحث عن المستخدم
+            $user = User::findOrFail($request->id_user);
 
+            // حذف الصلاحيات المرتبطة به
+            DB::table('ROLE_PAGE_USERS')->where('USER_ID', $user->id)->delete();
+            DB::table('ROLE_BTN_USERS')->where('USER_ID', $user->id)->delete();
+
+            // حذف المستخدم
+            $user->delete();
+
+            return response()->json([
+                'success' => 1,
+                'results' => ['message' => 'تم حذف المستخدم وجميع صلاحياته بنجاح']
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => 0,
+                'results' => ['message' => 'حدث خطأ أثناء الحذف: ' . $e->getMessage()]
+            ]);
+        }
+    }
 }

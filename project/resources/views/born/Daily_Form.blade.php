@@ -1,6 +1,8 @@
 @extends('layouts.main')
 @section('title', 'تقارير خاصة بالمواليد')
 @section('content')
+    <link href="{{asset('assets/plugins/custom/datatables/datatables.bundle.css')}}" rel="stylesheet" type="text/css" />
+
     <style>
         @media screen {
             #printSection {
@@ -104,24 +106,77 @@
                     <table id="result_tb" class="table table-striped dt-responsive table-row-bordered gy-5 gs-7"
                         style="width:100%">
                         <tr>
+                            <td>
+                                <a href="#" onclick="Daily_Report_Birth_Place();"> <strong> توزيع المواليد حسب مكان
+                                        الولادة
+                                    </strong> </a>
+                            </td>
                             <td width="258"><a href='#' onclick="Daily_Born();"><strong> تقرير يومي للمواليد حسب
                                         تاريخ الادخال </strong></a></td>
 
                         </tr>
-                        <tr>
-                            <td>
-                                <a href="#" onclick="Daily_Report_Birth_Place();"> <strong> تقرير يومي للمواليد حسب
-                                        مكان الولادة </strong> </a>
-                            </td>
 
-                        </tr>
                         <tr>
+                            <td width="260" height="7" scope="col">
+                                <a href="#" onclick="Distribution_Ages();"> <strong> توزيع المواليد حسب الفئات
+                                        العمرية</strong></a>
+                            </td>
                             <td width="260" height="7" scope="col">
                                 <a href="#" onclick="Daily_Born_Delivery();"> <strong> تقرير يومي للمواليد حسب تاريخ
                                         الولادة </strong></a>
                             </td>
+
                         </tr>
 
+
+                        <tr>
+                            <td width="260" height="7" scope="col">
+                                <a href="#" onclick="Distribution_sex();"> <strong> توزيع المواليد حسب المحافظات
+                                    </strong></a>
+                            </td>
+                            <td width="260" height="7" scope="col">
+                                <a href="#" onclick="Distribution_Weight();"> <strong> توزيع المواليد حسب الوزن
+                                    </strong></a>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td width="260" height="7" scope="col">
+                                <a href="#" onclick="Distribution_Clinics();"> <strong> توزيع المواليد حسب المركز
+                                        الصحي </strong></a>
+                            </td>
+                            <td width="260" height="7" scope="col">
+                                <a href="#" onclick="Distribution_Twins();"> <strong> توزيع المواليد حسب التوائم
+                                    </strong></a>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td width="260" height="7" scope="col">
+                                <a href="#" onclick="Distribution_Region();"> <strong> توزيع تفصيلي للمواليد حسب
+                                        المحافظات </strong></a>
+                            </td>
+                            <td width="260" height="7" scope="col">
+                                <a href="#" onclick="Distribution_Years();"> <strong> توزيع المواليد حسب المستوى
+                                        التعليمي
+                                    </strong></a>
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td width="260" height="7" scope="col">
+                                <a href="#" onclick="Distribution_SexOnly();"> <strong> توزيع المواليد حسب الجنس
+                                    </strong></a>
+                            </td>
+                            <td width="260" height="7" scope="col">
+                                <a href="#" onclick="Distribution_Job();"> <strong> توزيع المواليد حسب المهنة
+                                    </strong></a>
+                            </td>
+
+                        </tr>
                     </table>
                 </div>
             </div>
@@ -148,6 +203,8 @@
 
     @endsection
     @push('scripts')
+        <script src="{{asset('assets/plugins/custom/datatables/datatables.bundle.js')}}" ></script>
+
         <script>
             $("#Birth_date_frm").flatpickr({
                 enableTime: true,
@@ -217,35 +274,197 @@
 
             }
             document.getElementById("btnPrint").onclick = function() {
-            printElement(document.getElementById("printThis"));
-        };
+                printElement(document.getElementById("printThis"));
+            };
+
             function printElement(elem) {
-            var domClone = elem.cloneNode(true);
+                var domClone = elem.cloneNode(true);
                 var $printSection = document.createElement("div");
                 $printSection.id = "printSection";
                 document.body.appendChild($printSection);
-            $printSection.innerHTML = "";
-            $printSection.appendChild(domClone);
-            window.print();
-        }
+                $printSection.innerHTML = "";
+                $printSection.appendChild(domClone);
+                window.print();
+            }
 
-        function Daily_Born_Print() {
+            function Daily_Born_Print() {
 
-var query = {
-    date_F: $('#Birth_date_frm').val(),
-    date_T: $('#Birth_date_to').val(),
+                var query = {
+                    date_F: $('#Birth_date_frm').val(),
+                    date_T: $('#Birth_date_to').val(),
 
 
-}
-var base_url = "{{ URL::to('Report/Daily_Born_Print') }}?" + $.param(query);
-// window.location = base_url;
+                }
+                var base_url = "{{ URL::to('Report/Daily_Born_Print') }}?" + $.param(query);
+                // window.location = base_url;
 
-$('#MyModal .modal-body').load(base_url, function() {
-    /* load finished, show dialog */
-    $('#MyModal').modal('show')
-});
+                $('#MyModal .modal-body').load(base_url, function() {
+                    /* load finished, show dialog */
+                    $('#MyModal').modal('show')
+                });
 
-}
+            }
 
+            function Distribution_Ages() {
+
+                var query = {
+                    date_F: $('#Birth_date_frm').val(),
+                    date_T: $('#Birth_date_to').val(),
+
+
+                }
+                var base_url = "{{ URL::to('Report/Distribution_Ages') }}?" + $.param(query);
+                // window.location = base_url;
+
+                $('#MyModal .modal-body').load(base_url, function() {
+                    /* load finished, show dialog */
+                    $('#MyModal').modal('show')
+                });
+
+            }
+
+            function Distribution_sex() {
+
+                var query = {
+                    date_F: $('#Birth_date_frm').val(),
+                    date_T: $('#Birth_date_to').val(),
+
+
+                }
+                var base_url = "{{ URL::to('Report/Distribution_sex') }}?" + $.param(query);
+                // window.location = base_url;
+
+                $('#MyModal .modal-body').load(base_url, function() {
+                    /* load finished, show dialog */
+                    $('#MyModal').modal('show')
+                });
+
+            }
+
+            function Distribution_Weight() {
+
+                var query = {
+                    date_F: $('#Birth_date_frm').val(),
+                    date_T: $('#Birth_date_to').val(),
+
+
+                }
+                var base_url = "{{ URL::to('Report/Distribution_Weight') }}?" + $.param(query);
+                // window.location = base_url;
+
+                $('#MyModal .modal-body').load(base_url, function() {
+                    /* load finished, show dialog */
+                    $('#MyModal').modal('show')
+                });
+
+            }
+
+            function Distribution_Clinics() {
+
+                var query = {
+                    date_F: $('#Birth_date_frm').val(),
+                    date_T: $('#Birth_date_to').val(),
+
+
+                }
+                var base_url = "{{ URL::to('Report/Distribution_Clinics') }}?" + $.param(query);
+                // window.location = base_url;
+
+                $('#MyModal .modal-body').load(base_url, function() {
+                    /* load finished, show dialog */
+                    $('#MyModal').modal('show')
+                });
+
+            }
+
+            function Distribution_Twins() {
+
+                var query = {
+                    date_F: $('#Birth_date_frm').val(),
+                    date_T: $('#Birth_date_to').val(),
+
+
+                }
+                var base_url = "{{ URL::to('Report/Distribution_Twins') }}?" + $.param(query);
+                // window.location = base_url;
+
+                $('#MyModal .modal-body').load(base_url, function() {
+                    /* load finished, show dialog */
+                    $('#MyModal').modal('show')
+                });
+
+            }
+
+            function Distribution_Region() {
+
+                var query = {
+                    date_F: $('#Birth_date_frm').val(),
+                    date_T: $('#Birth_date_to').val(),
+
+
+                }
+                var base_url = "{{ URL::to('Report/Distribution_Region') }}?" + $.param(query);
+                // window.location = base_url;
+
+                $('#MyModal .modal-body').load(base_url, function() {
+                    /* load finished, show dialog */
+                    $('#MyModal').modal('show')
+                });
+
+            }
+
+            function Distribution_Years() {
+
+                var query = {
+                    date_F: $('#Birth_date_frm').val(),
+                    date_T: $('#Birth_date_to').val(),
+
+
+                }
+                var base_url = "{{ URL::to('Report/Distribution_Years') }}?" + $.param(query);
+                // window.location = base_url;
+
+                $('#MyModal .modal-body').load(base_url, function() {
+                    /* load finished, show dialog */
+                    $('#MyModal').modal('show')
+                });
+
+            }
+
+            function Distribution_SexOnly() {
+
+                var query = {
+                    date_F: $('#Birth_date_frm').val(),
+                    date_T: $('#Birth_date_to').val(),
+
+
+                }
+                var base_url = "{{ URL::to('Report/Distribution_SexOnly') }}?" + $.param(query);
+                // window.location = base_url;
+
+                $('#MyModal .modal-body').load(base_url, function() {
+                    /* load finished, show dialog */
+                    $('#MyModal').modal('show')
+                });
+
+            }
+
+            function Distribution_Job() {
+
+                var query = {
+                    date_F: $('#Birth_date_frm').val(),
+                    date_T: $('#Birth_date_to').val(),
+
+
+                }
+                var base_url = "{{ URL::to('Report/Distribution_Job') }}?" + $.param(query);
+                // window.location = base_url;
+
+                $('#MyModal .modal-body').load(base_url, function() {
+                    /* load finished, show dialog */
+                    $('#MyModal').modal('show')
+                });
+
+            }
         </script>
     @endpush

@@ -32,6 +32,8 @@ use App\Exports\DeadExport;
 use Maatwebsite\Excel\Facades\Excel;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Traits\DeadDataTrait;
+use App\Http\Traits\SendSmsTrait;
+
 use Illuminate\Support\Facades\Storage;
 use Barryvdh\DomPDF\Facade\Pdf;
 
@@ -46,6 +48,7 @@ use File;
 class DeadController extends Controller
 {
     use DeadDataTrait;
+    use SendSmsTrait;
     protected $proxies = "*";
 
     protected $casts = [
@@ -68,7 +71,9 @@ class DeadController extends Controller
         $data['hospitals'] = DEADS_TB::ALL_HOS_DREF();
         $data['region'] = C_REGION_TB::get();
         $data['city'] = C_CITY_TB::get();
-        $data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::whereIn('DREF_M_CD', [2, 3])->orwhereIn('DREF_CODE', [134, 125, 146])->get();
+        $data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::get();
+
+        // $data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::whereIn('DREF_M_CD', [2, 3])->orwhereIn('DREF_CODE', [134, 125, 146])->get();
         $data['entry_employee'] = User::get();
 
 
@@ -80,7 +85,8 @@ class DeadController extends Controller
 
     public function insert_dead()
     {
-        //  $data['hospitals'] = C_DETAILS_REFERRAL_TB::get();
+        $user_id = Auth()->id();
+        $data['hos_no'] = User::where('id', $user_id)->value('user_dref_cd');
         $data['hospitals'] = DEADS_TB::ALL_HOS_DREF();
         // dd($data['hospitals']);
         $data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::get();
@@ -92,7 +98,8 @@ class DeadController extends Controller
         $data['region'] = C_REGION_TB::get();
         $data['city'] = C_CITY_TB::get();
         // $data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::get();
-        $data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::whereIn('DREF_M_CD', [2, 3])->orwhereIn('DREF_CODE', [134, 125, 146])->get();
+        //$data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::whereIn('DREF_M_CD', [2, 3])->orwhereIn('DREF_CODE', [134, 125, 146])->get();
+        $data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::get();
 
 
         return view('dead.insert_dead', $data);
@@ -101,6 +108,7 @@ class DeadController extends Controller
 
     public function dashboard()
     {
+
         return view('dashboard');
     }
 
@@ -109,6 +117,8 @@ class DeadController extends Controller
 
     public function getDeadResult(Request $request)
     {
+        ini_set('memory_limit', '1536M');
+
         $role = [
             'P_DEAD_CODE' => 'nullable|numeric',
             'P_ID' => 'nullable|numeric|digits:9',
@@ -117,9 +127,9 @@ class DeadController extends Controller
             'P_THIRD_NAME' => 'string|nullable',
             'P_LAST_NAME' => 'string|nullable',
             'P_DATE_FROM' => 'nullable|date_format:d/m/Y',
-            'P_DATE_TO' => 'nullable|date_format:d/m/Y' ,
+            'P_DATE_TO' => 'nullable|date_format:d/m/Y',
             'P_ENTER_FROM' => 'nullable|date_format:d/m/Y',
-            'P_ENTER_TO' => 'nullable|date_format:d/m/Y' ,
+            'P_ENTER_TO' => 'nullable|date_format:d/m/Y',
             'P_SEX_NO' => 'numeric|nullable',
             'P_REGION_NO' => 'numeric|nullable',
             'P_CITY_NO' => 'numeric|nullable',
@@ -141,7 +151,7 @@ class DeadController extends Controller
         $data1['ip'] = request()->ip();
         $data1['id_no'] = Auth()->id();
         $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
+        $data1['column_name'] = 'P_ID';
         $data['old_record'] = $request->all();
         $data1['type_action'] = 'S';
         Log::create($data1);
@@ -154,31 +164,35 @@ class DeadController extends Controller
 
             $action = '';
             foreach ($query['data'] as $key => $value) {
+                $action = '<div class="d-flex justify-content-center gap-1">';
                 if (IsPermissionBtn(23)) {
-
-                    $action = '<button type="button" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-3" title="طباعة اشعار الوفاة"
-                onclick="print_crt_dead(' . $value['DEAD_CODE'] . ')">
-                <i class="fonticon-printer fs-3"></i>
-            </button>';
+                    $action .= '<button type="button" class="btn btn-icon btn-active-color-primary" title="طباعة اشعار الوفاة"
+        onclick="print_crt_dead(' . $value['DEAD_CODE'] . ')">
+        <i class="fonticon-printer fs-3"></i>
+    </button>';
                 }
-                if (IsPermissionBtn(24)) {
 
-                    $action .= '<button type="button" class="btn btn-icon btn-bg-light btn-active-color-warning btn-sm me-3"
-            onclick="update_crt_dead(' . $value['DEAD_CODE'] . ');"  title="تعديل بيانات اشعار الوفاة">
-             <i class="fa-solid fa-pen-to-square fs-3"></i>
-        </button>';
+                if (IsPermissionBtn(24)) {
+                    $action .= '<button type="button" class="btn btn-icon btn-active-color-warning"
+        onclick="update_crt_dead(' . $value['DEAD_CODE'] . ');" title="تعديل بيانات اشعار الوفاة">
+        <i class="fa-solid fa-pen-to-square fs-3"></i>
+    </button>';
                 }
 
                 if (IsPermissionBtn(41) and $value['DEAD_SCANNED_ON'] != null) {
-
-
-                    $action .= '<a type="button" class="btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-3"
-                    onclick="open_files(' . $value['DEAD_ID'] . ');"  title="فتح إشعار الوفاة">
-                    <i class="fas fa-file fs-3"></i>
-                </button>';
+                    $action .= '<button type="button" class="btn btn-icon btn-active-color-primary"
+        onclick="open_files(' . $value['DEAD_ID'] . ');" title="فتح إشعار الوفاة">
+        <i class="fas fa-file fs-3"></i>
+    </button>';
                 }
 
-
+                if (IsPermissionBtn(44)) {
+                    $action .= '<button type="button" class="btn btn-icon btn-active-color-warning"
+        onclick="delete_crt_dead(' . $value['DEAD_CODE'] . ');" title="حذف إشعار الوفاة">
+        <i class="fa fa-trash fs-3" style="color:red"></i>
+    </button>';
+                }
+                $action .= '</div>';
 
                 $result['data'][] = array(
                     // $key + 1,
@@ -190,10 +204,13 @@ class DeadController extends Controller
                     $value['SEX_NAME_AR'],
                     $value['DEAD_FIRST_NAME_AR'] . ' ' . $value['DEAD_FATHER_NAME_AR'] . ' ' . $value['DEAD_GRANDFATHER_NAME_AR'] . ' ' . $value['DEAD_LAST_NAME_AR'],
                     $value['DREF_NAME_AR'],
+                    $value['DEAD_ICD1'],
                     // $value['DREF_NAME_AR'],
                     $value['ICD1_NAME'],
+                    $value['USER_FULL_NAME'],
+
                     // $value['DEAD_ICD1'],
-                    $value['ICD4_NAME'],
+                    // $value['ICD4_NAME'],
                     // $value['DEAD_ICD4'],
 
                     // $value['ICD1_NAME'] . ', ' . $value['ICD2_NAME'] . ' ,' . $value['ICD3_NAME'] . ', ' . $value['ICD4_NAME'] . ', ' . $value['ICD5_NAME'] . ', ' . $value['ICD6_NAME'] . ' ,' . $value['ICD7_NAME'] . ' ,' . $value['ICD8_NAME'],
@@ -243,7 +260,7 @@ class DeadController extends Controller
             'P_GRAND_FATHER_NAME' => 'required',
             'P_FAMILY_NAME' => 'required',
             'P_BIRTH_DATE' => 'required|date_format:d/m/Y|before_or_equal:' . date('d/m/Y'),
-            'P_BIRTH_DATE'.' '.'00:00' => 'before:P_DATE_DEATH|date_format:d/m/Y',
+            'P_BIRTH_DATE' . ' ' . '00:00' => 'before:P_DATE_DEATH|date_format:d/m/Y',
             'P_BIRTH_PLACE' => 'nullable',
             'P_JOB_CD' => 'nullable',
             'P_SEX_CD' => 'required|digits:1',
@@ -259,17 +276,17 @@ class DeadController extends Controller
             'P_DEAD_HOURS' => 'nullable',
             'P_REGION_CD' => 'nullable',
             'P_CITY_CD' => 'nullable',
-           // 'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|before_or_equal:' . date('d/m/Y H:i'),
-         //'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:P_BIRTH_DATE' . date('d/m/Y H:i'),
-           // 'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:P_BIRTH_DATE',
-            'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:'.'P_BIRTH_DATE'.' '.'00:00',
+            // 'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|before_or_equal:' . date('d/m/Y H:i'),
+            //'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:P_BIRTH_DATE' . date('d/m/Y H:i'),
+            // 'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:P_BIRTH_DATE',
+            'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:' . 'P_BIRTH_DATE' . ' ' . '00:00',
             'P_BURIAL_PLACE' => 'nullable',
             'P_BURIAL_CODE' => 'nullable',
             'P_PARTNER_ID' => 'nullable',
             'P_PARTNER_NAME' => 'nullable',
             'P_DEAD_DETAILS_CD' => 'nullable',
-          //  'DEAD_ICD1_CD' => 'required',
-           // 'DEAD_ICD4_CD' => 'required',
+            //  'DEAD_ICD1_CD' => 'required',
+            // 'DEAD_ICD4_CD' => 'required',
             'P_ICD_1' => 'required|numeric',
             'P_ICD_2' => 'nullable',
             'P_ICD_3' => 'nullable',
@@ -297,7 +314,8 @@ class DeadController extends Controller
             'P_RELATIONSHIP' => 'required|nullable',
             'P_REPORTER_ADDRESS' => 'nullable',
             'P_REPORTER_MOBILE' => ['nullable', 'numeric', 'digits:10', new StartWith('059', '056')],
-            'P_DATE_OF_REPORT' => 'required|date_format:d/m/Y H:i|after_or_equal:P_DATE_DEATH',            'P_RECEIVE_DATE' => 'nullable',
+            'P_DATE_OF_REPORT' => 'required|date_format:d/m/Y H:i|after_or_equal:P_DATE_DEATH',
+            'P_RECEIVE_DATE' => 'nullable',
             'P_RECEIVER_NAME' => 'nullable',
             'P_REGISTER_DATE' => 'nullable',
             'P_REGISTER_NAME' => 'nullable',
@@ -322,6 +340,7 @@ class DeadController extends Controller
 
         try {
             $query = DEADS_TB::ADD_DEAD_DATA($request->all());
+            //dd($query);
             $data1['user_id'] = Auth()->id();
             $data1['ip'] = request()->ip();
             $data1['id_no'] = Auth()->id();
@@ -338,7 +357,7 @@ class DeadController extends Controller
             return Response::json(array('success' => false, 'errors' => $exception->getMessage()));
             //$exception->getTraceAsString()
         }
-        return Response::json(array('success' => true, 'results' => 'تمت عملية الإدخال بنجاح',$query));
+        return Response::json(array('success' => true, 'results' => 'تمت عملية الإدخال بنجاح', $query));
     }
     public function getDeadIcd_name(Request $request)
     {
@@ -390,7 +409,7 @@ class DeadController extends Controller
             'P_GRAND_FATHER_NAME' => 'required',
             'P_FAMILY_NAME' => 'required',
             'P_BIRTH_DATE' => 'required|date_format:d/m/Y|before_or_equal:' . date('d/m/Y'),
-            'P_BIRTH_DATE'.' '.'00:00' => 'before:P_DATE_DEATH|date_format:d/m/Y',
+            'P_BIRTH_DATE' . ' ' . '00:00' => 'before:P_DATE_DEATH|date_format:d/m/Y',
             'P_BIRTH_PLACE' => 'nullable',
             'P_JOB_CD' => 'nullable',
             'P_SEX_CD' => 'required|digits:1',
@@ -407,8 +426,8 @@ class DeadController extends Controller
             'P_REGION_CD' => 'nullable',
             'P_CITY_CD' => 'nullable',
             //'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:P_BIRTH_DATE',
-           // 'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|before_or_equal:' . date('d/m/Y H:i'),
-	    'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:'.'P_BIRTH_DATE'.' '.'00:00',
+            // 'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|before_or_equal:' . date('d/m/Y H:i'),
+            'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i|after_or_equal:' . 'P_BIRTH_DATE' . ' ' . '00:00',
             'P_BURIAL_PLACE' => 'nullable',
             'P_BURIAL_CODE' => 'nullable',
             'P_PARTNER_ID' => 'nullable',
@@ -448,6 +467,7 @@ class DeadController extends Controller
             'P_REGISTER_NAME' => 'nullable',
             'P_REGISTER_PLACE_CD' => 'required',
             'P_COMMITTE_OPINION' => 'nullable',
+            'P_SOURCE' => 'required',
 
         ];
 
@@ -466,7 +486,7 @@ class DeadController extends Controller
             $data1['ip'] = request()->ip();
             $data1['id_no'] = Auth()->id();
             $data1['table_name'] = 'DEADS_TB';
-            $data1['column_name'] = ' ';
+            $data1['column_name'] = $request->P_DEAD_NUMBER;
             $data['old_record'] = $request->all();
             $data1['type_action'] = 'U';
             Log::create($data1);
@@ -528,9 +548,9 @@ class DeadController extends Controller
 
             )); // 400 being the HTTP code for an invalid request.
         }
-      //  dd($request->all());
+        //  dd($request->all());
         $dead = DEADS_TB::where('DEAD_CODE', $request->P_DEAD_NUMBER)->first();
-      //  dd($dead);
+        //  dd($dead);
 
         if (isset($dead->dead_dod) && $dead->dead_dod == false) {
             return Response::json(array('success' => false, 'results' => ['message' => "يوجد خطأ في صيغة تاريخ الوفاة !!!"]));
@@ -553,7 +573,7 @@ class DeadController extends Controller
         $data1['ip'] = request()->ip();
         $data1['id_no'] = Auth()->id();
         $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = 'DEAD_CODE';
+        $data1['column_name'] = $P_DEAD_NUMBER;
         $data1['type_action'] = 'P';
         Log::create($data1);
         //return view('dead.dead_crt', $result);
@@ -598,6 +618,8 @@ class DeadController extends Controller
     public function update_dead($dead_number = null)
     {
         if ($dead_number) {
+            $user_id = Auth()->id();
+            $data['hos_no'] = User::where('id', $user_id)->value('user_dref_cd');
             $data['dead_number'] = $dead_number;
             $data['jobs'] = C_JOB_TB::get();
             $data['hospitals'] = DEADS_TB::ALL_HOS_DREF();
@@ -637,7 +659,7 @@ class DeadController extends Controller
         $data1['ip'] = request()->ip();
         $data1['id_no'] = $request->ID_NO;
         $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = 'DEAD_ID';
+        $data1['column_name'] = $request->ID_NO;
         $data1['type_action'] = 'S';
         Log::create($data1);
         //dd($FLAG);
@@ -669,7 +691,7 @@ class DeadController extends Controller
         $data1['ip'] = request()->ip();
         $data1['id_no'] = $request->P_ID_NO;
         $data1['table_name'] = 'CITZN_API';
-        $data1['column_name'] = 'ID_NO';
+        $data1['column_name'] = $request->P_ID_NO;
         $data1['type_action'] = 'S';
         Log::create($data1);
         //dd($data);
@@ -678,7 +700,11 @@ class DeadController extends Controller
             $result['sname'] = $data['DEAD_FATHER_NAME_AR'];
             $result['tname'] = $data['DEAD_GRANDFATHER_NAME_AR'];
             $result['lname'] = $data['DEAD_LAST_NAME_AR'];
-            $result['birth_date'] =  Carbon::createFromFormat('d/m/Y', $data['DEAD_DOB'])->format('d/m/Y'); //$data['DEAD_DOB'];
+            if (!empty($data['DEAD_DOB'])) {
+                $result['birth_date'] =  Carbon::createFromFormat('d/m/Y', $data['DEAD_DOB'])->format('d/m/Y'); //$data['DEAD_DOB'];
+            } else {
+                $result['birth_date'] = null; // أو "غير متوفر"
+            }
             $result['sex'] = $data['DEAD_SEX_CD'];
             $result['DEAD_MARTIAL_STATUS'] = $data['DEAD_MARTIAL_STATUS'];
             $result['CITY_CD'] = $data['DEAD_CITY_CD'];
@@ -742,41 +768,79 @@ class DeadController extends Controller
         $result['data'] = $request->all();
         $path_file =  Storage::path('uploaded_files/' . $result['data']['Dead_ID'] . '.pdf');
         if (Storage::exists('uploaded_files/' . $result['data']['Dead_ID'] . '.pdf')) {
-       $file = File::get($path_file);
-       $response =   response()->download( $path_file,$result['data']['Dead_ID'] . '.pdf',['Content-Type' => 'application/pdf']);
-        return $response;
-        }
-        else{
+            $file = File::get($path_file);
+            $response =   response()->download($path_file, $result['data']['Dead_ID'] . '.pdf', ['Content-Type' => 'application/pdf']);
+            return $response;
+        } else {
             abort(404);
-
         }
-
-
     }
     public function get_helth_center(Request $request)
     {
-      //  C_DETAILS_REFERRAL_TB::whereIn('DREF_M_CD', [2, 3])->orwhereIn('DREF_CODE', [134, 125, 146])->get();
+        //  C_DETAILS_REFERRAL_TB::whereIn('DREF_M_CD', [2, 3])->orwhereIn('DREF_CODE', [134, 125, 146])->get();
         //$query = DEADS_TB::GET_CITY($request->all());
-        $query =C_DETAILS_REFERRAL_TB::where('DREF_CITY_CD',$request->city_cd)->get();
+        $query = C_DETAILS_REFERRAL_TB::where('DREF_CITY_CD', $request->city_cd)->get();
         // return json_encode($query);
 
         return Response::json($query);
     }
 
-  public function get_hos_by_place(Request $request)
+    public function get_hos_by_place(Request $request)
     {
         if ($request->death_place_cd == 2) {
             $query = C_DETAILS_REFERRAL_TB::where('DREF_CODE', 125)->get();
         } elseif ($request->death_place_cd == 3) {
-            $query = C_DETAILS_REFERRAL_TB::whereIn('DREF_CODE', [138,166,167,173,174,175,176])->get();
-
+            $query = C_DETAILS_REFERRAL_TB::whereIn('DREF_CODE', [138, 166, 167, 173, 174, 175, 176])->get();
         } else {
-            $query = C_DETAILS_REFERRAL_TB::whereNotIn('DREF_CODE', [125,138,166,167,173,174,175,176])->get();
+            $query = C_DETAILS_REFERRAL_TB::whereNotIn('DREF_CODE', [125, 138, 166, 167, 173, 174, 175, 176])->get();
         }
 
 
         return Response::json($query);
     }
     //$data['HEALTH_CENTER'] =
+    function delete_dead(Request $request)
+    {
 
+        $role = [
+            'P_DEAD_NUMBER' => 'required',
+        ];
+
+        $validator = Validator::make($request->all(), $role);
+        if ($validator->fails()) {
+            return Response::json(array(
+                'success' => false,
+                'errors' => implode('-', $validator->errors()->all())
+
+            )); // 400 being the HTTP code for an invalid request.
+        }
+        // $request->merge(["P_DELETE_BY" => Auth()->id()]);
+        $ip = request()->ip() === '::1' ? '127.0.0.1' : request()->ip();
+        // dd($ip);
+        try {
+            $query = DEADS_TB::DELETE_DEAD_DATA($request->all());
+            $deadId = basename($request->P_DEAD_NUMBER); // تعقيم المدخل
+            $filePath = 'uploaded_files/' . $deadId . '.pdf';
+            if (Storage::exists($filePath)) {
+                Storage::delete($filePath);
+            }
+
+            $data1['user_id'] = Auth()->id();
+            $data1['ip'] = $ip;
+            $data1['id_no'] = Auth()->id();
+            $data1['table_name'] = 'DEADS_TB';
+            $data1['column_name'] = $request->P_DEAD_NUMBER;
+            $data['old_record'] = $request->all();
+            $data1['type_action'] = 'D';
+            Log::create($data1);
+            // dd($query);
+        } catch (\Exception $exception) {
+            //DB::rollBack();
+
+            //dd($exception->getMessage().$message->toString());
+            return Response::json(array('success' => false, 'errors'  => $exception->getMessage(), 400));
+            //$exception->getTraceAsString()
+        }
+        return Response::json(array('success' => true, 'results' =>  'تمت عملية الحذف بنجاح'));
+    }
 }

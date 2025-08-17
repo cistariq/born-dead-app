@@ -19,6 +19,7 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
     Redirect /submit /login
+    AddDefaultCharset UTF-8
 </IfModule>
 
 

@@ -11,6 +11,20 @@
                 <!--begin::Compact form-->
                 <div class="d-flex align-items-center">
                     <!--begin::Input group-->
+                    <label class="control-label col-md-1">رقم هوية المولود</label>
+                    <div class="position-relative w-md-200px me-md-1">
+
+                        <div class="row mb-4">
+                            <div class="col-lg-10">
+                                <i
+                                    class="ki-duotone ki-magnifier fs-3 text-gray-500 position-absolute top-50 translate-middle ms-6"><span
+                                        class="path1"></span><span class="path2"></span></i>
+                                <input type="text" class="form-control form-control ps-10" name="search"
+                                    id="P_born_ID" value="" placeholder="رقم هوية المولود">
+
+                            </div>
+                        </div>
+                    </div>
                     <label class="control-label col-md-1">رقم هوية الأب</label>
                     <div class="position-relative w-md-200px me-md-1">
 
@@ -239,7 +253,7 @@
                             <th>اسم المولود بالكامل</th>
                             <th>اسم الأم</th>
                             <th>تاريخ الميلاد</th>
-                            <th>المركز الصحي</th>
+                            <th>مكان الولادة</th>
                             <th style="text-align: center">الإجراءات</th>
                         </tr>
                     </thead>
@@ -275,6 +289,8 @@
         function get_born_data() {
 
             if (($('#P_reg_no').val() == null || $('#P_reg_no').val() == undefined || $('#P_reg_no').val() == '') && ($(
+                        '#P_born_ID').val() == null || $('#P_born_ID').val() == undefined || $('#P_born_ID').val() ==
+                    '') && ($(
                         '#P_father_ID').val() == null || $('#P_father_ID').val() == undefined || $('#P_father_ID').val() ==
                     '') && ($(
                         '#P_mother_ID').val() == null || $('#P_mother_ID').val() == undefined || $('#P_mother_ID').val() ==
@@ -308,6 +324,8 @@
                     undefined || $(
                         '#P_LAST_NAME').val() == '')) && (($('#P_reg_no').val() == null || $('#P_reg_no').val() ==
                         undefined || $('#P_reg_no').val() == '') && ($(
+                        '#P_born_ID').val() == null || $('#P_born_ID').val() == undefined || $('#P_born_ID').val() ==
+                    '')&& ($(
                         '#P_father_ID').val() == null || $('#P_father_ID').val() == undefined || $('#P_father_ID').val() == '')
                         &&
                     ($('#P_mother_ID').val() == null || $('#P_mother_ID').val() == undefined || $('#P_mother_ID').val() ==
@@ -341,6 +359,7 @@
             } else {
 
                 var P_BORN_CODE = $('#P_reg_no').val();
+                var P_BORN_ID = $('#P_born_ID').val();
                 var P_FATHER_ID = $('#P_father_ID').val();
                 var P_MOTHER_ID = $('#P_mother_ID').val();
                 var P_FIRST_NAME = $('#P_FIRST_NAME').val();
@@ -371,6 +390,7 @@
                         method: 'post',
                         data: {
                             P_BORN_CODE: P_BORN_CODE,
+                            P_BORN_ID:P_BORN_ID,
                             P_FATHER_ID: P_FATHER_ID,
                             P_MOTHER_ID: P_MOTHER_ID,
                             P_FIRST_NAME: P_FIRST_NAME,
@@ -428,6 +448,7 @@
         function exports_excel() {
             var query = {
                 P_BORN_CODE: $('#P_reg_no').val(),
+                P_BORN_ID: $('#P_born_ID').val(),
                 P_FATHER_ID: $('#P_father_ID').val(),
                 P_MOTHER_ID: $('#P_mother_ID').val(),
                 P_FIRST_NAME: $('#P_FIRST_NAME').val(),
