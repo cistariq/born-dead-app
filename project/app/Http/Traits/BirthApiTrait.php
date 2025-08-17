@@ -47,7 +47,7 @@ trait BirthApiTrait
                     'X-UserID' => $user_id,
                 ])
                 ->post('https://center-hos-api.sehatty.ps/index.php/birth_api/getBirthNumberQuota', [
-                    'hos_no' => 1//$data['hos_no']
+                    'hos_no' => $data['hos_no']
                 ]);
 
             if ($response->successful()) {

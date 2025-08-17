@@ -88,7 +88,7 @@
             });
 
             // تعيين القيمة الافتراضية عبر Select2 API
-            //$('#hos_no').val("{{ $defaultHospital }}").trigger('change');
+          //  $('#hos_no').val("{{ $defaultHospital }}").trigger('change');
             $('#hos_no').val(1).trigger('change');
             check_record_quata();
         });
