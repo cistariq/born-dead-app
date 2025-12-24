@@ -24,11 +24,17 @@ class Quota extends Model
         'REQUEST_DATE',
         'APPROVE_DATE',          // أضف هذا
         'REQUEST_APPROVE_EMP',   // وأيضاً هذا
+        'SPENT_NUMBER_FROM',
+        'SPENT_NUMBER_TO',
+        'CASHIER_EMP',
+        'EXCHANGE_DATE',
 
     ];
        // تحويل التاريخ إلى كائن Carbon تلقائياً
     protected $casts = [
         'approve_date' => 'datetime',
+        'exchange_date' => 'datetime',
+        'request_date' => 'datetime',
     ];
 
     // جلب رقم جديد من Sequence

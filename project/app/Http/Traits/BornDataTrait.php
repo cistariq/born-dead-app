@@ -8,8 +8,6 @@ use App\Models\C_REGION_TB;
 use App\Models\BORNS_INFO_TB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
-
-//
 trait BornDataTrait
 {
     public function check_record_born(Request $request)
@@ -29,8 +27,7 @@ trait BornDataTrait
                 'IdNumber' => $data['P_BI_ID'],
             ]);
             $data = $response->json();
-           //dd($data);
-            //   dd($data['Data']['REGION']);
+//              dd($data);
             $region_data = BORNS_INFO_TB::GET_BORN_REGION($data['Data']['REGION']);
             $city_data = BORNS_INFO_TB::GET_BORN_CITY($data['Data']['CITY']);
             $born_status = BORNS_INFO_TB::GET_BORN_STATUS($data['Data']['BIRTH_STATUS']);
@@ -59,12 +56,9 @@ trait BornDataTrait
             "payload" => $data['Data'],
             'status'     => '200',
             ];
-           Log::channel('citizen')->info($message, $data1);
-
-
-            //dd($data['region_cd']);
+           Log::channel('citizen')->info($message, $data1);            
+		//dd($data['region_cd']);
             return $data;
-
         } catch (\Exception $exception) {
             return [];
         }
@@ -73,8 +67,8 @@ trait BornDataTrait
     public function getTokenCommitment(Request $request)
     {
         $response = Http::asForm()->post('https://gapi.ctznps.com/api/Security/Login', [
-            'UserName' => '112222244',
-            'Password' => 'f8KgNRm4qErT#*C'
+            'UserName' => '771112255',
+            'Password' => 'J0v0#312Mf'
         ]);
         //dd(trim($response->json()['Data']['Token']));
         if (isset($response->json()['Data']['Token'])) {

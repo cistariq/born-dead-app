@@ -73,6 +73,7 @@
 @endsection
 @push('scripts')
     <script>
+
         $("#P_DATE_FROM").flatpickr({
             dateFormat: "d/m/Y",
             maxDate: new Date(),
@@ -90,6 +91,8 @@
 
             // تعيين القيمة الافتراضية عبر Select2 API
             $('#P_HOS_NO').val("{{ $defaultHospital }}").trigger('change');
+         search_request();
+
         });
 
         function statusText(status) {

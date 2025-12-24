@@ -313,8 +313,8 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="1">توقيع الطبيب :</td>
-                <td colspan="2">التاريخ: {{ date('d/m/Y') }} </td>
+                <td colspan="3">توقيع الطبيب :</td>
+                {{-- <td colspan="2">تاريخ طباعة الإشعار: {{ date('d/m/Y') }} </td> --}}
             </tr>
         </table>
     </div>
@@ -421,7 +421,18 @@
 
         </table>
     </div>
-
+<div style="margin-top:10px;">
+    <table style="width:100%; font-size:10px;" dir="rtl">
+        <tr>
+            <td style="text-align:right;">
+                تاريخ طباعة الإشعار: {{ date('d/m/Y H:i') }}
+            </td>
+            <td style="text-align:left;">
+                 طبع بواسطة الموظف: {{ Auth::user()->user_full_name ?? '' }}
+            </td>
+        </tr>
+    </table>
+</div>
 </body>
 
 </html>

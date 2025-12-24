@@ -128,7 +128,7 @@
                                             <!--begin::Input-->
                                             <select id="p_hospital_id" name="p_hospital_id" data-control="select2"
                                                 data-placeholder="اختر ..." data-allow-clear="true"
-                                                class="form-select form-select-solid form-select-lg fw-bold">
+                                                class="form-select form-select-solid form-select-lg fw-bold ">
                                                 <option></option>
                                                 @foreach ($hospitals as $hospital)
                                                     <option value="{{ $hospital->dref_code }}">
@@ -513,6 +513,24 @@
     <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
 
     <script>
+        function initSelect2InModal(modalId, selectId) {
+            $(modalId).on('shown.bs.modal', function() {
+                $(selectId).select2('destroy');
+
+                $(selectId).select2({
+                    dropdownParent: $(modalId),
+                    placeholder: "اختر ...",
+                    allowClear: true,
+                    width: '100%'
+                });
+            });
+        }
+
+        // مودال التعديل
+        initSelect2InModal('#kt_modal_update_user', '#u_hospital_id');
+
+        // مودال الإضافة أو أي مودال آخر
+        initSelect2InModal('#kt_modal_add_user', '#p_hospital_id');
         var datatable;
         var form;
         var submitButton;
@@ -526,6 +544,7 @@
             $('#search').on('keyup', function(e) {
                 datatable.search(e.target.value).draw();
             });
+
         });
         var handleForm = function(e) {
             // Init form validation rules. For more info check the FormValidation plugin's official documentation:https://formvalidation.io/

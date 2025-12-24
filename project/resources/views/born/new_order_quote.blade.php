@@ -88,8 +88,8 @@
             });
 
             // تعيين القيمة الافتراضية عبر Select2 API
-          //  $('#hos_no').val("{{ $defaultHospital }}").trigger('change');
-            $('#hos_no').val(1).trigger('change');
+            $('#hos_no').val("{{ $defaultHospital }}").trigger('change');
+          //  $('#hos_no').val(1).trigger('change');
             check_record_quata();
         });
 
@@ -107,10 +107,10 @@
                 },
             }).done(function(response) {
                 console.log(response);
-                if (response.status == 'success') {
+                if (response.success == true) {
                     Swal.fire({
                         title: 'تمت عملية حفظ الطلب بنجاح !',
-                        text: response.message,
+                        text: response.results,
                         icon: "success",
                         confirmButtonText: 'موافق'
                     });
@@ -120,7 +120,7 @@
 
                     Swal.fire({
                         title: 'يوجد خطأ في عملية الإدخال !',
-                        text: response.message,
+                        text: response.results,
                         icon: 'error',
                         confirmButtonText: 'Ok'
                     });
@@ -145,12 +145,12 @@
                 contentType: false,
                 data: form_data,
                 success: function(response) {
-                    console.log(response.data);
-                    if (response.status == 200 && response.data && response.data.BNQ_IS_ACTIVE == 1) {
-                        $('#current_number').val(response.data.BNQ_CURRENT_NUMBER ?? 0);
-                        $('#last_number').val(response.data.BNQ_END_NUMBER ?? 0);
+                    console.log(response);
+                    if (response.data.status == 200) {
+                        $('#current_number').val(response.data.data[0]['BNQ_CURRENT_NUMBER'] ?? 0);
+                        $('#last_number').val(response.data.data[0]['BNQ_END_NUMBER'] ?? 0);
                         $('#remaining_numbers').val(
-                            (response.data.BNQ_CURRENT_NUMBER ?? 0) - (response.data.BNQ_END_NUMBER ?? 0)
+                            (response.data.data[0]['BNQ_END_NUMBER'] ?? 0) - (response.data.data[0]['BNQ_CURRENT_NUMBER'] ?? 0)
                         );
                     } else {
                         Swal.fire({

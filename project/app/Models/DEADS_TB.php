@@ -296,7 +296,7 @@ class DEADS_TB extends Model
     :P_UPDATED_BY,:P_BIRTH_DATE,:P_DATE_DEATH,:P_NATIONALITY_CD,:P_MARTIAL_STATUS_CD,:P_DEATH_COUNTRY,:P_DEATH_REGION_PLACE,:P_DEATH_CITY_PLACE,
     :P_BIRTH_PLACE,:P_RELEGION_CD,:P_JOB_CD,:P_BURIAL_PLACE,:P_BURIAL_CODE,:P_PREGNANCY_CD,:P_GESTATIONAL_WEEK,:P_AFTER_DELIVERY_CD,:P_PARTNER_ID,:P_PARTNER_NAME,
     :P_DOC_SPECIALIST,:P_DOC_ADDRESS,:P_TREATMENT_DATE,:P_PREVIEW_DATE,:P_SEEING_CORPSE_DATE,:P_CORPSE_DISSECTION_CD,:P_CORPSE_DESSECTION_DATE,:P_REPORTER_SEX_CD,
-    :P_REPORTER_NATIONALITY_CD,:P_RELATIONSHIP,:P_REPORTER_ADDRESS,:P_REPORTER_MOBILE,:P_RECEIVE_DATE,:P_RECEIVER_NAME,:P_REGISTER_DATE,:P_REGISTER_NAME,:P_REGISTER_PLACE_CD,:P_COMMITTE_OPINION,:P_SOURCE,:P_RESULT); end;";
+    :P_REPORTER_NATIONALITY_CD,:P_RELATIONSHIP,:P_REPORTER_ADDRESS,:P_REPORTER_MOBILE,:P_RECEIVE_DATE,:P_RECEIVER_NAME,:P_REGISTER_DATE,:P_REGISTER_NAME,:P_REGISTER_PLACE_CD,:P_COMMITTE_OPINION,:P_SOURCE,:P_QR_CD,:P_RESULT); end;";
         return DB::transaction(function ($conn) use ($sql_dead, $data) {
             $lista = [];
             $P_RESULT = 0;
@@ -369,6 +369,7 @@ class DEADS_TB extends Model
             $stmt->bindParam(':P_REGISTER_PLACE_CD', $data['P_REGISTER_PLACE_CD']);
             $stmt->bindParam(':P_COMMITTE_OPINION', $data['P_COMMITTE_OPINION']);
             $stmt->bindParam(':P_SOURCE', $data['P_SOURCE']);
+            $stmt->bindParam(':P_QR_CD', $data['P_QR_CD']);
             $stmt->bindParam(':P_RESULT', $P_RESULT, PDO::PARAM_INT, 1);
             $stmt->execute();
             $data['P_DEAD_NUMBER'] = $P_DEAD_NUMBER;
@@ -458,6 +459,25 @@ class DEADS_TB extends Model
     // });
 
     // }
+public static function CHECK_ID(string $idNo): int
+{
+    // استدعاء الدالة داخل Package CONFIGURATION_PAC
+    $sql = "BEGIN :RESULT := CONFIGURATION_PAC.ID_CHECK(:P_ID_NO); END;";
+
+    return DB::transaction(function ($conn) use ($sql, $idNo) {
+
+        $RESULT = 0;
+        $pdo    = $conn->getPdo();
+        $stmt   = $pdo->prepare($sql);
+
+        $stmt->bindParam(':P_ID_NO', $idNo);
+        $stmt->bindParam(':RESULT', $RESULT, \PDO::PARAM_INT, 1);
+
+        $stmt->execute();
+
+        return $RESULT; // 0 أو 1
+    });
+}
 
     public static function DEAD_IS_FOUND($data)
     {
@@ -962,7 +982,7 @@ class DEADS_TB extends Model
             $pdo = $conn->getPdo();
             $stmt = $pdo->prepare($sql);
             //$data['Death_date_frm'] = date('d/m/Y', strtotime($data['Death_date_frm']));
-           // $data['Death_date_to'] = date('d/m/Y', strtotime($data['Death_date_to']));
+            // $data['Death_date_to'] = date('d/m/Y', strtotime($data['Death_date_to']));
             $stmt->bindParam(':ID', $data['Dead_ID']);
             $stmt->bindParam(':SEX', $data['Sex']);
             $stmt->bindParam(':DIAG_FROM', $data['Diag_From']);
@@ -1566,7 +1586,8 @@ class DEADS_TB extends Model
         });
     }
 
-    public static function ADD_DEAD_SCAN($DEAD_ID, $USER_CD, $IS_SCANNED){
+    public static function ADD_DEAD_SCAN($DEAD_ID, $USER_CD, $IS_SCANNED)
+    {
         $sql = "begin DEAD_INFO_PKG.ADD_SCAN_INFO (:P_ID,:P_SCAN_BY,:P_IS_SCANNED); end;";
 
         return DB::transaction(function ($conn) use ($sql, $DEAD_ID, $USER_CD, $IS_SCANNED) {
@@ -1578,9 +1599,7 @@ class DEADS_TB extends Model
             $stmt->bindParam(':P_SCAN_BY', $USER_CD);
             $stmt->bindParam(':P_IS_SCANNED', $IS_SCANNED);
             $stmt->execute();
-
         });
-
     }
     //delete data
 
@@ -1601,4 +1620,209 @@ class DEADS_TB extends Model
         });
     }
 
+    public static function INSERT_NEW_CITIZEN_BY_ID(
+        $idNumber,
+        $firstName,
+        $fatherName,
+        $fatherGrandName,
+        $familyName,
+        $birthDate,
+        $personalCD,
+        $personal,
+        $gender,
+        $sex,
+        $region,
+        $regionCD,
+        $fatherId,
+        $motherId,
+        $birthCountryCD,
+        $birthCountryDesc,
+        $birthCityCD,
+        $birthCityDesc
+    ) {
+        $sql = "
+    BEGIN
+        UPDATE_CITIZEN_PKG.INSERT_NEW_CITIZEN_PR(
+            :P_ID,
+            :P_FNAME,
+            :P_SNAME,
+            :P_TNAME,
+            :P_LNAME,
+            :P_BIRTH_DATE,
+            :P_SEX_CODE,
+            :P_SEX,
+            :P_REGION_CODE,
+            :P_REGION,
+            :P_STATUS,
+            :P_STATUS_CODE,
+            :P_FATH_ID,
+            :P_MOTH_ID,
+            :P_BIRTH_COUNTRY_CODE,
+            :P_BIRTH_CITY_CODE,
+            :P_BIRTH_COUNTRY,
+            :P_BIRTH_CITY,
+            :P_RESULT
+        );
+    END;
+    ";
+
+        return DB::transaction(function ($conn) use (
+            $sql,
+            $idNumber,
+            $firstName,
+            $fatherName,
+            $fatherGrandName,
+            $familyName,
+            $birthDate,
+            $personalCD,
+            $personal,
+            $gender,
+            $sex,
+            $region,
+            $regionCD,
+            $fatherId,
+            $motherId,
+            $birthCountryCD,
+            $birthCountryDesc,
+            $birthCityCD,
+            $birthCityDesc
+        ) {
+
+            $P_RESULT = 0;
+
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+
+            $stmt->bindParam(':P_ID', $idNumber);
+            $stmt->bindParam(':P_FNAME', $firstName);
+            $stmt->bindParam(':P_SNAME', $fatherName);
+            $stmt->bindParam(':P_TNAME', $fatherGrandName);
+            $stmt->bindParam(':P_LNAME', $familyName);
+            $stmt->bindParam(':P_BIRTH_DATE', $birthDate);
+            $stmt->bindParam(':P_SEX_CODE', $sex);
+            $stmt->bindParam(':P_SEX', $gender);
+            $stmt->bindParam(':P_REGION_CODE', $regionCD);
+            $stmt->bindParam(':P_REGION', $region);
+            $stmt->bindParam(':P_STATUS', $personal);
+            $stmt->bindParam(':P_STATUS_CODE', $personalCD);
+            $stmt->bindParam(':P_FATH_ID', $fatherId);
+            $stmt->bindParam(':P_MOTH_ID', $motherId);
+            $stmt->bindParam(':P_BIRTH_COUNTRY_CODE', $birthCountryCD);
+            $stmt->bindParam(':P_BIRTH_CITY_CODE', $birthCityCD);
+            $stmt->bindParam(':P_BIRTH_COUNTRY', $birthCountryDesc);
+            $stmt->bindParam(':P_BIRTH_CITY', $birthCityDesc);
+
+            // ✅ OUT PARAM (مثل الدالة الشغالة)
+            $stmt->bindParam(':P_RESULT', $P_RESULT, \PDO::PARAM_INT, 1);
+
+            $stmt->execute();
+
+            return [
+                'P_RESULT' => $P_RESULT
+            ];
+        });
+    }
+
+    public static function UPDATE_NEW_CITIZEN_BY_ID(
+        $idNumber,
+        $firstName,
+        $fatherName,
+        $fatherGrandName,
+        $familyName,
+        $birthDate,
+        $personalCD,
+        $personal,
+        $gender,
+        $sex,
+        $region,
+        $regionCD,
+        $fatherId,
+        $motherId,
+        $birthCountryCD,
+        $birthCountryDesc,
+        $birthCityCD,
+        $birthCityDesc
+    ) {
+        $sql = "
+    BEGIN
+        UPDATE_CITIZEN_PKG.UPDATE_NEW_CITIZEN_BY_ID(
+            :P_ID,
+            :P_FNAME,
+            :P_SNAME,
+            :P_TNAME,
+            :P_LNAME,
+            :P_BIRTH_DATE,
+            :P_SEX_CODE,
+            :P_SEX,
+            :P_REGION_CODE,
+            :P_REGION,
+            :P_STATUS,
+            :P_STATUS_CODE,
+            :P_FATH_ID,
+            :P_MOTH_ID,
+            :P_BIRTH_COUNTRY_CODE,
+            :P_BIRTH_CITY_CODE,
+            :P_BIRTH_COUNTRY,
+            :P_BIRTH_CITY,
+            :P_RESULT
+        );
+    END;
+    ";
+
+        return DB::transaction(function ($conn) use (
+            $sql,
+            $idNumber,
+            $firstName,
+            $fatherName,
+            $fatherGrandName,
+            $familyName,
+            $birthDate,
+            $personalCD,
+            $personal,
+            $gender,
+            $sex,
+            $region,
+            $regionCD,
+            $fatherId,
+            $motherId,
+            $birthCountryCD,
+            $birthCountryDesc,
+            $birthCityCD,
+            $birthCityDesc
+        ) {
+
+            $P_RESULT = 0; // OUT parameter
+
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+
+            $stmt->bindParam(':P_ID', $idNumber);
+            $stmt->bindParam(':P_FNAME', $firstName);
+            $stmt->bindParam(':P_SNAME', $fatherName);
+            $stmt->bindParam(':P_TNAME', $fatherGrandName);
+            $stmt->bindParam(':P_LNAME', $familyName);
+            $stmt->bindParam(':P_BIRTH_DATE', $birthDate);
+            $stmt->bindParam(':P_SEX_CODE', $sex);
+            $stmt->bindParam(':P_SEX', $gender);
+            $stmt->bindParam(':P_REGION_CODE', $regionCD);
+            $stmt->bindParam(':P_REGION', $region);
+            $stmt->bindParam(':P_STATUS', $personal);
+            $stmt->bindParam(':P_STATUS_CODE', $personalCD);
+            $stmt->bindParam(':P_FATH_ID', $fatherId);
+            $stmt->bindParam(':P_MOTH_ID', $motherId);
+            $stmt->bindParam(':P_BIRTH_COUNTRY_CODE', $birthCountryCD);
+            $stmt->bindParam(':P_BIRTH_CITY_CODE', $birthCityCD);
+            $stmt->bindParam(':P_BIRTH_COUNTRY', $birthCountryDesc);
+            $stmt->bindParam(':P_BIRTH_CITY', $birthCityDesc);
+
+            // OUT parameter
+            $stmt->bindParam(':P_RESULT', $P_RESULT, \PDO::PARAM_INT, 1);
+
+            $stmt->execute();
+
+            return [
+                'P_RESULT' => $P_RESULT
+            ];
+        });
+    }
 }

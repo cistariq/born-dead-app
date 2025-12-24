@@ -102,6 +102,7 @@
             $('.btn-outline-dark').on('click', function() {
                 clear_form();
             });
+            searchRequests();
         });
 
         // دالة البحث واستدعاء السيرفر لجلب البيانات
@@ -111,7 +112,7 @@
             const dateTo = $('#P_DATE_TO').val();
 
             $.ajax({
-                url: "{{ route('born.search_release') }}", // استبدل بالرابط الصحيح في Laravel
+                url: "{{ route('born.search_release') }}",
                 method: 'GET',
                 data: {
                     P_HOS_NO: hosNo,
@@ -145,7 +146,12 @@
                     });
                 },
                 error: function() {
-                    alert('حدث خطأ أثناء البحث');
+                    Swal.fire({
+                        title: 'فشل العملية',
+                        text: 'حدث خطأ أثناء البحث',
+                        icon: 'error',
+                        confirmButtonText: 'موافق'
+                    });
                 }
             });
         }
@@ -160,27 +166,51 @@
 
         // دالة صرف الطلب (تحتاج تضيفها حسب منطقك)
         function releaseRequest(id) {
-            if (!confirm('هل أنت متأكد من صرف هذا الطلب؟')) {
-                return;
-            }
-
-            $.ajax({
-                url: "{{ route('born.release') }}",
-                method: 'POST',
-                data: {
-                    id: id,
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function(response) {
-                    if (response.status === 'success') {
-                        alert('تم صرف الطلب بنجاح');
-                        searchRequests(); // إعادة تحميل الجدول لتحديث البيانات
-                    } else {
-                        alert('فشل صرف الطلب: ' + (response.message || 'حدث خطأ'));
-                    }
-                },
-                error: function() {
-                    alert('حدث خطأ أثناء صرف الطلب');
+            Swal.fire({
+                title: 'تأكيد العملية',
+                text: 'هل أنت متأكد من صرف هذا الطلب؟',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'نعم، صرف الطلب',
+                cancelButtonText: 'إلغاء',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "{{ route('born.release') }}",
+                        method: 'POST',
+                        data: {
+                            id: id,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.success == true) {
+                                Swal.fire({
+                                    title: 'تم بنجاح',
+                                    text: 'تم صرف الطلب بنجاح',
+                                    icon: 'success',
+                                    confirmButtonText: 'حسناً'
+                                }).then(() => {
+                                    searchRequests(); // إعادة تحميل الجدول
+                                });
+                            } else {
+                                Swal.fire({
+                                    title: 'فشل العملية',
+                                    text: response.message || 'حدث خطأ أثناء صرف الطلب',
+                                    icon: 'error',
+                                    confirmButtonText: 'موافق'
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                title: 'خطأ',
+                                text: 'حدث خطأ أثناء الاتصال بالخادم',
+                                icon: 'error',
+                                confirmButtonText: 'موافق'
+                            });
+                        }
+                    });
                 }
             });
         }

@@ -600,7 +600,7 @@ class BornController extends Controller
             'MOTHER_REGION_CD' => 'numeric|nullable',
             'MOTHER_CITY_CD' => 'numeric|nullable',
             'MOTHER_TEL' => ['nullable', 'numeric', 'digits:10', new StartWith('059', '056')],
-            'MOTHER_FAMILY_NAME' => 'string|required',
+            'MOTHER_FAMILY_NAME' => 'nullable',
             'MOTHER_DATA_FRM_MOI' => 'numeric|nullable',
             'MOTHER_ID_TYPE' => 'numeric|nullable'
 

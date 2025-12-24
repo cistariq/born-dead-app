@@ -994,6 +994,7 @@
 
             var P_DEAD_DATE = $("#P_Date_dead").val();
             var P_BIRTH_DATE = $("#P_BIRTH_DATE").val();
+            var P_DEAD_HOURS = $("#P_DEAD_HOURS").val();
 
             var start = parseDMY(P_BIRTH_DATE);
             var end = parseDMY_HM(P_DEAD_DATE);
@@ -1001,7 +1002,7 @@
             var diffMs = end - start;
             var diffHours = Math.floor(diffMs / (1000 * 60 * 60));
 
-            if (diffHours < 24) {
+            if (diffHours < 24 && (P_DEAD_HOURS < 0 || P_DEAD_HOURS !== "")) {
                 Swal.fire({
                     title: 'يوجد خطأ في عملية الإدخال !',
                     text: 'تاريخ الوفاة أقل من تاريخ الميلاد',
@@ -1622,7 +1623,6 @@
                             confirmButtonText: 'Ok'
                         });
 
-
                     }
                 });
             }
@@ -1630,6 +1630,7 @@
 
         function getDataPersonalInfoBy() {
             var P_ID_NO = $('#P_ID_NO').val();
+            var P_DEAD_NUMBER = $('#P_DEAD_NUMBER').val();
             block_insert_dead.block();
 
             var url = "{{ route('dead.get_person_query') }}";
@@ -1639,6 +1640,7 @@
                 method: 'post',
                 data: {
                     'P_ID_NO': P_ID_NO,
+                    'P_DEAD_NUMBER' : P_DEAD_NUMBER,
                 },
             }).done(function(response) {
                 console.log(response);
@@ -1669,7 +1671,6 @@
                         $("#P_nationality_id").val(1).change();
                         $("#P_JOB_CD").val(55).change();
                         $('#P_DEATH_COUNTRY').val('فلسطين');
-
 
                         if (response.results.DEATH_DT != null) {
                             Swal.fire({
@@ -1703,14 +1704,11 @@
                     });
                     Swal.fire({
                         title: 'يوجد خطأ في عملية الإدخال !',
-                        text: response.results.message,
+                        text: response.results,
                         icon: 'error',
                         confirmButtonText: 'Ok'
                     });
-
-                    check_dead_record();
-
-                    //    block_insert_dead.release();
+                    clear_form();
 
 
                 }
@@ -2256,8 +2254,8 @@
                 var foo = document.getElementById('div_input');
 
                 foo.style.display = 'block';
-
-                getDataPersonalInfoBy();
+                if($('#P_DEAD_NUMBER').val()==null || $('#P_DEAD_NUMBER').val() == undefined || $('#P_DEAD_NUMBER').val() == '')
+                    getDataPersonalInfoBy();
 
             });
         }
@@ -2266,46 +2264,53 @@
         function get_partner_data() {
             var P_ID_NO = $('#P_Wife_ID').val();
             block_insert_dead.block();
+            if (P_ID_NO == null || P_ID_NO == '') {
+                $('#P_Wife_Name').val('');
+                block_insert_dead.release();
+                return;
+            } else {
 
-            var url = "{{ route('dead.get_person_query') }}";
-            $.ajax({
-                url: url,
-                type: 'json',
-                method: 'post',
-                data: {
-                    'P_ID_NO': P_ID_NO,
-                },
-            }).done(function(response) {
-                console.log(response);
-                if (response.success) {
+                var url = "{{ route('dead.get_person_query') }}";
+                $.ajax({
+                    url: url,
+                    type: 'json',
+                    method: 'post',
+                    data: {
+                        'P_ID_NO': P_ID_NO,
+                    },
+                }).done(function(response) {
+                    console.log(response);
+                    if (response.success) {
 
-                    if (response.success == 1) {
+                        if (response.success == 1) {
 
-                        $('#P_Wife_Name').val(response.results.fname + ' ' + response.results.sname + ' ' + response
-                            .results.tname + ' ' + response.results.lname);
+                            $('#P_Wife_Name').val(response.results.fname + ' ' + response.results.sname + ' ' +
+                                response
+                                .results.tname + ' ' + response.results.lname);
+
+                        }
+                    } else {
+                        console.log(response);
+                        $message = "";
+                        $.each(response.errors, function(key, value) {
+                            console.log(value);
+                            console.log(key);
+                            $message += value.join('-') + "\r\n";
+                        });
+                        Swal.fire({
+                            title: 'يوجد خطأ في عملية الإدخال !',
+                            text: response.results,
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
+
+
+
 
                     }
-                } else {
-                    console.log(response);
-                    $message = "";
-                    $.each(response.errors, function(key, value) {
-                        console.log(value);
-                        console.log(key);
-                        $message += value.join('-') + "\r\n";
-                    });
-                    Swal.fire({
-                        title: 'يوجد خطأ في عملية الإدخال !',
-                        text: response.results,
-                        icon: 'error',
-                        confirmButtonText: 'Ok'
-                    });
-
-
-
-
-                }
-                block_insert_dead.release();
-            });
+                    block_insert_dead.release();
+                });
+            }
         }
 
         function get_submitted_dead() {

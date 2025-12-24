@@ -439,7 +439,7 @@
                                     <!--begin::Col-->
                                     <input type="text" name="P_birth_state" id="P_birth_state"
                                         class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark"
-                                        disabled>
+                                        >
                                     <!--end::Col-->
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">مكان ميلاد والد الأب</label>
@@ -541,7 +541,7 @@
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">نوع الوثيقة</label>
                                 <!--end::Label-->
                                 <div class="col-lg-2 fv-row">
-                                    <select id="P_type_id" name="m_type_id" data-control="select2"
+                                    <select id="m_type_id" name="m_type_id" data-control="select2"
                                         data-placeholder="اختر ..."
                                         class="form-select form-select-lg fw-bold form-select-solid border border-1 border border-dark">
                                         <option></option>
@@ -616,7 +616,7 @@
                                     <!--begin::Col-->
                                     <input type="text" name="m_birth_state" id="m_birth_state"
                                         class="form-control text-center form-control-lg mb-3 mb-lg-0 form-control-solid border border-1 border border-dark"
-                                        disabled>
+                                        >
                                     <!--end::Col-->
                                 </div>
                                 <label class="col-lg-2 col-form-label required fw-bold fs-6">مكان ميلاد والد الأم</label>
@@ -793,7 +793,7 @@
                         $('#BI_RELEGION_CD').val(2).change();
                     }
 
-                    $('#BORN_DETAILS_DELIVERY_DATE').val(response.Data.CHILD_DOB + " " + response.Data.BIRTH_HORS);
+                    $('#BORN_DETAILS_DELIVERY_DATE').val(response.Data.CHILD_DOB + " " + (response.Data.BIRTH_HORS ?? "08:00"));
                     $('#P_FATHER_ID').val(response.Data.FAHER_ID);
                     getDataFatherInfoBy();
                     $('#P_MOTHER_ID').val(response.Data.MOTHER_ID);
@@ -1116,7 +1116,7 @@
                 var MOTHER_FATHER_NAME_AR = $('#M_SECOND_NAME').val();
                 var MOTHER_GRANDFATHER_NAME_AR = $('#M_THIRD_NAME').val();
                 var MOTHER_LAST_NAME_AR = $('#M_LAST_NAME').val();
-                var MOTHER_DOB = $('#P_MOTHER_BIRTH_DATE').val();
+                var MOTHER_DOB = $('#M_BIRTH_DATE').val();
                 var MOTHER_BIRTH_PLACE = $('#m_birth_state').val();
                 var MOTHER_FATHER_BIRTH_PLACE = $('#mf_birth_state').val();
                 var MOTHER_JOB = $('#P_MOTHER_JOB_NAME').val();
@@ -1281,7 +1281,7 @@
                 var MOTHER_FATHER_NAME_AR = $('#M_SECOND_NAME').val();
                 var MOTHER_GRANDFATHER_NAME_AR = $('#M_THIRD_NAME').val();
                 var MOTHER_LAST_NAME_AR = $('#M_LAST_NAME').val();
-                var MOTHER_DOB = $('#P_MOTHER_BIRTH_DATE').val();
+                var MOTHER_DOB = $('#M_BIRTH_DATE').val();
                 var MOTHER_BIRTH_PLACE = $('#m_birth_state').val();
                 var MOTHER_FATHER_BIRTH_PLACE = $('#mf_birth_state').val();
                 var MOTHER_JOB = $('#P_MOTHER_JOB_NAME').val();
@@ -1293,6 +1293,7 @@
                 var MOTHER_FAMILY_NAME = $('#P_mother_family').val();
                 var MOTHER_DATA_FRM_MOI = $('#MOTHER_DATA_FRM_MOI').val();
                 var MOTHER_ID_TYPE = $('#m_type_id').val();
+                //alert(MOTHER_ID_TYPE);
 
                 var url = "{{ route('born.ADD_BORN_MOTHER_DATA') }}";
                 $.ajax({
@@ -1341,7 +1342,7 @@
                         });
                         Swal.fire({
                             title: 'يوجد خطأ في عملية الإدخال !',
-                            text: $message,
+                            text: response.results.message,
                             icon: 'error',
                             confirmButtonText: 'Ok'
                         });
@@ -1355,9 +1356,9 @@
         }
 
         function save_born_details_info() {
+            block_insert_born.block();
 
-            if (($("#FATHER_NUMBER").val() != 0 || $("#FATHER_NUMBER").val() != '') && ($("#MOTHER_NUMBER").val() != 0 || $(
-                    "#MOTHER_NUMBER").val() != '')) {
+            if ($("#MOTHER_NUMBER").val() != 0)  {
 
                 var BORN_DETAILS_REASON_CD = $("#BORN_DETAILS_REASON_CD").val();
                 var BORN_DETAILS_GRAVID = $("#BORN_DETAILS_GRAVID").val();
@@ -1500,7 +1501,14 @@
                 });
 
             } else {
-                save_born_father_info();
+
+                 if (($("#FATHER_NUMBER").val() == 0 ) || ($("#MOTHER_NUMBER").val() != 0 || $(
+                    "#MOTHER_NUMBER").val() != '')) {
+                     save_born_father_info();
+                    }else{
+                        save_born_mother_info();
+                        getDataMotherInfoBy();
+                    }
             }
             block_insert_born.release();
 

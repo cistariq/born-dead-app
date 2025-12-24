@@ -66,7 +66,7 @@ class UserController extends Controller
     public function update(Request $request)
     {
         $role = [
-            'user_full_name' => 'required|unique:user_tb|max:255',
+            'user_full_name' => 'required|max:255',
             'user_dref_cd' => 'nullable|exists:C_DETAILS_REFERRAL_TB,DREF_CODE',
             'user_username' => 'required|numeric|digits:9',
             'status' => [

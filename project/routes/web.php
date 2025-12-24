@@ -63,6 +63,7 @@ Route::group(['middleware' => [Authenticate::class]],function(){
     Route::post('/getPersonalInfo', [PersonalInfoController::class, 'getPersonalInfo'])->name('getPersonalInfo');
 
     Route::post('/check_records', [DeadController::class, 'check_records'])->name('check_records');
+    Route::post('/check_dead_records', [DeadController::class, 'check_dead_records'])->name('check_dead_records');
     Route::post('/check_record_born', [BornController::class, 'check_record_born'])->name('check_record_born');
     Route::post('/Send_SMS', [DeadController::class, 'Send_SMS'])->name('Send_SMS');
     Route::post('/check_record_quata', [QuoteBornController::class, 'check_record_quata'])->name('check_record_quata');
@@ -98,6 +99,7 @@ Route::group(['middleware' => [Authenticate::class]],function(){
         Route::post('/print_crt_dead', [DeadController::class, 'print_crt_dead'])->name('print_crt_dead');
         Route::post('/print_missing_form', [DeadController::class, 'print_missing_form'])->name('print_missing_form');
         Route::post('/check_records', [DeadController::class, 'check_records'])->name('check_records');
+        Route::post('/check_dead_records', [DeadController::class, 'check_dead_records'])->name('check_dead_records');
         Route::post('/print_dead', [DeadController::class, 'print_dead'])->name('print_dead');
         Route::post('/update', [DeadController::class, 'update'])->name('update');
         Route::post('/get_person_query', [DeadController::class, 'get_person_query'])->name('get_person_query');
@@ -276,6 +278,9 @@ Route::group(['middleware' => [Authenticate::class]],function(){
             Route::get('/search_release', [QuoteBornController::class, 'search_release'])->name('search_release');
             Route::post('/release', [QuoteBornController::class, 'release'])->name('release');
 
+            Route::get('/quote_search', [QuoteBornController::class,'quote_search'])->name('quote_search');
+            Route::get('/search_quote', [QuoteBornController::class, 'search_quote'])->name('search_quote');
+            Route::get('/quota_export_excel', [QuoteBornController::class, 'quota_export_excel'])->name('quota_export_excel');
 
 
         });
