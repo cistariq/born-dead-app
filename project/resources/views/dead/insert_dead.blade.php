@@ -1627,7 +1627,96 @@
                 });
             }
         }
+        /*
+                function getDataPersonalInfoBy() {
+                    var P_ID_NO = $('#P_ID_NO').val();
+                    var P_DEAD_NUMBER = $('#P_DEAD_NUMBER').val();
+                    block_insert_dead.block();
 
+                    var url = "{{ route('dead.get_person_query') }}";
+                    $.ajax({
+                        url: url,
+                        type: 'json',
+                        method: 'post',
+                        data: {
+                            'P_ID_NO': P_ID_NO,
+                            'P_DEAD_NUMBER' : P_DEAD_NUMBER,
+                        },
+                    }).done(function(response) {
+                        console.log(response);
+                        if (response.success) {
+
+                            if (response.success == 1) {
+
+                                $('#P_FIRST_NAME').val(response.results.fname);
+                                $('#P_FATHER_NAME').val(response.results.sname);
+                                $('#P_GRAND_FATHER_NAME').val(response.results.tname);
+                                $('#P_FAMILY_NAME').val(response.results.lname);
+                                $('#P_BIRTH_PLACE').val(response.results.BIRTH_PLACE);
+
+                                // P_BIRTH_DATE.setDate(new Date(response.results.birth_date));
+
+                                $('#P_BIRTH_DATE').val(response.results.birth_date);
+                                $('#P_SEX_CD').val(response.results.sex).change();
+
+                                //  $("#P_religion_id").val(response.results[0]['']).change();
+
+                                $("#P_social_status_id").val(response.results.DEAD_PERSONALITY_CODE_CD).change();
+
+
+                                $("#P_region_id").val(response.results.REGION_CD).change();
+
+                                $("#P_city_id").val(response.results.CITY_CD).change();
+                                $("#P_religion_id").val(1).change();
+                                $("#P_nationality_id").val(1).change();
+                                $("#P_JOB_CD").val(55).change();
+                                $('#P_DEATH_COUNTRY').val('فلسطين');
+
+                                if (response.results.DEATH_DT != null) {
+                                    Swal.fire({
+                                        title: 'خطأ !',
+                                        text: 'هذا الشخص متوفي بتاريخ ' + response.results.death_date,
+                                        icon: 'error',
+                                        confirmButtonText: 'Ok'
+                                    });
+                                }
+                                const today = new Date();
+                                const yyyy = today.getFullYear();
+                                const dob = new Date($('#P_BIRTH_DATE').val()).getFullYear();
+
+                                var age = yyyy - dob;
+
+                                if ($('#P_SEX_CD').val() == 2 && (age <= 50 && age >= 15) && $("#P_social_status_id")
+                                    .val() == 2) {
+                                    document.getElementById("dead_women").style.display = "block";
+                                } else {
+                                    document.getElementById("dead_women").style.display = "none";
+
+                                }
+                            }
+                        } else {
+                            console.log(response);
+                            $message = "";
+                            $.each(response.errors, function(key, value) {
+                                console.log(value);
+                                console.log(key);
+                                $message += value.join('-') + "\r\n";
+                            });
+                            Swal.fire({
+                                title: 'يوجد خطأ في عملية الإدخال !',
+                                text: response.results,
+                                icon: 'error',
+                                confirmButtonText: 'Ok'
+                            });
+                            clear_form();
+
+
+                        }
+                        block_insert_dead.release();
+                    });
+                }
+
+        */
         function getDataPersonalInfoBy() {
             var P_ID_NO = $('#P_ID_NO').val();
             var P_DEAD_NUMBER = $('#P_DEAD_NUMBER').val();
@@ -1636,87 +1725,73 @@
             var url = "{{ route('dead.get_person_query') }}";
             $.ajax({
                 url: url,
-                type: 'json',
-                method: 'post',
+                type: 'post',
+                dataType: 'json',
                 data: {
                     'P_ID_NO': P_ID_NO,
-                    'P_DEAD_NUMBER' : P_DEAD_NUMBER,
+                    'P_DEAD_NUMBER': P_DEAD_NUMBER,
                 },
             }).done(function(response) {
-                console.log(response);
                 if (response.success) {
 
-                    if (response.success == 1) {
+                    $('#P_FIRST_NAME').val(response.results.fname);
+                    $('#P_FATHER_NAME').val(response.results.sname);
+                    $('#P_GRAND_FATHER_NAME').val(response.results.tname);
+                    $('#P_FAMILY_NAME').val(response.results.lname);
+                    $('#P_BIRTH_PLACE').val(response.results.BIRTH_PLACE);
+                    $('#P_BIRTH_DATE').val(response.results.birth_date);
+                    $('#P_SEX_CD').val(response.results.sex).change();
+                    $("#P_social_status_id").val(response.results.DEAD_PERSONALITY_CODE_CD).change();
+                    $("#P_region_id").val(response.results.REGION_CD).change();
+                    $("#P_city_id").val(response.results.CITY_CD).change();
+                    $("#P_religion_id").val(1).change();
+                    $("#P_nationality_id").val(1).change();
+                    $("#P_JOB_CD").val(55).change();
+                    $('#P_DEATH_COUNTRY').val('فلسطين');
 
-                        $('#P_FIRST_NAME').val(response.results.fname);
-                        $('#P_FATHER_NAME').val(response.results.sname);
-                        $('#P_GRAND_FATHER_NAME').val(response.results.tname);
-                        $('#P_FAMILY_NAME').val(response.results.lname);
-                        $('#P_BIRTH_PLACE').val(response.results.BIRTH_PLACE);
-
-                        // P_BIRTH_DATE.setDate(new Date(response.results.birth_date));
-
-                        $('#P_BIRTH_DATE').val(response.results.birth_date);
-                        $('#P_SEX_CD').val(response.results.sex).change();
-
-                        //  $("#P_religion_id").val(response.results[0]['']).change();
-
-                        $("#P_social_status_id").val(response.results.DEAD_PERSONALITY_CODE_CD).change();
-
-
-                        $("#P_region_id").val(response.results.REGION_CD).change();
-
-                        $("#P_city_id").val(response.results.CITY_CD).change();
-                        $("#P_religion_id").val(1).change();
-                        $("#P_nationality_id").val(1).change();
-                        $("#P_JOB_CD").val(55).change();
-                        $('#P_DEATH_COUNTRY').val('فلسطين');
-
-                        if (response.results.DEATH_DT != null) {
-                            Swal.fire({
-                                title: 'خطأ !',
-                                text: 'هذا الشخص متوفي بتاريخ ' + response.results.death_date,
-                                icon: 'error',
-                                confirmButtonText: 'Ok'
-                            });
-                        }
-                        const today = new Date();
-                        const yyyy = today.getFullYear();
-                        const dob = new Date($('#P_BIRTH_DATE').val()).getFullYear();
-
-                        var age = yyyy - dob;
-
-                        if ($('#P_SEX_CD').val() == 2 && (age <= 50 && age >= 15) && $("#P_social_status_id")
-                            .val() == 2) {
-                            document.getElementById("dead_women").style.display = "block";
-                        } else {
-                            document.getElementById("dead_women").style.display = "none";
-
-                        }
+                    if (response.results.DEATH_DT != null) {
+                        Swal.fire({
+                            title: 'خطأ !',
+                            text: 'هذا الشخص متوفي بتاريخ ' + response.results.death_date,
+                            icon: 'error',
+                            confirmButtonText: 'Ok'
+                        });
                     }
+
                 } else {
-                    console.log(response);
-                    $message = "";
-                    $.each(response.errors, function(key, value) {
-                        console.log(value);
-                        console.log(key);
-                        $message += value.join('-') + "\r\n";
-                    });
+                    // في حالة خطأ من السيرفر مثل ID_CHECK
+                    var message = response.message || "يوجد خطأ في عملية الإدخال !";
+
                     Swal.fire({
-                        title: 'يوجد خطأ في عملية الإدخال !',
-                        text: response.results,
+                        title: 'خطأ !',
+                        text: message,
                         icon: 'error',
                         confirmButtonText: 'Ok'
                     });
+
                     clear_form();
-
-
                 }
+
+            }).fail(function(xhr) {
+                // في حالة خطأ HTTP مثل 422
+                var err = "حدث خطأ غير متوقع";
+
+                if (xhr.responseJSON) {
+                    err = xhr.responseJSON.message || JSON.stringify(xhr.responseJSON);
+                }
+
+                Swal.fire({
+                    title: 'خطأ !',
+                    text: err,
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
+
+                clear_form();
+            }).always(function() {
                 block_insert_dead.release();
             });
         }
-
-
 
         //update data
         function update_dead_data() {
@@ -2254,7 +2329,8 @@
                 var foo = document.getElementById('div_input');
 
                 foo.style.display = 'block';
-                if($('#P_DEAD_NUMBER').val()==null || $('#P_DEAD_NUMBER').val() == undefined || $('#P_DEAD_NUMBER').val() == '')
+                if ($('#P_DEAD_NUMBER').val() == null || $('#P_DEAD_NUMBER').val() == undefined || $(
+                        '#P_DEAD_NUMBER').val() == '')
                     getDataPersonalInfoBy();
 
             });
@@ -2264,53 +2340,62 @@
         function get_partner_data() {
             var P_ID_NO = $('#P_Wife_ID').val();
             block_insert_dead.block();
-            if (P_ID_NO == null || P_ID_NO == '') {
+
+            if (!P_ID_NO) {
                 $('#P_Wife_Name').val('');
                 block_insert_dead.release();
                 return;
-            } else {
-
-                var url = "{{ route('dead.get_person_query') }}";
-                $.ajax({
-                    url: url,
-                    type: 'json',
-                    method: 'post',
-                    data: {
-                        'P_ID_NO': P_ID_NO,
-                    },
-                }).done(function(response) {
-                    console.log(response);
-                    if (response.success) {
-
-                        if (response.success == 1) {
-
-                            $('#P_Wife_Name').val(response.results.fname + ' ' + response.results.sname + ' ' +
-                                response
-                                .results.tname + ' ' + response.results.lname);
-
-                        }
-                    } else {
-                        console.log(response);
-                        $message = "";
-                        $.each(response.errors, function(key, value) {
-                            console.log(value);
-                            console.log(key);
-                            $message += value.join('-') + "\r\n";
-                        });
-                        Swal.fire({
-                            title: 'يوجد خطأ في عملية الإدخال !',
-                            text: response.results,
-                            icon: 'error',
-                            confirmButtonText: 'Ok'
-                        });
-
-
-
-
-                    }
-                    block_insert_dead.release();
-                });
             }
+
+            var url = "{{ route('dead.get_person_query') }}";
+
+            $.ajax({
+                url: url,
+                type: 'post',
+                dataType: 'json',
+                data: {
+                    'P_ID_NO': P_ID_NO,
+                },
+            }).done(function(response) {
+                if (response.success) {
+                    $('#P_Wife_Name').val(
+                        response.results.fname + ' ' +
+                        response.results.sname + ' ' +
+                        response.results.tname + ' ' +
+                        response.results.lname
+                    );
+                } else {
+                    // في حالة خطأ من السيرفر مثل ID_CHECK
+                    var message = response.message || "يوجد خطأ في عملية الإدخال !";
+
+                    Swal.fire({
+                        title: 'خطأ !',
+                        text: message,
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+
+                    $('#P_Wife_Name').val('');
+                }
+            }).fail(function(xhr) {
+                // في حالة خطأ HTTP مثل 422
+                var err = "حدث خطأ غير متوقع";
+
+                if (xhr.responseJSON) {
+                    err = xhr.responseJSON.message || JSON.stringify(xhr.responseJSON);
+                }
+
+                Swal.fire({
+                    title: 'خطأ !',
+                    text: err,
+                    icon: 'error',
+                    confirmButtonText: 'Ok'
+                });
+
+                $('#P_Wife_Name').val('');
+            }).always(function() {
+                block_insert_dead.release();
+            });
         }
 
         function get_submitted_dead() {
@@ -2324,7 +2409,6 @@
                     icon: 'error',
                     confirmButtonText: 'موافق'
                 }).then((result) => {
-                    /* Read more about isConfirmed, isDenied below */
                     if (result.isConfirmed) {
                         $('#P_advertiser_ID_NO').val('');
                     }
@@ -2335,48 +2419,59 @@
                 block_insert_dead.block();
 
                 var url = "{{ route('dead.get_person_query') }}";
+
                 $.ajax({
                     url: url,
-                    type: 'json',
-                    method: 'post',
+                    type: 'post',
+                    dataType: 'json',
                     data: {
                         'P_ID_NO': P_ID_NO,
                     },
                 }).done(function(response) {
-                    console.log(response);
                     if (response.success) {
+                        $('#P_advertiser_Name').val(
+                            response.results.fname + ' ' +
+                            response.results.sname + ' ' +
+                            response.results.lname
+                        );
+                        $('#P_advertiser_gender').val(response.results.sex).change();
+                        $("#P_advertiser_nationality_id").val(1).change();
 
-                        if (response.success == 1) {
-
-                            $('#P_advertiser_Name').val(response.results.fname + ' ' + response.results.sname +
-                                ' ' + response.results.lname);
-                            $('#P_advertiser_gender').val(response.results.sex).change();
-                            $("#P_advertiser_nationality_id").val(1).change();
-
-                        }
                     } else {
-                        console.log(response);
-                        $message = "";
-                        $.each(response.errors, function(key, value) {
-                            console.log(value);
-                            console.log(key);
-                            $message += value.join('-') + "\r\n";
-                        });
+                        // في حالة خطأ من السيرفر مثل ID_CHECK
+                        var message = response.message || "يوجد خطأ في عملية الإدخال !";
+
                         Swal.fire({
-                            title: 'يوجد خطأ في عملية الإدخال !',
-                            text: response.results,
+                            title: 'خطأ !',
+                            text: message,
                             icon: 'error',
                             confirmButtonText: 'Ok'
                         });
 
-
-
-
+                        $('#P_advertiser_Name').val('');
                     }
+                }).fail(function(xhr) {
+                    // في حالة خطأ HTTP مثل 422
+                    var err = "حدث خطأ غير متوقع";
+
+                    if (xhr.responseJSON) {
+                        err = xhr.responseJSON.message || JSON.stringify(xhr.responseJSON);
+                    }
+
+                    Swal.fire({
+                        title: 'خطأ !',
+                        text: err,
+                        icon: 'error',
+                        confirmButtonText: 'Ok'
+                    });
+
+                    $('#P_advertiser_Name').val('');
+                }).always(function() {
                     block_insert_dead.release();
                 });
             }
         }
+
 
         function get_limit_option() {
             var selectedOptions = $("#P_OTHER_CAUSE").find('option:selected');

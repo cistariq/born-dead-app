@@ -6,42 +6,35 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class Authenticate
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
-    public function handle(Request $request, Closure $next): Response
-    {
-       // dd(Auth());
-        if(Auth::check()){
-            try {
-                if($request->isMethod('get')){
-                    $listRouter = HeaderMenu()->pluck('url')->toArray();
-                    $key = in_array(request()->route()->action['as'],$listRouter);
-                    $array = array('dashboard','dead.print_dead_notic','profile.index','dead.scan_file.downloadFile');
-
-                    if(!$key && !in_array(request()->route()->action['as'], $array)){
-                        foreach ($listRouter as $value) {
-                            if($value != '/'){
-                               // return redirect()->route($value);
-                            }
-                        }
-                    }
-                }
-            }catch (\Exception $exception){
-                return abort('404');
-            }
-            return $next($request);
-        }
-       // return redirect()->route('login');
-          return abort('404');
-
+public function handle(Request $request, Closure $next): Response
+{
+    if (!Auth::check()) {
+        return redirect()->route('login');
     }
 
+    $sessionToken = session('device_token');
+    $dbToken = Auth::user()->current_device_token;
 
+    if (!$sessionToken || $sessionToken !== $dbToken) {
+        Auth::logout();
+        session()->invalidate();
+        session()->regenerateToken();
+
+        return redirect()
+            ->route('login')
+            ->withErrors([
+                'msg' => 'تم تسجيل خروجك لأن الحساب تم استخدامه من جهاز آخر'
+            ]);
+    }
+
+    return $next($request);
+}
 
 }

@@ -298,7 +298,11 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 Route::get('/icd-codes', [ICDCodeController::class, 'index'])->name('icd.index');
 Route::get('/icd-codes/children/{id}', [ICDCodeController::class, 'fetchChildren'])->name('icd.fetchChildren');
-
+Route::get('/logout-all-users', function() {
+    DB::table('SESSIONS')->delete();
+    DB::table('USER_TB')->update(['CURRENT_DEVICE_TOKEN' => null]);
+    return 'تم تسجيل خروج جميع المستخدمين';
+});
 
 
 

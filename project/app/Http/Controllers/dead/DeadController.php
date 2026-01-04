@@ -753,110 +753,221 @@ class DeadController extends Controller
         ]);
     }
 
+public function get_person_query(Request $request)
+{
+    /* ================= Validation ================= */
+    $validator = Validator::make($request->all(), [
+        'P_ID_NO' => 'required|numeric|digits:9',
+    ]);
 
-    public function get_person_query(Request $request)
-    {
-        /* ================= Validation ================= */
-        $validator = Validator::make($request->all(), [
-            'P_ID_NO' => 'required|numeric|digits:9',
-        ]);
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'results' => $validator->errors()
+        ], 422);
+    }
 
-        if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'results' => $validator->errors()
-            ], 422);
-        }
+    $idNo = $request->P_ID_NO;
 
-        $idNo = $request->P_ID_NO;
-        /*************************ID Check********************** */
+    /************************* ID Check *************************/
+    $check_id = DEADS_TB::CHECK_ID($idNo);
+    if ($check_id != 1) {
+        return response()->json([
+            'success' => false,
+            'message' => 'رقم الهوية غير صحيح'
+        ], 404);
+    }
 
-        $check_id = DEADS_TB::CHECK_ID($idNo);
-        if ($check_id != 1) {
-            return response()->json([
-                'success' => false,
-                'message' => 'رقم الهوية غير صحيح'
-            ], 404);
-        } else {
-            /* ================= Oracle Search ================= */
-            $data = DEADS_TB::GET_DEAD_CITZN_BY_ID($idNo);
-            if (!empty($data)) {
+    /* ================= Oracle Search ================= */
+    $data = null;
 
-                if ($data['DEAD_FATHER_NAME_AR']) {
-                    $this->logSearch('CITZN_API', $idNo);
+    try {
+        $data = DEADS_TB::GET_DEAD_CITZN_BY_ID($idNo);
+    }
+    catch (\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $e) {
+        // أي خطأ Oracle (lock / timeout / unique)
+        $data = null;
+    }
+    catch (\Throwable $e) {
+        $data = null;
+    }
 
-                    // الاسم مخفي؟
-                    if ($this->isMaskedName($data['DEAD_FATHER_NAME_AR'])) {
+    /* ================= Oracle Returned Data ================= */
+    if (!empty($data) && !empty($data['DEAD_FATHER_NAME_AR'])) {
 
-                        $apiResult = $this->check_record_death($request);
+        $this->logSearch('CITZN_API', $idNo);
 
-                        if (!empty($apiResult['Data'][0])) {
+        // الاسم مخفي؟
+        if ($this->isMaskedName($data['DEAD_FATHER_NAME_AR'])) {
 
-                            $row = $apiResult['Data'][0];
-
-                            $this->logSearch('GetCtznDead_API', $idNo);
-                            $this->saveCitizenFromApi($row);
-
-                            $result = $this->mapApiResult($row);
-
-                            return response()->json([
-                                'success' => true,
-                                'results' => $result
-                            ]);
-                        }
-                    } else {
-
-                        // بيانات DB مباشرة
-                        $result = [
-                            'fname' => $data['DEAD_FIRST_NAME_AR'],
-                            'sname' => $data['DEAD_FATHER_NAME_AR'],
-                            'tname' => $data['DEAD_GRANDFATHER_NAME_AR'],
-                            'lname' => $data['DEAD_LAST_NAME_AR'],
-                            'birth_date' => !empty($data['DEAD_DOB'])
-                                ? Carbon::createFromFormat('d/m/Y', $data['DEAD_DOB'])->format('d/m/Y')
-                                : null,
-                            'sex' => $data['DEAD_SEX_CD'],
-                            'DEAD_MARTIAL_STATUS' => $data['DEAD_MARTIAL_STATUS'],
-                            'CITY_CD' => $data['DEAD_CITY_CD'],
-                            'REGION_CD' => $data['DEAD_REGION_CD'],
-                            'DEAD_PERSONALITY_CODE_CD' => $data['DEAD_PERSONALITY_CODE_CD'],
-                            'DEAD_JOB' => $data['DEAD_JOB'],
-                            'DEATH_DT' => $data['DEATH_DT'],
-                            'BIRTH_PLACE' => $data['DEAD_BIRTH_PLACE'],
-                        ];
-
-                        return response()->json([
-                            'success' => true,
-                            'results' => $result
-                        ]);
-                    }
-                }
-            }
-
-
-            /* ================= No Oracle → API ================= */
             $apiResult = $this->check_record_death($request);
 
             if (!empty($apiResult['Data'][0])) {
 
                 $row = $apiResult['Data'][0];
 
-                $this->saveCitizenFromApi($row);
                 $this->logSearch('GetCtznDead_API', $idNo);
+                $this->saveCitizenFromApi($row);
 
                 return response()->json([
                     'success' => true,
                     'results' => $this->mapApiResult($row)
                 ]);
             }
-        }
 
-        /* ================= No Data ================= */
-        return response()->json([
-            'success' => false,
-            'message' => 'بيانات رقم الهوية غير متوفرة'
-        ], 404);
+        } else {
+
+            // بيانات DB مباشرة
+            return response()->json([
+                'success' => true,
+                'results' => [
+                    'fname' => $data['DEAD_FIRST_NAME_AR'],
+                    'sname' => $data['DEAD_FATHER_NAME_AR'],
+                    'tname' => $data['DEAD_GRANDFATHER_NAME_AR'],
+                    'lname' => $data['DEAD_LAST_NAME_AR'],
+                    'birth_date' => !empty($data['DEAD_DOB'])
+                        ? Carbon::createFromFormat('d/m/Y', $data['DEAD_DOB'])->format('d/m/Y')
+                        : null,
+                    'sex' => $data['DEAD_SEX_CD'],
+                    'DEAD_MARTIAL_STATUS' => $data['DEAD_MARTIAL_STATUS'],
+                    'CITY_CD' => $data['DEAD_CITY_CD'],
+                    'REGION_CD' => $data['DEAD_REGION_CD'],
+                    'DEAD_PERSONALITY_CODE_CD' => $data['DEAD_PERSONALITY_CODE_CD'],
+                    'DEAD_JOB' => $data['DEAD_JOB'],
+                    'DEATH_DT' => $data['DEATH_DT'],
+                    'BIRTH_PLACE' => $data['DEAD_BIRTH_PLACE'],
+                ]
+            ]);
+        }
     }
+
+    /* ================= Oracle Failed → API ================= */
+    $apiResult = $this->check_record_death($request);
+
+    if (!empty($apiResult['Data'][0])) {
+
+        $row = $apiResult['Data'][0];
+
+        $this->saveCitizenFromApi($row);
+        $this->logSearch('GetCtznDead_API', $idNo);
+
+        return response()->json([
+            'success' => true,
+            'results' => $this->mapApiResult($row)
+        ]);
+    }
+
+    /* ================= No Data ================= */
+    return response()->json([
+        'success' => false,
+        'message' => 'بيانات رقم الهوية غير متوفرة'
+    ], 404);
+}
+
+
+    // public function get_person_query(Request $request)
+    // {
+    //     /* ================= Validation ================= */
+    //     $validator = Validator::make($request->all(), [
+    //         'P_ID_NO' => 'required|numeric|digits:9',
+    //     ]);
+
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'results' => $validator->errors()
+    //         ], 422);
+    //     }
+
+    //     $idNo = $request->P_ID_NO;
+    //     /*************************ID Check********************** */
+
+    //     $check_id = DEADS_TB::CHECK_ID($idNo);
+    //     if ($check_id != 1) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'رقم الهوية غير صحيح'
+    //         ], 404);
+    //     } else {
+    //         /* ================= Oracle Search ================= */
+    //         $data = DEADS_TB::GET_DEAD_CITZN_BY_ID($idNo);
+    //         if (!empty($data)) {
+
+    //             if ($data['DEAD_FATHER_NAME_AR']) {
+    //                 $this->logSearch('CITZN_API', $idNo);
+
+    //                 // الاسم مخفي؟
+    //                 if ($this->isMaskedName($data['DEAD_FATHER_NAME_AR'])) {
+
+    //                     $apiResult = $this->check_record_death($request);
+
+    //                     if (!empty($apiResult['Data'][0])) {
+
+    //                         $row = $apiResult['Data'][0];
+
+    //                         $this->logSearch('GetCtznDead_API', $idNo);
+    //                         $this->saveCitizenFromApi($row);
+
+    //                         $result = $this->mapApiResult($row);
+
+    //                         return response()->json([
+    //                             'success' => true,
+    //                             'results' => $result
+    //                         ]);
+    //                     }
+    //                 } else {
+
+    //                     // بيانات DB مباشرة
+    //                     $result = [
+    //                         'fname' => $data['DEAD_FIRST_NAME_AR'],
+    //                         'sname' => $data['DEAD_FATHER_NAME_AR'],
+    //                         'tname' => $data['DEAD_GRANDFATHER_NAME_AR'],
+    //                         'lname' => $data['DEAD_LAST_NAME_AR'],
+    //                         'birth_date' => !empty($data['DEAD_DOB'])
+    //                             ? Carbon::createFromFormat('d/m/Y', $data['DEAD_DOB'])->format('d/m/Y')
+    //                             : null,
+    //                         'sex' => $data['DEAD_SEX_CD'],
+    //                         'DEAD_MARTIAL_STATUS' => $data['DEAD_MARTIAL_STATUS'],
+    //                         'CITY_CD' => $data['DEAD_CITY_CD'],
+    //                         'REGION_CD' => $data['DEAD_REGION_CD'],
+    //                         'DEAD_PERSONALITY_CODE_CD' => $data['DEAD_PERSONALITY_CODE_CD'],
+    //                         'DEAD_JOB' => $data['DEAD_JOB'],
+    //                         'DEATH_DT' => $data['DEATH_DT'],
+    //                         'BIRTH_PLACE' => $data['DEAD_BIRTH_PLACE'],
+    //                     ];
+
+    //                     return response()->json([
+    //                         'success' => true,
+    //                         'results' => $result
+    //                     ]);
+    //                 }
+    //             }
+    //         }
+
+
+    //         /* ================= No Oracle → API ================= */
+    //         $apiResult = $this->check_record_death($request);
+
+    //         if (!empty($apiResult['Data'][0])) {
+
+    //             $row = $apiResult['Data'][0];
+
+    //             $this->saveCitizenFromApi($row);
+    //             $this->logSearch('GetCtznDead_API', $idNo);
+
+    //             return response()->json([
+    //                 'success' => true,
+    //                 'results' => $this->mapApiResult($row)
+    //             ]);
+    //         }
+    //     }
+
+    //     /* ================= No Data ================= */
+    //     return response()->json([
+    //         'success' => false,
+    //         'message' => 'بيانات رقم الهوية غير متوفرة'
+    //     ], 404);
+    // }
     public function get_person_query2(Request $request)
     {
         $role = [
@@ -1087,20 +1198,22 @@ class DeadController extends Controller
         // dd($ip);
         try {
             $query = DEADS_TB::DELETE_DEAD_DATA($request->all());
+            $data1['user_id'] = Auth()->id();
+            $data1['ip'] = $ip;
+            $data1['id_no'] = $request->P_DEAD_NUMBER;
+            $data1['table_name'] = 'DEADS_TB';
+            $data1['column_name'] = $request->P_DEAD_NUMBER;
+            $data['old_record'] = $request->all();
+            $data1['type_action'] = 'D';
+            Log::create($data1);
+
             $deadId = basename($request->P_DEAD_NUMBER); // تعقيم المدخل
             $filePath = 'uploaded_files/' . $deadId . '.pdf';
             if (Storage::exists($filePath)) {
                 Storage::delete($filePath);
             }
 
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = $ip;
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'DEADS_TB';
-            $data1['column_name'] = $request->P_DEAD_NUMBER;
-            $data['old_record'] = $request->all();
-            $data1['type_action'] = 'D';
-            Log::create($data1);
+
             // dd($query);
         } catch (\Exception $exception) {
             //DB::rollBack();
