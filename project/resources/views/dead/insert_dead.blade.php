@@ -907,7 +907,7 @@
                             @endif
                             @if (IsPermissionBtn(26))
                                 <button type="button" class="btn btn-primary" data-kt-stepper-action="submit"
-                                    id="update_btn" onclick="update_dead_data();">
+                                    id="update_btn" onclick="showUpdateReasonModal();">
                                     <span class="indicator-label">
                                         حفظ التعديلات
                                     </span>
@@ -933,6 +933,40 @@
         <!--begin::Card header-->
 
     </div>
+    <div class="modal fade" id="updateReasonModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">سبب التعديل</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <label>يرجى إدخال سبب التعديل <span class="text-danger">*</span></label>
+
+                    <textarea id="P_UPDATE_REASON" name="P_UPDATE_REASON" class="form-control" rows="3"
+                        placeholder="أدخل سبب التعديل هنا..."></textarea>
+
+                    <small class="text-danger d-none" id="reasonError">
+                        سبب التعديل مطلوب
+                    </small>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        إلغاء
+                    </button>
+
+                    <button type="button" id="confirmUpdateBtn" class="btn btn-success" onclick="update_dead_data();">
+                        تأكيد التعديل
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 @endsection
 @push('scripts')
     <script>
@@ -1013,6 +1047,18 @@
 
             }
 
+        }
+
+        function showUpdateReasonModal() {
+
+            const modalElement = document.getElementById('updateReasonModal');
+
+            const modal = new bootstrap.Modal(modalElement, {
+                backdrop: 'static', // يمنع الإغلاق خارج المودال
+                keyboard: false // يمنع زر ESC
+            });
+
+            modal.show();
         }
 
         function getDeadIcdToSelect_Byname(select_id) {
@@ -1865,6 +1911,7 @@
             var P_REPORTER_ADDRESS = $('#P_advertiser_Address').val();
             var P_REPORTER_MOBILE = $('#P_advertiser_Phone').val();
             var P_DATE_OF_REPORT = $('#P_advertise_Date').val();
+            var P_UPDATE_REASON = $('#P_UPDATE_REASON').val();
 
             //Interior data
 
@@ -1944,6 +1991,7 @@
                     'P_BURIAL_PLACE': P_BURIAL_PLACE,
                     'P_BURIAL_CODE': P_BURIAL_CODE,
                     'P_SOURCE': P_SOURCE,
+                    'P_UPDATE_REASON': P_UPDATE_REASON,
                     'P_COMMITTE_OPINION': P_COMMITTE_OPINION
 
                 },
@@ -2308,21 +2356,62 @@
                         }
                         $('#P_hospital_id').val(response.dref_cd).change();
 
+                        if (response.MA_ACC_KIND_CD == 101) {
+                            // Clear existing options
+                            $select.empty();
+                            // Append the new constant option
+                            $select.append('<option value="20497" selected>Y36</option>');
+                            $select2.empty();
+                            // Append the new constant option
+                            $select2.append('<option value="20497" selected>Y36</option>');
+                            $select3.empty();
+                            // Append the new constant option
+                            $select3.append('<option value="20497" selected>Operations of war</option>');
+                            $select4.empty();
+                            // Append the new constant option
+                            $select4.append('<option value="20497" selected>Operations of war</option>');
 
+                        } else {
+                            // Clear existing options
+                            $select.empty();
+                            // Append the new constant option
+                            $select.append('<option value="22921" selected>Y36</option>');
+                            $select2.empty();
+                            // Append the new constant option
+                            $select2.append('<option value="22921" selected>Y36</option>');
+                            $select3.empty();
+                            // Append the new constant option
+                            $select3.append('<option value="22921" selected>Operations of war</option>');
+                            $select4.empty();
+                            // Append the new constant option
+                            $select4.append('<option value="22921" selected>Operations of war</option>');
+                        }
+                    } else if (response.status_cd == 4) {
+                        // alert('Tariq');
+                        $('#P_FLAG').val('شهيد غير مباشر');
+                        $('#P_SOURSE').val(3);
+                        P_DEAD_DATE.setDate(new Date(response.event_date));
 
-                        // Clear existing options
-                        $select.empty();
-                        // Append the new constant option
-                        $select.append('<option value="22921" selected>Y36</option>');
-                        $select2.empty();
-                        // Append the new constant option
-                        $select2.append('<option value="22921" selected>Y36</option>');
-                        $select3.empty();
-                        // Append the new constant option
-                        $select3.append('<option value="22921" selected>Operations of war</option>');
-                        $select4.empty();
-                        // Append the new constant option
-                        $select4.append('<option value="22921" selected>Operations of war</option>');
+                        //   $('#P_Date_dead').val(response.event_date); /// by Nareen
+                        $('#P_COMMITTE_OPINION').val(response.notes);
+
+                        let $select = $("#DEAD_ICD1_CD");
+                        let $select2 = $("#DEAD_ICD4_CD");
+                        let $select3 = $("#DIAG1_NAME");
+                        let $select4 = $("#DIAG4_NAME");
+
+                        $("#DEAD_DETAILS_CD").val(4).change();
+                        if (response.dref_cd == 125) {
+                            $('#P_DEATH_PLACE_CD').val(2).change();
+                        } else if (response.dref_cd == 138 || response.dref_cd == 166 || response.dref_cd == 167 ||
+                            response.dref_cd == 173 || response.dref_cd == 174 || response.dref_cd == 175 ||
+                            response.dref_cd == 176) {
+                            $('#P_DEATH_PLACE_CD').val(3).change();
+                        } else {
+                            $('#P_DEATH_PLACE_CD').val(1).change();
+                        }
+                        $('#P_hospital_id').val(response.dref_cd).change();
+
                     }
                 }
 

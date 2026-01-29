@@ -88,6 +88,111 @@ class DeadController extends Controller
         return view('dead.dead_search', $data);
     }
 
+    public function citizen_status_search()
+    {
+
+        return view('dead.citizen_status_search');
+    }
+
+    public function check_citizen_id(Request $request)
+    {
+        // dd($request->all());
+        $rules = [
+            'P_CITIZEN_ID' => 'required|numeric|digits:9',
+        ];
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => implode(' - ', $validator->errors()->all()),
+            ], 422);
+        }
+
+        $idNo = $request->P_CITIZEN_ID;
+
+        /************ فحص صحة رقم الهوية ************/
+        $check_id = DEADS_TB::CHECK_ID($idNo);
+
+        if ($check_id != 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'رقم الهوية غير صحيح',
+            ], 404);
+        }
+
+        /************ البحث في جدول الوفيات ************/
+        $deathData = DEADS_TB::GET_DEAD_INFO_BY_ID($idNo);
+        if (!empty($deathData)) {
+            // dd($deathData);
+            $deathData[0]['BIRTH_PLACE'] = $deathData[0]['DEAD_D_BIRTH_PLACE'] ?? '';
+            // dd($deathData);
+            $code = $deathData[0]['DEAD_MARTIAL_STATUS_CD'] ?? null; // مثال على رقم الحالة الزوجية
+            // dd($code);
+            $status = C_MARTIAL_STATUS_TB::where('MS_CODE', $code)->first();
+            // dd($status);
+            $deathData[0]['MARITAL_STATUS'] = $status ? $status->ms_name_ar : '';
+            //dd($deathData[0]['MARITAL_STATUS']);
+
+            $deadDate = Carbon::parse($deathData[0]['DEAD_DOD'])->format('Y-m-d');
+            //dd($deadDate);
+             $deathData[0]['DEAD_DOB'] = Carbon::parse($deathData[0]['DEAD_DOB'])->format('Y-m-d');
+
+        }
+
+        if (!empty($deathData)) {
+            return response()->json([
+                'success' => true,
+                'status'  => 'dead',
+                'message' => 'متوفي بتاريخ ' . $deadDate,
+                'data'    => $deathData,
+            ], 200);
+        }
+
+        /************ البحث في جدول المواطنين ************/
+        $citizenData = DEADS_TB::GET_DEAD_CITZN_BY_ID($idNo);
+
+        if (!empty($citizenData)) {
+            $fakeRequest = new Request([
+                'P_ID' => $idNo
+            ]);
+            /************ فحص سجلات الوفاة من المستشفيات ************/
+            $check = $this->check_dead_records($fakeRequest)->getData(true);
+            $resultOut = $check['data']['data']['RESULT_OUT'] ?? null;
+            $hos_name  = $check['data']['data']['RESULT_DEATH_HOS'] ?? null;
+
+            switch ($resultOut) {
+                case 0:
+                    // ✔ على قيد الحياة
+                    $status  = 'alive';
+                    $message = 'على قيد الحياة';
+                    break;
+
+                case 1:
+                    // ✔ متوفي داخل المستشفى ولم يُستكمل الإشعار
+                    $status  = 'pending_death';
+                    $message = "المريض متوفي داخل المستشفى ($hos_name) ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+                    break;
+
+                default:
+                    $status  = 'unknown';
+                    $message = 'حالة غير محددة للبيانات';
+            }
+
+            return response()->json([
+                'success' => true,
+                'status'  => $status,
+                'message' => $message,
+                'data'    => $citizenData,
+            ], 200);
+        }
+
+        /************ في حال لم يوجد في أي جدول ************/
+        return response()->json([
+            'success' => false,
+            'message' => 'لا توجد بيانات لهذا الرقم',
+        ], 404);
+    }
 
     public function insert_dead()
     {
@@ -117,7 +222,199 @@ class DeadController extends Controller
 
         return view('dashboard');
     }
+    /*
+    public function getCitizenResult(Request $request)
+    {
+        ini_set('memory_limit', '1536M');
 
+        $role = [
+            'P_ID' => 'numeric|digits:9',
+        ];
+
+        $data = $request->validate($role);
+
+        $query = DEADS_TB::GET_DEAD_CITZN_BY_ID($request->P_ID);
+
+        $count = $query['RESULT_COUNT'] ?? 0;
+        $totalData = $count;
+        $totalFiltered = $totalData;
+        $result['data'] = [];
+
+        if (!empty($query['data']) && is_array($query['data'])) {
+
+            // ✔ يوجد بيانات متوفي
+            foreach ($query['data'] as $value) {
+                $CITIZEN_STATUS = 'متوفي بتاريخ ' . $value['DEAD_DOD'];
+
+                $result['data'][] = [
+                    $value['DEAD_ID'],
+                    $value['DEAD_FIRST_NAME_AR'] . ' ' . $value['DEAD_FATHER_NAME_AR'] . ' ' . $value['DEAD_GRANDFATHER_NAME_AR'] . ' ' . $value['DEAD_LAST_NAME_AR'],
+                    $value['SEX_NAME_AR'],
+                    $value['DEAD_DOB'],
+                    $value['DEAD_MARTIAL_STATUS'],
+                    $CITIZEN_STATUS,
+                    $value['REGION_NAME_AR'],
+                ];
+            }
+        } else {
+
+            // ❌ لا توجد بيانات متوفي → نتحقق من الحالة
+            $check = $this->check_dead_records($request)->getData(true);
+            $resultOut = $check['data']['data']['RESULT_OUT'] ?? null;
+            $hos_name = $check['data']['data']['RESULT_DEATH_HOS'] ?? null;
+
+            switch ($resultOut) {
+                case 0:
+                    $message = "على قيد الحياة";
+                    break;
+
+                case 1:
+                    $message = "المريض متوفي داخل المستشفى ($hos_name) ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+                    break;
+
+                default:
+                    $message = "حالة غير محددة للبيانات";
+            }
+
+            // 🔁 جلب بيانات المواطن من مصدر آخر (مثلاً سجل السكان)
+            $citizenData = DEADS_TB::GET_DEAD_CITZN_BY_ID($request->P_ID);
+
+            if (!empty($citizenData['data']) && is_array($citizenData['data'])) {
+                foreach ($citizenData['data'] as $value) {
+                    $result['data'][] = [
+                        $value['CITIZEN_ID'],
+                        $value['FIRST_NAME_AR'] . ' ' . $value['FATHER_NAME_AR'] . ' ' . $value['GRANDFATHER_NAME_AR'] . ' ' . $value['LAST_NAME_AR'],
+                        $value['SEX_NAME_AR'],
+                        $value['DOB'],
+                        $value['MARTIAL_STATUS'],
+                        $message, // ✅ هنا نضيف حالة المواطن
+                        $value['REGION_NAME_AR'],
+                    ];
+                }
+
+                return response()->json([
+                    "draw" => intval($request->draw),
+                    "recordsTotal" => count($result['data']),
+                    "recordsFiltered" => count($result['data']),
+                    "data" => $result['data'],
+                ]);
+            }
+
+            // ❌ إذا لم توجد بيانات حتى في المصدر الآخر
+            return response()->json([
+                "draw" => intval($request->draw),
+                "recordsTotal" => 0,
+                "recordsFiltered" => 0,
+                "data" => [],
+                "results" => $message
+            ]);
+        }
+
+        return response()->json([
+            "draw" => intval($request->draw),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $result['data']
+        ]);
+    }
+*/
+
+    public function getCitizenResult(Request $request)
+    {
+        ini_set('memory_limit', '1536M');
+
+        $role = [
+            'P_ID' => 'numeric|digits:9',
+        ];
+
+        $data = $request->validate($role);
+
+        $query = DEADS_TB::GET_DEAD_CITZN_BY_ID($request->P_ID);
+
+        $count = $query['RESULT_COUNT'] ?? 0;
+        $totalData = $count;
+        $totalFiltered = $totalData;
+        $result['data'] = [];
+
+        if (!empty($query['data']) && is_array($query['data'])) {
+
+            // ✔ يوجد بيانات متوفي
+            foreach ($query['data'] as $value) {
+                $CITIZEN_STATUS = 'متوفي بتاريخ ' . $value['DEAD_DOD'];
+
+                $result['data'][] = [
+                    $value['DEAD_ID'],
+                    $value['DEAD_FIRST_NAME_AR'] . ' ' . $value['DEAD_FATHER_NAME_AR'] . ' ' . $value['DEAD_GRANDFATHER_NAME_AR'] . ' ' . $value['DEAD_LAST_NAME_AR'],
+                    $value['SEX_NAME_AR'],
+                    $value['DEAD_DOB'],
+                    $value['DEAD_MARTIAL_STATUS'],
+                    $CITIZEN_STATUS,
+                    $value['REGION_NAME_AR'],
+                ];
+            }
+        } else {
+
+            // ❌ لا توجد بيانات وفاة → نتحقق من الحالة
+            $check = $this->check_dead_records($request)->getData(true);
+            $resultOut = $check['data']['data']['RESULT_OUT'] ?? null;
+            $hos_name = $check['data']['data']['RESULT_DEATH_HOS'] ?? null;
+
+            switch ($resultOut) {
+                case 0:
+                    // ✔ على قيد الحياة
+                    $message = "على قيد الحياة";
+                    break;
+
+                case 1:
+                    // ✔ متوفي داخل المستشفى ولم يُستكمل الإشعار
+                    $message = "المريض متوفي داخل المستشفى ($hos_name) ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+                    break;
+
+                default:
+                    $message = "حالة غير محددة للبيانات";
+            }
+
+            // 🔁 جلب بيانات المواطن من مصدر آخر (مثل سجل السكان)
+            $citizenData = DEADS_TB::GET_DEAD_CITZN_BY_ID($request->P_ID);
+
+            if (!empty($citizenData['data']) && is_array($citizenData['data'])) {
+                foreach ($citizenData['data'] as $value) {
+                    $result['data'][] = [
+                        $value['CITIZEN_ID'],
+                        $value['FIRST_NAME_AR'] . ' ' . $value['FATHER_NAME_AR'] . ' ' . $value['GRANDFATHER_NAME_AR'] . ' ' . $value['LAST_NAME_AR'],
+                        $value['SEX_NAME_AR'],
+                        $value['DOB'],
+                        $value['MARTIAL_STATUS'],
+                        $message, // ✅ هنا تظهر "على قيد الحياة" أو رسالة المستشفى
+                        $value['REGION_NAME_AR'],
+                    ];
+                }
+
+                return response()->json([
+                    "draw" => intval($request->draw),
+                    "recordsTotal" => count($result['data']),
+                    "recordsFiltered" => count($result['data']),
+                    "data" => $result['data'],
+                ]);
+            }
+
+            // ❌ إذا لم توجد بيانات حتى في المصدر الآخر
+            return response()->json([
+                "draw" => intval($request->draw),
+                "recordsTotal" => 0,
+                "recordsFiltered" => 0,
+                "data" => [],
+                "results" => $message
+            ]);
+        }
+
+        return response()->json([
+            "draw" => intval($request->draw),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $result['data']
+        ]);
+    }
 
     public function getDeadResult(Request $request)
     {
@@ -208,8 +505,8 @@ class DeadController extends Controller
                     $value['SEX_NAME_AR'],
                     $value['DEAD_FIRST_NAME_AR'] . ' ' . $value['DEAD_FATHER_NAME_AR'] . ' ' . $value['DEAD_GRANDFATHER_NAME_AR'] . ' ' . $value['DEAD_LAST_NAME_AR'],
                     $value['DREF_NAME_AR'],
-                    $value['DEAD_ICD1'],
-                    $value['ICD1_NAME'],
+                    $value['DEAD_ICD4'],
+                    $value['ICD4_NAME'],
                     $value['USER_FULL_NAME'],
                     $action,
                 ];
@@ -441,6 +738,7 @@ class DeadController extends Controller
             'P_DATE_OF_REPORT' => 'required|date_format:d/m/Y H:i|after_or_equal:P_DATE_DEATH',
             'P_REGISTER_PLACE_CD' => 'required',
             'P_SOURCE' => 'required',
+            'P_UPDATE_REASON' => 'required|string',
             // باقي الحقول nullable
         ];
 
@@ -753,118 +1051,219 @@ class DeadController extends Controller
         ]);
     }
 
-public function get_person_query(Request $request)
-{
-    /* ================= Validation ================= */
-    $validator = Validator::make($request->all(), [
-        'P_ID_NO' => 'required|numeric|digits:9',
-    ]);
+    // public function get_person_query(Request $request)
+    // {
+    //     /* ================= Validation ================= */
+    //     $validator = Validator::make($request->all(), [
+    //         'P_ID_NO' => 'required|numeric|digits:9',
+    //     ]);
 
-    if ($validator->fails()) {
-        return response()->json([
-            'success' => false,
-            'results' => $validator->errors()
-        ], 422);
-    }
+    //     if ($validator->fails()) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'results' => $validator->errors()
+    //         ], 422);
+    //     }
 
-    $idNo = $request->P_ID_NO;
+    //     $idNo = $request->P_ID_NO;
 
-    /************************* ID Check *************************/
-    $check_id = DEADS_TB::CHECK_ID($idNo);
-    if ($check_id != 1) {
-        return response()->json([
-            'success' => false,
-            'message' => 'رقم الهوية غير صحيح'
-        ], 404);
-    }
+    //     /************************* ID Check *************************/
+    //     $check_id = DEADS_TB::CHECK_ID($idNo);
+    //     if ($check_id != 1) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => 'رقم الهوية غير صحيح'
+    //         ], 404);
+    //     }
 
-    /* ================= Oracle Search ================= */
-    $data = null;
+    //     /* ================= Oracle Search ================= */
+    //     $data = null;
 
-    try {
-        $data = DEADS_TB::GET_DEAD_CITZN_BY_ID($idNo);
-    }
-    catch (\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $e) {
-        // أي خطأ Oracle (lock / timeout / unique)
+    //     try {
+    //         $data = DEADS_TB::GET_DEAD_CITZN_BY_ID($idNo);
+    //     } catch (\Yajra\Pdo\Oci8\Exceptions\Oci8Exception $e) {
+    //         // أي خطأ Oracle (lock / timeout / unique)
+    //         $data = null;
+    //     } catch (\Throwable $e) {
+    //         $data = null;
+    //     }
+
+    //     /* ================= Oracle Returned Data ================= */
+    //     if (!empty($data) && !empty($data['DEAD_FATHER_NAME_AR'])) {
+
+    //         $this->logSearch('CITZN_API', $idNo);
+
+    //         // الاسم مخفي؟
+    //         if ($this->isMaskedName($data['DEAD_FATHER_NAME_AR'])) {
+
+    //             $apiResult = $this->check_record_death($request);
+
+    //             if (!empty($apiResult['Data'][0])) {
+
+    //                 $row = $apiResult['Data'][0];
+
+    //                 $this->logSearch('GetCtznDead_API', $idNo);
+    //                 $this->saveCitizenFromApi($row);
+
+    //                 return response()->json([
+    //                     'success' => true,
+    //                     'results' => $this->mapApiResult($row)
+    //                 ]);
+    //             }
+    //         } else {
+
+    //             // بيانات DB مباشرة
+    //             return response()->json([
+    //                 'success' => true,
+    //                 'results' => [
+    //                     'fname' => $data['DEAD_FIRST_NAME_AR'],
+    //                     'sname' => $data['DEAD_FATHER_NAME_AR'],
+    //                     'tname' => $data['DEAD_GRANDFATHER_NAME_AR'],
+    //                     'lname' => $data['DEAD_LAST_NAME_AR'],
+    //                     'birth_date' => !empty($data['DEAD_DOB'])
+    //                         ? Carbon::createFromFormat('d/m/Y', $data['DEAD_DOB'])->format('d/m/Y')
+    //                         : null,
+    //                     'sex' => $data['DEAD_SEX_CD'],
+    //                     'DEAD_MARTIAL_STATUS' => $data['DEAD_MARTIAL_STATUS'],
+    //                     'CITY_CD' => $data['DEAD_CITY_CD'],
+    //                     'REGION_CD' => $data['DEAD_REGION_CD'],
+    //                     'DEAD_PERSONALITY_CODE_CD' => $data['DEAD_PERSONALITY_CODE_CD'],
+    //                     'DEAD_JOB' => $data['DEAD_JOB'],
+    //                     'DEATH_DT' => $data['DEATH_DT'],
+    //                     'BIRTH_PLACE' => $data['DEAD_BIRTH_PLACE'],
+    //                 ]
+    //             ]);
+    //         }
+    //     }
+
+    //     /* ================= Oracle Failed → API ================= */
+    //     $apiResult = $this->check_record_death($request);
+
+    //     if (!empty($apiResult['Data'][0])) {
+
+    //         $row = $apiResult['Data'][0];
+
+    //         $this->saveCitizenFromApi($row);
+    //         $this->logSearch('GetCtznDead_API', $idNo);
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'results' => $this->mapApiResult($row)
+    //         ]);
+    //     }
+
+    //     /* ================= No Data ================= */
+    //     return response()->json([
+    //         'success' => false,
+    //         'message' => 'بيانات رقم الهوية غير متوفرة'
+    //     ], 404);
+    // }
+
+    public function get_person_query(Request $request)
+    {
+        /* ================= Validation ================= */
+        $validator = Validator::make($request->all(), [
+            'P_ID_NO' => 'required|numeric|digits:9',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'results' => $validator->errors()
+            ], 422);
+        }
+
+        $idNo = $request->P_ID_NO;
+
+        /************************* ID Check *************************/
+        $check_id = DEADS_TB::CHECK_ID($idNo);
+        if ($check_id != 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'رقم الهوية غير صحيح'
+            ], 404);
+        }
+
+        /* ================= Oracle Search ================= */
         $data = null;
-    }
-    catch (\Throwable $e) {
-        $data = null;
-    }
 
-    /* ================= Oracle Returned Data ================= */
-    if (!empty($data) && !empty($data['DEAD_FATHER_NAME_AR'])) {
+        try {
+            $data = DEADS_TB::GET_DEAD_CITZN_BY_ID($idNo);
+        } catch (\Throwable $e) {
+            // تجاهل أي خطأ Oracle (lock / timeout / duplicate / distributed tx)
+            $data = null;
+        }
 
-        $this->logSearch('CITZN_API', $idNo);
+        /* ================= Oracle Returned Data ================= */
+        if (!empty($data) && !empty($data['DEAD_FATHER_NAME_AR'])) {
 
-        // الاسم مخفي؟
-        if ($this->isMaskedName($data['DEAD_FATHER_NAME_AR'])) {
+            $this->logSearch('CITZN_API', $idNo);
 
-            $apiResult = $this->check_record_death($request);
+            // الاسم مخفي؟
+            if ($this->isMaskedName($data['DEAD_FATHER_NAME_AR'])) {
 
-            if (!empty($apiResult['Data'][0])) {
+                $apiResult = $this->check_record_death($request);
 
-                $row = $apiResult['Data'][0];
+                if (!empty($apiResult['Data'][0])) {
 
-                $this->logSearch('GetCtznDead_API', $idNo);
-                $this->saveCitizenFromApi($row);
+                    $row = $apiResult['Data'][0];
 
+                    $this->logSearch('GetCtznDead_API', $idNo);
+                    $this->saveCitizenFromApi($row);
+
+                    return response()->json([
+                        'success' => true,
+                        'results' => $this->mapApiResult($row)
+                    ]);
+                }
+            } else {
+
+                // بيانات DB مباشرة
                 return response()->json([
                     'success' => true,
-                    'results' => $this->mapApiResult($row)
+                    'results' => [
+                        'fname' => $data['DEAD_FIRST_NAME_AR'],
+                        'sname' => $data['DEAD_FATHER_NAME_AR'],
+                        'tname' => $data['DEAD_GRANDFATHER_NAME_AR'],
+                        'lname' => $data['DEAD_LAST_NAME_AR'],
+                        'birth_date' => !empty($data['DEAD_DOB'])
+                            ? Carbon::createFromFormat('d/m/Y', $data['DEAD_DOB'])->format('d/m/Y')
+                            : null,
+                        'sex' => $data['DEAD_SEX_CD'],
+                        'DEAD_MARTIAL_STATUS' => $data['DEAD_MARTIAL_STATUS'],
+                        'CITY_CD' => $data['DEAD_CITY_CD'],
+                        'REGION_CD' => $data['DEAD_REGION_CD'],
+                        'DEAD_PERSONALITY_CODE_CD' => $data['DEAD_PERSONALITY_CODE_CD'],
+                        'DEAD_JOB' => $data['DEAD_JOB'],
+                        'DEATH_DT' => $data['DEATH_DT'],
+                        'BIRTH_PLACE' => $data['DEAD_BIRTH_PLACE'],
+                    ]
                 ]);
             }
+        }
 
-        } else {
+        /* ================= Oracle Failed → API ================= */
+        $apiResult = $this->check_record_death($request);
 
-            // بيانات DB مباشرة
+        if (!empty($apiResult['Data'][0])) {
+
+            $row = $apiResult['Data'][0];
+
+            $this->saveCitizenFromApi($row);
+            $this->logSearch('GetCtznDead_API', $idNo);
+
             return response()->json([
                 'success' => true,
-                'results' => [
-                    'fname' => $data['DEAD_FIRST_NAME_AR'],
-                    'sname' => $data['DEAD_FATHER_NAME_AR'],
-                    'tname' => $data['DEAD_GRANDFATHER_NAME_AR'],
-                    'lname' => $data['DEAD_LAST_NAME_AR'],
-                    'birth_date' => !empty($data['DEAD_DOB'])
-                        ? Carbon::createFromFormat('d/m/Y', $data['DEAD_DOB'])->format('d/m/Y')
-                        : null,
-                    'sex' => $data['DEAD_SEX_CD'],
-                    'DEAD_MARTIAL_STATUS' => $data['DEAD_MARTIAL_STATUS'],
-                    'CITY_CD' => $data['DEAD_CITY_CD'],
-                    'REGION_CD' => $data['DEAD_REGION_CD'],
-                    'DEAD_PERSONALITY_CODE_CD' => $data['DEAD_PERSONALITY_CODE_CD'],
-                    'DEAD_JOB' => $data['DEAD_JOB'],
-                    'DEATH_DT' => $data['DEATH_DT'],
-                    'BIRTH_PLACE' => $data['DEAD_BIRTH_PLACE'],
-                ]
+                'results' => $this->mapApiResult($row)
             ]);
         }
-    }
 
-    /* ================= Oracle Failed → API ================= */
-    $apiResult = $this->check_record_death($request);
-
-    if (!empty($apiResult['Data'][0])) {
-
-        $row = $apiResult['Data'][0];
-
-        $this->saveCitizenFromApi($row);
-        $this->logSearch('GetCtznDead_API', $idNo);
-
+        /* ================= No Data ================= */
         return response()->json([
-            'success' => true,
-            'results' => $this->mapApiResult($row)
-        ]);
+            'success' => false,
+            'message' => 'بيانات رقم الهوية غير متوفرة'
+        ], 404);
     }
-
-    /* ================= No Data ================= */
-    return response()->json([
-        'success' => false,
-        'message' => 'بيانات رقم الهوية غير متوفرة'
-    ], 404);
-}
-
-
     // public function get_person_query(Request $request)
     // {
     //     /* ================= Validation ================= */

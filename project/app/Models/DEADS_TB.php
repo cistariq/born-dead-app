@@ -14,7 +14,16 @@ class DEADS_TB extends Model
 {
     use HasFactory;
     protected $table  = 'DEADS_TB';
+    protected $primaryKey = 'DEAD_ID';
+
     protected $guarded = [];
+    public $timestamps = false;
+
+    protected $fillable = [
+        'SOURCE',
+        'UPDATE_REASON',
+        'UPDATED_ON',
+    ];
 
     public static function GET_DEAD_DATA_BY_ID($data)
     {
@@ -296,7 +305,7 @@ class DEADS_TB extends Model
     :P_UPDATED_BY,:P_BIRTH_DATE,:P_DATE_DEATH,:P_NATIONALITY_CD,:P_MARTIAL_STATUS_CD,:P_DEATH_COUNTRY,:P_DEATH_REGION_PLACE,:P_DEATH_CITY_PLACE,
     :P_BIRTH_PLACE,:P_RELEGION_CD,:P_JOB_CD,:P_BURIAL_PLACE,:P_BURIAL_CODE,:P_PREGNANCY_CD,:P_GESTATIONAL_WEEK,:P_AFTER_DELIVERY_CD,:P_PARTNER_ID,:P_PARTNER_NAME,
     :P_DOC_SPECIALIST,:P_DOC_ADDRESS,:P_TREATMENT_DATE,:P_PREVIEW_DATE,:P_SEEING_CORPSE_DATE,:P_CORPSE_DISSECTION_CD,:P_CORPSE_DESSECTION_DATE,:P_REPORTER_SEX_CD,
-    :P_REPORTER_NATIONALITY_CD,:P_RELATIONSHIP,:P_REPORTER_ADDRESS,:P_REPORTER_MOBILE,:P_RECEIVE_DATE,:P_RECEIVER_NAME,:P_REGISTER_DATE,:P_REGISTER_NAME,:P_REGISTER_PLACE_CD,:P_COMMITTE_OPINION,:P_SOURCE,:P_QR_CD,:P_RESULT); end;";
+    :P_REPORTER_NATIONALITY_CD,:P_RELATIONSHIP,:P_REPORTER_ADDRESS,:P_REPORTER_MOBILE,:P_RECEIVE_DATE,:P_RECEIVER_NAME,:P_REGISTER_DATE,:P_REGISTER_NAME,:P_REGISTER_PLACE_CD,:P_COMMITTE_OPINION,:P_SOURCE,:P_UPDATE_REASON,:P_QR_CD,:P_RESULT); end;";
         return DB::transaction(function ($conn) use ($sql_dead, $data) {
             $lista = [];
             $P_RESULT = 0;
@@ -369,6 +378,7 @@ class DEADS_TB extends Model
             $stmt->bindParam(':P_REGISTER_PLACE_CD', $data['P_REGISTER_PLACE_CD']);
             $stmt->bindParam(':P_COMMITTE_OPINION', $data['P_COMMITTE_OPINION']);
             $stmt->bindParam(':P_SOURCE', $data['P_SOURCE']);
+            $stmt->bindParam(':P_UPDATE_REASON', $data['P_UPDATE_REASON']);
             $stmt->bindParam(':P_QR_CD', $data['P_QR_CD']);
             $stmt->bindParam(':P_RESULT', $P_RESULT, PDO::PARAM_INT, 1);
             $stmt->execute();
@@ -459,25 +469,25 @@ class DEADS_TB extends Model
     // });
 
     // }
-public static function CHECK_ID(string $idNo): int
-{
-    // استدعاء الدالة داخل Package CONFIGURATION_PAC
-    $sql = "BEGIN :RESULT := CONFIGURATION_PAC.ID_CHECK(:P_ID_NO); END;";
+    public static function CHECK_ID(string $idNo): int
+    {
+        // استدعاء الدالة داخل Package CONFIGURATION_PAC
+        $sql = "BEGIN :RESULT := CONFIGURATION_PAC.ID_CHECK(:P_ID_NO); END;";
 
-    return DB::transaction(function ($conn) use ($sql, $idNo) {
+        return DB::transaction(function ($conn) use ($sql, $idNo) {
 
-        $RESULT = 0;
-        $pdo    = $conn->getPdo();
-        $stmt   = $pdo->prepare($sql);
+            $RESULT = 0;
+            $pdo    = $conn->getPdo();
+            $stmt   = $pdo->prepare($sql);
 
-        $stmt->bindParam(':P_ID_NO', $idNo);
-        $stmt->bindParam(':RESULT', $RESULT, \PDO::PARAM_INT, 1);
+            $stmt->bindParam(':P_ID_NO', $idNo);
+            $stmt->bindParam(':RESULT', $RESULT, \PDO::PARAM_INT, 1);
 
-        $stmt->execute();
+            $stmt->execute();
 
-        return $RESULT; // 0 أو 1
-    });
-}
+            return $RESULT; // 0 أو 1
+        });
+    }
 
     public static function DEAD_IS_FOUND($data)
     {
@@ -1825,4 +1835,25 @@ public static function CHECK_ID(string $idNo): int
             ];
         });
     }
+
+    public static function CHECK_CITIZEN_ID($data)
+    {
+        //لفحص هذا رقم الهوية موجود أم لا
+        $sql_check = "begin DEAD_INFO_PKG.CHECK_CITIZEN_ID(:P_CITIZEN_ID,:CITIZEN); end;";
+
+        return DB::transaction(function ($conn) use ($sql_check, $data) {
+
+            $CITIZEN = 0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql_check);
+            $stmt->bindParam(':P_CITIZEN_ID', $data['P_ID']);
+            $stmt->bindParam(':CITIZEN', $CITIZEN, PDO::PARAM_INT, 1);
+
+            $stmt->execute();
+            $data['CITIZEN'] = $CITIZEN;
+            return $data;
+        });
+    }
+
+
 }

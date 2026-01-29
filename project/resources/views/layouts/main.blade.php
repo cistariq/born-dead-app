@@ -480,3 +480,11 @@
 <!--end::Body-->
 
 </html>
+<script>
+    window.addEventListener('beforeunload', function () {
+        navigator.sendBeacon(
+            "{{ route('tab.logout') }}",
+            new Blob([], { type: 'application/json' })
+        );
+    });
+</script>

@@ -28,6 +28,7 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
+
     public function login(Request $request)
     {
         try {
@@ -36,7 +37,7 @@ class LoginController extends Controller
             // تحقق من صحة البيانات
             $validator = Validator::make($request->all(), [
                 'user_name' => ['required', 'exists:user_tb,user_username'],
-                'password' => ['required'],
+                'password'  => ['required'],
             ]);
 
             if ($validator->fails()) {
@@ -46,7 +47,10 @@ class LoginController extends Controller
             }
 
             // محاولة تسجيل الدخول
-            if (Auth::attempt(['user_username' => $request->user_name, 'password' => $request->password])) {
+            if (Auth::attempt([
+                'user_username' => $request->user_name,
+                'password'      => $request->password
+            ])) {
 
                 $user = Auth::user();
 
@@ -59,24 +63,21 @@ class LoginController extends Controller
                 }
 
                 /** ===============================
-                 *  Device Token Logic (الجديد)
+                 *  Device Token Logic (المعدل)
                  * =============================== */
 
-                // تحقق إذا كان هناك جلسة سابقة نشطة
-                if ($user->current_device_token) {
-                    Auth::logout();
-                    return redirect()->back()
-                        ->withErrors(['msg' => 'تم تسجيل دخول الحساب من جهاز آخر. يرجى المحاولة لاحقاً'])
-                        ->withInput();
-                }
+                // 🔴 1) حذف أي جلسات قديمة للمستخدم (طرد الجهاز السابق)
+                DB::table('sessions')
+                    ->where('user_id', $user->id)
+                    ->delete();
 
-                // إنشاء توكن جديد للجهاز الحالي
+                // 🔴 2) إنشاء توكن جديد للجهاز الحالي
                 $deviceToken = Str::uuid()->toString();
 
-                // حفظ التوكن في session
+                // 🔴 3) تخزين التوكن في الجلسة
                 session(['device_token' => $deviceToken]);
 
-                // حفظ التوكن في قاعدة البيانات
+                // 🔴 4) تحديث التوكن في قاعدة البيانات
                 DB::table('user_tb')
                     ->where('id', $user->id)
                     ->update([
@@ -87,12 +88,12 @@ class LoginController extends Controller
                  *  Log User Login
                  * =============================== */
                 $logData = [
-                    'user_id' => $user->id,
-                    'id_no' => $user->id,
-                    'ip' => $request->ip(),
-                    'table_name' => 'user_tb',
+                    'user_id'     => $user->id,
+                    'id_no'       => $user->id,
+                    'ip'          => $request->ip(),
+                    'table_name'  => 'user_tb',
                     'column_name' => 'user_name',
-                    'old_value' => $user->user_name,
+                    'old_value'   => $user->user_name,
                     'type_action' => 'I',
                 ];
                 Log::create($logData);
@@ -100,13 +101,15 @@ class LoginController extends Controller
                 /** ===============================
                  *  Permissions
                  * =============================== */
-                session(['permission' => $this->getRolesUser()]);
+                session(['permission'     => $this->getRolesUser()]);
                 session(['permission_btn' => $this->getRolesBtnUser()]);
 
                 return redirect()->route('welcome');
             }
 
-            return redirect()->back()->withErrors(['msg' => 'كلمة المرور خاطئة'])->withInput();
+            return redirect()->back()
+                ->withErrors(['msg' => 'كلمة المرور خاطئة'])
+                ->withInput();
         } catch (\Exception $e) {
             return redirect()->back()->withErrors([
                 'msg' => 'النظام تحت الصيانة - خطأ في الاتصال بقاعدة البيانات، يرجى المحاولة فيما بعد'
@@ -131,7 +134,7 @@ class LoginController extends Controller
         $request->session()->regenerateToken();
 
         // إعادة التوجيه إلى صفحة تسجيل الدخول
-    return redirect()->away('http://10.20.10.100/perm/index.php/Login/');
+        return redirect()->away('http://10.20.10.100/perm/index.php/Login/');
     }
 
     public function getRolesUser()
@@ -147,72 +150,97 @@ class LoginController extends Controller
         $roles = RoleBtnUser::where('user_id', Auth()->id())->pluck('role_btns_id')->toArray();
         return $roles;
     }
-   function login_from_perm($h)
+    function login_from_perm($h)
+    {
+        // جلب بيانات المستخدم من API خارجي
+        $homepage = file_get_contents('http://10.20.10.100/perm/index.php/Api/get_priv_byid/' . $h . '/186');
+        $users = json_decode($homepage, true);
+
+        if (!isset($users['USERS'][0]['USER_ID'])) {
+            return abort(404);
+        }
+
+        $user_id = $users['USERS'][0]['USER_ID'];
+        $user = User::where('user_id_no', $user_id)->first();
+
+        if (!$user) {
+            return abort(404);
+        }
+
+        // محاولة تسجيل الدخول
+        Auth::login($user);
+
+        // التحقق من حالة الحساب
+        if ($user->status == 0) {
+            Auth::logout();
+            return abort(404);
+        }
+
+        /** ===============================
+         *  Device Token Logic
+         * =============================== */
+        // if ($user->current_device_token) {
+        //     Auth::logout();
+        //     return redirect()->away('http://10.20.10.100/perm/index.php/Login/')
+        //         ->withErrors(['msg' => 'تم تسجيل دخول الحساب من جهاز آخر. يرجى المحاولة لاحقاً']);
+        // }
+        // 🔴 1) حذف أي جلسات قديمة للمستخدم (طرد الجهاز السابق)
+        DB::table('sessions')
+            ->where('user_id', $user->id)
+            ->delete();
+
+        // 🔴 2) إنشاء توكن جديد للجهاز الحالي
+        $deviceToken = Str::uuid()->toString();
+
+        // 🔴 3) تخزين التوكن في الجلسة
+        session(['device_token' => $deviceToken]);
+
+        // 🔴 4) تحديث التوكن في قاعدة البيانات
+        DB::table('user_tb')
+            ->where('id', $user->id)
+            ->update([
+                'current_device_token' => $deviceToken
+            ]);
+        /** ===============================
+         *  تسجيل الـ Log
+         * =============================== */
+        $logData = [
+            'user_id' => $user->id,
+            'id_no' => $user->id,
+            'ip' => request()->ip(), // استخدام helper request() للحصول على IP
+            'table_name' => 'user_tb',
+            'column_name' => 'user_name',
+            'old_value' => $user->user_name,
+            'type_action' => 'I', // I = Insert / Login
+        ];
+        Log::create($logData);
+
+        /** ===============================
+         *  Permissions
+         * =============================== */
+        session(['permission'     => $this->getRolesUser()]);
+        session(['permission_btn' => $this->getRolesBtnUser()]);
+
+
+        return redirect()->route('welcome');
+    }
+public function tabLogout(Request $request)
 {
-    // جلب بيانات المستخدم من API خارجي
-    $homepage = file_get_contents('http://10.20.10.100/perm/index.php/Api/get_priv_byid/' . $h . '/186');
-    $users = json_decode($homepage, true);
+    if (Auth::check()) {
 
-    if (!isset($users['USERS'][0]['USER_ID'])) {
-        return abort(404);
-    }
+        // حذف التوكن فقط إذا كان يخص هذا الجهاز
+        DB::table('user_tb')
+            ->where('id', Auth::id())
+            ->where('current_device_token', session('device_token'))
+            ->update(['current_device_token' => null]);
 
-    $user_id = $users['USERS'][0]['USER_ID'];
-    $user = User::where('user_id_no', $user_id)->first();
-
-    if (!$user) {
-        return abort(404);
-    }
-
-    // محاولة تسجيل الدخول
-    Auth::login($user);
-
-    // التحقق من حالة الحساب
-    if ($user->status == 0) {
         Auth::logout();
-        return abort(404);
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
     }
 
-    /** ===============================
-     *  Device Token Logic
-     * =============================== */
-    if ($user->current_device_token) {
-        Auth::logout();
-        return redirect()->away('http://10.20.10.100/perm/index.php/Login/')
-            ->withErrors(['msg' => 'تم تسجيل دخول الحساب من جهاز آخر. يرجى المحاولة لاحقاً']);
-    }
-
-    // إنشاء توكن جديد للجهاز الحالي
-    $deviceToken = Str::uuid()->toString();
-
-    // حفظ التوكن في session
-    session(['device_token' => $deviceToken]);
-
-    // حفظ التوكن في قاعدة البيانات
-    DB::table('user_tb')
-        ->where('id', $user->id)
-        ->update(['current_device_token' => $deviceToken]);
-
-    /** ===============================
-     *  تسجيل الـ Log
-     * =============================== */
-    $logData = [
-        'user_id' => $user->id,
-        'id_no' => $user->id,
-        'ip' => request()->ip(), // استخدام helper request() للحصول على IP
-        'table_name' => 'user_tb',
-        'column_name' => 'user_name',
-        'old_value' => $user->user_name,
-        'type_action' => 'I', // I = Insert / Login
-    ];
-    Log::create($logData);
-
-    /** ===============================
-     *  Permissions
-     * =============================== */
-    session(['permission' => $this->getRolesUser()]);
-    session(['permission_btn' => $this->getRolesBtnUser()]);
-
-    return redirect()->route('welcome');
+    return response()->noContent();
 }
+
 }

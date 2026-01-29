@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Middleware\SingleDeviceMiddleware;
 
 use App\Http\Controllers\ICDCodeController;
 
@@ -56,7 +57,9 @@ Route::group(['prefix' => 'login','as'=>'login.'], function () {
    Route::get('/login_from_perm/{id}', [LoginController::class, 'login_from_perm'])->name('login_from_perm');
  });
 
-
+Route::middleware(['auth', SingleDeviceMiddleware::class])->group(function () {
+    Route::get('/welcome', [DashboardController::class, 'welcome'])->name('welcome');
+});
 Route::group(['middleware' => [Authenticate::class]],function(){
     Route::get('/profile',[ProfileController::class, 'index'])->name('profile.index');
     Route::post('/update-password',[ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
@@ -69,7 +72,7 @@ Route::group(['middleware' => [Authenticate::class]],function(){
     Route::post('/check_record_quata', [QuoteBornController::class, 'check_record_quata'])->name('check_record_quata');
 
 
-    Route::get('/welcome', [DashboardController::class, 'welcome'])->name('welcome');
+  //  Route::get('/welcome', [DashboardController::class, 'welcome'])->name('welcome');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/getStatistics', [DashboardController::class, 'getStatistics'])->name('dashboard.getStatistics');
@@ -81,6 +84,7 @@ Route::group(['middleware' => [Authenticate::class]],function(){
         Route::get('/update_dead/{ID_NO}', [DeadController::class, 'update_dead'])->name('update_dead');
         Route::get('/print_dead_notic/{ID_NO}', [DeadController::class, 'print_dead_notic'])->name('print_dead_notic');
         Route::get('/dead_search', [DeadController::class, 'dead_search'])->name('dead_search');
+        Route::get('/citizen_status_search', [DeadController::class, 'citizen_status_search'])->name('citizen_status_search');
         Route::post('/getDeadResult', [DeadController::class,'getDeadResult'])->name('getDeadResult');
         Route::get('/export_excel', [DeadController::class, 'export_excel'])->name('export_excel');
         Route::post('/save_dead_info', [DeadController::class, 'save_dead_info'])->name('save_dead_info');
@@ -110,6 +114,7 @@ Route::group(['middleware' => [Authenticate::class]],function(){
         Route::post('/get_hos_by_place', [DeadController::class, 'get_hos_by_place'])->name('get_hos_by_place');
        // Route::post('/delete_dead', [DeadController::class, 'delete_dead'])->name('delete_dead');
         Route::get('/delete_dead', [DeadController::class, 'delete_dead'])->name('delete_dead');
+        Route::post('/check_citizen_id', [DeadController::class,'check_citizen_id'])->name('check_citizen_id');
 
 
     });
@@ -295,6 +300,8 @@ Route::group(['middleware' => [Authenticate::class]],function(){
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::post('/tab-logout', [LoginController::class, 'tabLogout'])
+    ->name('tab.logout');
 
 Route::get('/icd-codes', [ICDCodeController::class, 'index'])->name('icd.index');
 Route::get('/icd-codes/children/{id}', [ICDCodeController::class, 'fetchChildren'])->name('icd.fetchChildren');
