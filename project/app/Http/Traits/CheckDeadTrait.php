@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
+use App\Models\C_MARTIAL_STATUS_TB;
+use App\Models\DEADS_TB;
+
 
 
 trait CheckDeadTrait
@@ -103,4 +108,5 @@ trait CheckDeadTrait
             return null;
         }
     }
+
 }

@@ -2,12 +2,16 @@
 
 namespace App\Http\Traits;
 
+use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Models\DEADS_TB;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use App\Models\C_MARTIAL_STATUS_TB;
 
 
 trait DeathDataTrait
@@ -79,7 +83,6 @@ trait DeathDataTrait
             'UserName' => '882222277',
             'Password' => 'Fd56*MVZ#403'
         ]);
-        //dd(trim($response->json()['Data']['Token']));
         if (isset($response->json()['Data']['Token'])) {
             return $response->json()['Data']['Token'];
         } else {
@@ -89,7 +92,7 @@ trait DeathDataTrait
 
     public function check_citizen_by_id(Request $request)
     {
-        // print_r('here1');exit;
+        print_r('here');exit;
         // dd($request->all());
         $rules = [
             'P_CITIZEN_ID' => 'required|numeric|digits:9',
@@ -103,9 +106,8 @@ trait DeathDataTrait
             ], 422);
         }
 
-        // $idNo = $request->P_CITIZEN_ID;
+       // $idNo = $request->P_CITIZEN_ID;
         $idNo = $request->input('P_CITIZEN_ID');
-       // print_r($idNo);exit;
 
         /************ فحص صحة رقم الهوية ************/
         $check_id = DEADS_TB::CHECK_ID($idNo);
@@ -140,20 +142,15 @@ trait DeathDataTrait
 
         /************ البحث في جدول المواطنين ************/
         $citizenData = DEADS_TB::GET_DEAD_CITZN_BY_ID($idNo);
-        // print_r($citizenData);exit;
 
         if (!empty($citizenData)) {
             $fakeRequest = new Request([
                 'P_ID_NO' => $idNo
             ]);
             /************ فحص سجلات الوفاة من المستشفيات ************/
-            //  print_r('here');exit;
             $check = $this->check_record_death($fakeRequest);
-            //print_r($check);exit;
-
-            $resultOut = $check['StatusCode'] ?? null;
-            $hos_name = $check['Data'][0]['RESULT_DEATH_HOS'] ?? null;
-            //   print_r($check['Data'][0]['RESULT_DEATH_HOS']);exit;
+            $resultOut = $check['data']['data']['RESULT_OUT'] ?? null;
+            $hos_name  = $check['data']['data']['RESULT_DEATH_HOS'] ?? null;
             switch ($resultOut) {
                 case 0:
                     // ✔ على قيد الحياة

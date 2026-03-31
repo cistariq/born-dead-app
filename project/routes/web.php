@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ProfileController;
 use App\Http\Controllers\dead\ApplicationController;
 use App\Http\Controllers\dead\DashboardController;
+
 use App\Http\Controllers\ConstantController;
 use App\Http\Controllers\dead\DeadController;
 use App\Http\Controllers\ReportController;
@@ -32,11 +33,11 @@ use App\Http\Middleware\SingleDeviceMiddleware;
 
 use App\Http\Controllers\ICDCodeController;
 
-Route::get('/test',function(){
+Route::get('/test', function () {
     $UNIX_DATE = (45293 - 25569) * 86400;
     echo date("d-m-Y", $UNIX_DATE);
 
-//
+    //
 });
 
 // Route::get('/test-db', function () {
@@ -51,18 +52,18 @@ Route::get('/test',function(){
 //     Log::channel('citizen')->info('اختبار تسجيل في citizen_log.log');
 //     return 'تم التسجيل!';
 // });
-Route::get('/login',[LoginController::class, 'index'])->name('login');
-Route::post('/login',[LoginController::class, 'login'])->name('login.check');
-Route::group(['prefix' => 'login','as'=>'login.'], function () {
-   Route::get('/login_from_perm/{id}', [LoginController::class, 'login_from_perm'])->name('login_from_perm');
- });
+Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::post('/login', [LoginController::class, 'login'])->name('login.check');
+Route::group(['prefix' => 'login', 'as' => 'login.'], function () {
+    Route::get('/login_from_perm/{id}', [LoginController::class, 'login_from_perm'])->name('login_from_perm');
+});
 
 Route::middleware(['auth', SingleDeviceMiddleware::class])->group(function () {
     Route::get('/welcome', [DashboardController::class, 'welcome'])->name('welcome');
 });
-Route::group(['middleware' => [Authenticate::class]],function(){
-    Route::get('/profile',[ProfileController::class, 'index'])->name('profile.index');
-    Route::post('/update-password',[ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
+Route::group(['middleware' => [Authenticate::class]], function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::post('/update-password', [ProfileController::class, 'updatePassword'])->name('profile.updatePassword');
     Route::post('/getPersonalInfo', [PersonalInfoController::class, 'getPersonalInfo'])->name('getPersonalInfo');
 
     Route::post('/check_records', [DeadController::class, 'check_records'])->name('check_records');
@@ -72,20 +73,26 @@ Route::group(['middleware' => [Authenticate::class]],function(){
     Route::post('/check_record_quata', [QuoteBornController::class, 'check_record_quata'])->name('check_record_quata');
 
 
-  //  Route::get('/welcome', [DashboardController::class, 'welcome'])->name('welcome');
+    //  Route::get('/welcome', [DashboardController::class, 'welcome'])->name('welcome');
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/dashboard/getStatistics', [DashboardController::class, 'getStatistics'])->name('dashboard.getStatistics');
 
-    Route::group(['prefix' => 'dead','as'=>'dead.'], function () {
+
+    Route::get('/dashboard/getStatistics', [DashboardController::class, 'getStatistics'])->name('dashboard.getStatistics');
+    Route::get('/borns_dashboard', [DashboardController::class, 'borns_dashboard'])->name('borns_dashboard');
+
+    Route::get('/dashboard/getbirthStatistics', [DashboardController::class, 'getbirthStatistics'])->name('dashboard.getbirthStatistics');
+
+    Route::group(['prefix' => 'dead', 'as' => 'dead.'], function () {
         //Route::get('/', [DeadController::class, 'index'])->name('index');
-        Route::post('/getDataResult', [DeadController::class,'getDataResult'])->name('getDataResult');
+        Route::post('/getDataResult', [DeadController::class, 'getDataResult'])->name('getDataResult');
         Route::get('/insert_dead', [DeadController::class, 'insert_dead'])->name('insert_dead');
         Route::get('/update_dead/{ID_NO}', [DeadController::class, 'update_dead'])->name('update_dead');
         Route::get('/print_dead_notic/{ID_NO}', [DeadController::class, 'print_dead_notic'])->name('print_dead_notic');
         Route::get('/dead_search', [DeadController::class, 'dead_search'])->name('dead_search');
         Route::get('/citizen_status_search', [DeadController::class, 'citizen_status_search'])->name('citizen_status_search');
-        Route::post('/getDeadResult', [DeadController::class,'getDeadResult'])->name('getDeadResult');
+        Route::get('/all_citizen_status_search', [DeadController::class, 'all_citizen_status_search'])->name('all_citizen_status_search');
+        Route::post('/getDeadResult', [DeadController::class, 'getDeadResult'])->name('getDeadResult');
         Route::get('/export_excel', [DeadController::class, 'export_excel'])->name('export_excel');
         Route::post('/save_dead_info', [DeadController::class, 'save_dead_info'])->name('save_dead_info');
         Route::post('/update_dead_info', [DeadController::class, 'update_dead_info'])->name('update_dead_info');
@@ -112,190 +119,180 @@ Route::group(['middleware' => [Authenticate::class]],function(){
         Route::get('/file_pdf', [DeadController::class, 'file_pdf'])->name('file_pdf');
         Route::post('/get_helth_center', [DeadController::class, 'get_helth_center'])->name('get_helth_center');
         Route::post('/get_hos_by_place', [DeadController::class, 'get_hos_by_place'])->name('get_hos_by_place');
-       // Route::post('/delete_dead', [DeadController::class, 'delete_dead'])->name('delete_dead');
+        // Route::post('/delete_dead', [DeadController::class, 'delete_dead'])->name('delete_dead');
         Route::get('/delete_dead', [DeadController::class, 'delete_dead'])->name('delete_dead');
-        Route::post('/check_citizen_id', [DeadController::class,'check_citizen_id'])->name('check_citizen_id');
+        Route::post('/check_citizen_id', [DeadController::class, 'check_citizen_id'])->name('check_citizen_id');
+        Route::post('/check_excel_file', [DeadController::class, 'check_excel_file'])->name('check_excel_file');
+        Route::get('/check_excel', [DeadController::class, 'check_excel'])->name('check_excel');
+        Route::post('/checkExcel', [DeadController::class, 'checkExcel'])->name('checkExcel');
+        Route::post('/exportExcel', [DeadController::class, 'exportExcel'])->name('exportExcel');
+        Route::get('/update_dead_source', [DeadController::class, 'update_dead_source'])->name('update_dead_source');
 
-
+        Route::post('/searchById', [DeadController::class, 'searchById'])->name('searchById');
+        Route::post('/updateSource', [DeadController::class, 'updateSource'])->name('updateSource');
     });
 
 
-    Route::group(['prefix' => 'Report','as'=>'Report.'], function () {
-            Route::get('/',[ReportController::class,'index'])->name('index');
-            Route::get('/Distribution_Death_Place',[ReportController::class,'Distribution_Death_Place'])->name('Distribution_Death_Place');
-            Route::get('/Distribution_Region_Ages',[ReportController::class,'Distribution_Region_Ages'])->name('Distribution_Region_Ages');
-            Route::get('/GET_Distribution_Death_Place_Kids',[ReportController::class,'GET_Distribution_Death_Place_Kids'])->name('GET_Distribution_Death_Place_Kids');
-            Route::get('/GET_Distribution_Region_Kids',[ReportController::class,'GET_Distribution_Region_Kids'])->name('GET_Distribution_Region_Kids');
-            Route::get('/GET_Distribution_Region_Ages1',[ReportController::class,'GET_Distribution_Region_Ages1'])->name('GET_Distribution_Region_Ages1');
-            Route::get('/GET_Distribution_Region_Ages2',[ReportController::class,'GET_Distribution_Region_Ages2'])->name('GET_Distribution_Region_Ages2');
-            Route::get('/GET_Distribution_Death_Hosp',[ReportController::class,'GET_Distribution_Death_Hosp'])->name('GET_Distribution_Death_Hosp');
-            Route::get('/GET_Distribution_Region_Ages3',[ReportController::class,'GET_Distribution_Region_Ages3'])->name('GET_Distribution_Region_Ages3');
-            Route::get('/GET_Distribution_Death_Hos_Kids',[ReportController::class,'GET_Distribution_Death_Hos_Kids'])->name('GET_Distribution_Death_Hos_Kids');
-            Route::get('/GET_Distribution_sex_D',[ReportController::class,'GET_Distribution_sex_D'])->name('GET_Distribution_sex_D');
-            Route::get('/GET_Daily_Dead_Rep_2',[ReportController::class,'GET_Daily_Dead_Rep_2'])->name('GET_Daily_Dead_Rep_2');
-            Route::get('/GET_Daily_Report_D',[ReportController::class,'GET_Daily_Report_D'])->name('GET_Daily_Report_D');
-            Route::post('/Get_Daily_Dead_Rep_D',[ReportController::class,'Get_Daily_Dead_Rep_D'])->name('Get_Daily_Dead_Rep_D');
+    Route::group(['prefix' => 'Report', 'as' => 'Report.'], function () {
+        Route::get('/', [ReportController::class, 'index'])->name('index');
+        Route::get('/Distribution_Death_Place', [ReportController::class, 'Distribution_Death_Place'])->name('Distribution_Death_Place');
+        Route::get('/Distribution_Region_Ages', [ReportController::class, 'Distribution_Region_Ages'])->name('Distribution_Region_Ages');
+        Route::get('/GET_Distribution_Death_Place_Kids', [ReportController::class, 'GET_Distribution_Death_Place_Kids'])->name('GET_Distribution_Death_Place_Kids');
+        Route::get('/GET_Distribution_Region_Kids', [ReportController::class, 'GET_Distribution_Region_Kids'])->name('GET_Distribution_Region_Kids');
+        Route::get('/GET_Distribution_Region_Ages1', [ReportController::class, 'GET_Distribution_Region_Ages1'])->name('GET_Distribution_Region_Ages1');
+        Route::get('/GET_Distribution_Region_Ages2', [ReportController::class, 'GET_Distribution_Region_Ages2'])->name('GET_Distribution_Region_Ages2');
+        Route::get('/GET_Distribution_Death_Hosp', [ReportController::class, 'GET_Distribution_Death_Hosp'])->name('GET_Distribution_Death_Hosp');
+        Route::get('/GET_Distribution_Region_Ages3', [ReportController::class, 'GET_Distribution_Region_Ages3'])->name('GET_Distribution_Region_Ages3');
+        Route::get('/GET_Distribution_Death_Hos_Kids', [ReportController::class, 'GET_Distribution_Death_Hos_Kids'])->name('GET_Distribution_Death_Hos_Kids');
+        Route::get('/GET_Distribution_sex_D', [ReportController::class, 'GET_Distribution_sex_D'])->name('GET_Distribution_sex_D');
+        Route::get('/GET_Daily_Dead_Rep_2', [ReportController::class, 'GET_Daily_Dead_Rep_2'])->name('GET_Daily_Dead_Rep_2');
+        Route::get('/GET_Daily_Report_D', [ReportController::class, 'GET_Daily_Report_D'])->name('GET_Daily_Report_D');
+        Route::post('/Get_Daily_Dead_Rep_D', [ReportController::class, 'Get_Daily_Dead_Rep_D'])->name('Get_Daily_Dead_Rep_D');
 
-            Route::get('/GET_Distribution_Diagnosis',[ReportController::class,'GET_Distribution_Diagnosis'])->name('GET_Distribution_Diagnosis');
-            Route::get('/GET_Deads_non_Diagnosable',[ReportController::class,'GET_Deads_non_Diagnosable'])->name('GET_Deads_non_Diagnosable');
-            Route::post('/GET_Deads_non_Diagnosable_all',[ReportController::class,'GET_Deads_non_Diagnosable_all'])->name('GET_Deads_non_Diagnosable_all');
-            Route::get('/GET_Total_In_Diagnosis',[ReportController::class,'GET_Total_In_Diagnosis'])->name('GET_Total_In_Diagnosis');
-            Route::get('/GET_Unknown_Region_Deaths',[ReportController::class,'GET_Unknown_Region_Deaths'])->name('GET_Unknown_Region_Deaths');
-            Route::post('/GET_Unknown_Region_Deaths_ALL',[ReportController::class,'GET_Unknown_Region_Deaths_ALL'])->name('GET_Unknown_Region_Deaths_ALL');
-            Route::get('/GET_Distribution_ICD_Ages',[ReportController::class,'GET_Distribution_ICD_Ages'])->name('GET_Distribution_ICD_Ages');
-            Route::get('/GET_Distribution_MS_D',[ReportController::class,'GET_Distribution_MS_D'])->name('GET_Distribution_MS_D');
-            Route::get('/GET_Distribution_ICD_Ages_sample2',[ReportController::class,'GET_Distribution_ICD_Ages_sample2'])->name('GET_Distribution_ICD_Ages_sample2');
-            Route::get('/GET_Scanned_files_rep',[ReportController::class,'GET_Scanned_files_rep'])->name('GET_Scanned_files_rep');
-            Route::post('/get_scanned_file_rep',[ReportController::class,'get_scanned_file_rep'])->name('get_scanned_file_rep');
-            Route::post('/get_updated_file_rep',[ReportController::class,'get_updated_file_rep'])->name('get_updated_file_rep');
-            Route::get('/GET_Death_updated_rep',[ReportController::class,'GET_Death_updated_rep'])->name('GET_Death_updated_rep');
-            Route::get('/GET_NotScanned_files_rep',[ReportController::class,'GET_NotScanned_files_rep'])->name('GET_NotScanned_files_rep');
-            Route::get('/Icd_Search',[ReportController::class,'Icd_Search'])->name('Icd_Search');
-            Route::get('/icd-section/{code}', [ReportController::class, 'show'])->name('icd.show');
-            Route::get('/icd-search/{code}', [ReportController::class, 'search']);
-            Route::get('/icd-autocomplete/{term}', [ReportController::class, 'autocomplete'])->name('icd-autocomplete');
+        Route::get('/GET_Distribution_Diagnosis', [ReportController::class, 'GET_Distribution_Diagnosis'])->name('GET_Distribution_Diagnosis');
+        Route::get('/GET_Deads_non_Diagnosable', [ReportController::class, 'GET_Deads_non_Diagnosable'])->name('GET_Deads_non_Diagnosable');
+        Route::post('/GET_Deads_non_Diagnosable_all', [ReportController::class, 'GET_Deads_non_Diagnosable_all'])->name('GET_Deads_non_Diagnosable_all');
+        Route::get('/GET_Total_In_Diagnosis', [ReportController::class, 'GET_Total_In_Diagnosis'])->name('GET_Total_In_Diagnosis');
+        Route::get('/GET_Unknown_Region_Deaths', [ReportController::class, 'GET_Unknown_Region_Deaths'])->name('GET_Unknown_Region_Deaths');
+        Route::post('/GET_Unknown_Region_Deaths_ALL', [ReportController::class, 'GET_Unknown_Region_Deaths_ALL'])->name('GET_Unknown_Region_Deaths_ALL');
+        Route::get('/GET_Distribution_ICD_Ages', [ReportController::class, 'GET_Distribution_ICD_Ages'])->name('GET_Distribution_ICD_Ages');
+        Route::get('/GET_Distribution_MS_D', [ReportController::class, 'GET_Distribution_MS_D'])->name('GET_Distribution_MS_D');
+        Route::get('/GET_Distribution_ICD_Ages_sample2', [ReportController::class, 'GET_Distribution_ICD_Ages_sample2'])->name('GET_Distribution_ICD_Ages_sample2');
+        Route::get('/GET_Scanned_files_rep', [ReportController::class, 'GET_Scanned_files_rep'])->name('GET_Scanned_files_rep');
+        Route::post('/get_scanned_file_rep', [ReportController::class, 'get_scanned_file_rep'])->name('get_scanned_file_rep');
+        Route::post('/get_updated_file_rep', [ReportController::class, 'get_updated_file_rep'])->name('get_updated_file_rep');
+        Route::get('/GET_Death_updated_rep', [ReportController::class, 'GET_Death_updated_rep'])->name('GET_Death_updated_rep');
+        Route::get('/GET_NotScanned_files_rep', [ReportController::class, 'GET_NotScanned_files_rep'])->name('GET_NotScanned_files_rep');
+        Route::get('/Icd_Search', [ReportController::class, 'Icd_Search'])->name('Icd_Search');
+        Route::get('/icd-section/{code}', [ReportController::class, 'show'])->name('icd.show');
+        Route::get('/icd-search/{code}', [ReportController::class, 'search']);
+        Route::get('/icd-autocomplete/{term}', [ReportController::class, 'autocomplete'])->name('icd-autocomplete');
 
-            Route::post('/get_unscanned_file_rep',[ReportController::class,'get_unscanned_file_rep'])->name('get_unscanned_file_rep');
+        Route::post('/get_unscanned_file_rep', [ReportController::class, 'get_unscanned_file_rep'])->name('get_unscanned_file_rep');
 
-            Route::get('/Daily_Born',[ReportController::class,'Daily_Born'])->name('Daily_Born');
-            Route::get('/Daily_Report_Birth_Place',[ReportController::class,'Daily_Report_Birth_Place'])->name('Daily_Report_Birth_Place');
-            Route::get('/Daily_Born_Delivery',[ReportController::class,'Daily_Born_Delivery'])->name('Daily_Born_Delivery');
-            Route::get('/Daily_Born_Print',[ReportController::class,'Daily_Born_Print'])->name('Daily_Born_Print');
-            Route::post('/get_Daily_Born',[ReportController::class,'get_Daily_Born'])->name('get_Daily_Born');
-            Route::post('/Daily_Born_Delivery_Print',[ReportController::class,'Daily_Born_Delivery_Print'])->name('Daily_Born_Delivery_Print');
-            Route::post('/Get_Daily_Dead_Result',[ReportController::class,'Get_Daily_Dead_Result'])->name('Get_Daily_Dead_Result');
-            Route::get('/Distribution_Ages',[ReportController::class,'Distribution_Ages'])->name('Distribution_Ages');
-            Route::get('/Distribution_sex',[ReportController::class,'Distribution_sex'])->name('Distribution_sex');
-            Route::get('/Distribution_Weight',[ReportController::class,'Distribution_Weight'])->name('Distribution_Weight');
-            Route::get('/Distribution_Clinics',[ReportController::class,'Distribution_Clinics'])->name('Distribution_Clinics');
-            Route::get('/Distribution_Twins',[ReportController::class,'Distribution_Twins'])->name('Distribution_Twins');
-            Route::get('/Distribution_Region',[ReportController::class,'Distribution_Region'])->name('Distribution_Region');
-            Route::get('/Distribution_Years',[ReportController::class,'Distribution_Years'])->name('Distribution_Years');
-            Route::get('/Distribution_SexOnly',[ReportController::class,'Distribution_SexOnly'])->name('Distribution_SexOnly');
-            Route::get('/Distribution_Job',[ReportController::class,'Distribution_Job'])->name('Distribution_Job');
-
-
-
+        Route::get('/Daily_Born', [ReportController::class, 'Daily_Born'])->name('Daily_Born');
+        Route::get('/Daily_Report_Birth_Place', [ReportController::class, 'Daily_Report_Birth_Place'])->name('Daily_Report_Birth_Place');
+        Route::get('/Daily_Born_Delivery', [ReportController::class, 'Daily_Born_Delivery'])->name('Daily_Born_Delivery');
+        Route::get('/Daily_Born_Print', [ReportController::class, 'Daily_Born_Print'])->name('Daily_Born_Print');
+        Route::post('/get_Daily_Born', [ReportController::class, 'get_Daily_Born'])->name('get_Daily_Born');
+        Route::post('/Daily_Born_Delivery_Print', [ReportController::class, 'Daily_Born_Delivery_Print'])->name('Daily_Born_Delivery_Print');
+        Route::post('/Get_Daily_Dead_Result', [ReportController::class, 'Get_Daily_Dead_Result'])->name('Get_Daily_Dead_Result');
+        Route::get('/Distribution_Ages', [ReportController::class, 'Distribution_Ages'])->name('Distribution_Ages');
+        Route::get('/Distribution_sex', [ReportController::class, 'Distribution_sex'])->name('Distribution_sex');
+        Route::get('/Distribution_Weight', [ReportController::class, 'Distribution_Weight'])->name('Distribution_Weight');
+        Route::get('/Distribution_Clinics', [ReportController::class, 'Distribution_Clinics'])->name('Distribution_Clinics');
+        Route::get('/Distribution_Twins', [ReportController::class, 'Distribution_Twins'])->name('Distribution_Twins');
+        Route::get('/Distribution_Region', [ReportController::class, 'Distribution_Region'])->name('Distribution_Region');
+        Route::get('/Distribution_Years', [ReportController::class, 'Distribution_Years'])->name('Distribution_Years');
+        Route::get('/Distribution_SexOnly', [ReportController::class, 'Distribution_SexOnly'])->name('Distribution_SexOnly');
+        Route::get('/Distribution_Job', [ReportController::class, 'Distribution_Job'])->name('Distribution_Job');
     });
 
 
-        Route::group(['prefix' => 'constant','as'=>'constant.'], function () {
-            Route::get('/', [ConstantController::class, 'index'])->name('index');
-            Route::post('/getPersonalInfoByIdNo', [ConstantController::class, 'getPersonalInfoByIdNo'])->name('getPersonalInfoByIdNo');
-            Route::post('/getPersonalInfoByName', [ConstantController::class, 'getPersonalInfoByName'])->name('getPersonalInfoByName');
-            Route::post('/getPersonalNameByIdNo', [ConstantController::class, 'getPersonalNameByIdNo'])->name('getPersonalNameByIdNo');
-            Route::post('/getConstantDtl',[ConstantController::class,'getConstantDtl'])->name('get_constant_dtl');
-        });
+    Route::group(['prefix' => 'constant', 'as' => 'constant.'], function () {
+        Route::get('/', [ConstantController::class, 'index'])->name('index');
+        Route::post('/getPersonalInfoByIdNo', [ConstantController::class, 'getPersonalInfoByIdNo'])->name('getPersonalInfoByIdNo');
+        Route::post('/getPersonalInfoByName', [ConstantController::class, 'getPersonalInfoByName'])->name('getPersonalInfoByName');
+        Route::post('/getPersonalNameByIdNo', [ConstantController::class, 'getPersonalNameByIdNo'])->name('getPersonalNameByIdNo');
+        Route::post('/getConstantDtl', [ConstantController::class, 'getConstantDtl'])->name('get_constant_dtl');
+    });
 
-        Route::group(['prefix' => 'users','as'=>'user.'], function () {
-            Route::get('/', [UserController::class, 'index'])->name('index');
-            Route::post('/insert_user', [UserController::class, 'insert_user'])->name('insert_user');
-            Route::post('/update', [UserController::class, 'update'])->name('update');
-            Route::post('/update_password', [UserController::class, 'update_password'])->name('update_password');
-            Route::post('/delete', [UserController::class, 'delete'])->name('delete');
+    Route::group(['prefix' => 'users', 'as' => 'user.'], function () {
+        Route::get('/', [UserController::class, 'index'])->name('index');
+        Route::post('/insert_user', [UserController::class, 'insert_user'])->name('insert_user');
+        Route::post('/update', [UserController::class, 'update'])->name('update');
+        Route::post('/update_password', [UserController::class, 'update_password'])->name('update_password');
+        Route::post('/delete', [UserController::class, 'delete'])->name('delete');
+    });
+    Route::group(['prefix' => 'personl-info', 'as' => 'personl_info.'], function () {
+        Route::get('/', [PersonalInfoController::class, 'index'])->name('index');
+    });
 
-        });
-        Route::group(['prefix' => 'personl-info','as'=>'personl_info.'], function () {
-            Route::get('/', [PersonalInfoController::class, 'index'])->name('index');
-        });
+    Route::group(['prefix' => 'roles', 'as' => 'roles.'], function () {
+        Route::get('/', [RolePageController::class, 'index'])->name('index');
+        Route::post('/store', [RolePageController::class, 'store'])->name('store');
+        Route::get('/page-user', [RolePageController::class, 'page_user'])->name('page_user');
+        Route::post('/getUserPageByUserId', [RolePageController::class, 'getUserPageByUserId'])->name('getUserPageByUserId');
+        Route::post('/changeRolePageToUser', [RolePageController::class, 'changeRolePageToUser'])->name('changeRolePageToUser');
+    });
+    Route::group(['prefix' => 'roles-btn', 'as' => 'roles_btn.'], function () {
+        Route::get('/', [RoleBtnController::class, 'index'])->name('index');
+        Route::post('/store', [RoleBtnController::class, 'store'])->name('store');
+        Route::post('/getUserBtnByUserId', [RoleBtnController::class, 'getUserBtnByUserId'])->name('getUserBtnByUserId');
+        Route::post('/changeRoleBtnToUser', [RoleBtnController::class, 'changeRoleBtnToUser'])->name('changeRoleBtnToUser');
+    });
+    Route::get('/getConstantByParent', [ConstantController::class, 'getConstantByParent'])->name('getConstantByParent');
 
-        Route::group(['prefix' => 'roles','as'=>'roles.'], function () {
-            Route::get('/', [RolePageController::class, 'index'])->name('index');
-            Route::post('/store', [RolePageController::class, 'store'])->name('store');
-            Route::get('/page-user', [RolePageController::class, 'page_user'])->name('page_user');
-            Route::post('/getUserPageByUserId', [RolePageController::class, 'getUserPageByUserId'])->name('getUserPageByUserId');
-            Route::post('/changeRolePageToUser', [RolePageController::class, 'changeRolePageToUser'])->name('changeRolePageToUser');
-        });
-        Route::group(['prefix' => 'roles-btn','as'=>'roles_btn.'], function () {
-            Route::get('/', [RoleBtnController::class, 'index'])->name('index');
-            Route::post('/store', [RoleBtnController::class, 'store'])->name('store');
-            Route::post('/getUserBtnByUserId', [RoleBtnController::class, 'getUserBtnByUserId'])->name('getUserBtnByUserId');
-            Route::post('/changeRoleBtnToUser', [RoleBtnController::class, 'changeRoleBtnToUser'])->name('changeRoleBtnToUser');
-        });
-        Route::get('/getConstantByParent', [ConstantController::class, 'getConstantByParent'])->name('getConstantByParent');
+    Route::group(['prefix' => 'scan-file', 'as' => 'scan_file.'], function () {
+        Route::get('/', [ScanfileController::class, 'index'])->name('index');
+        Route::get('/multi-upload', [ScanfileController::class, 'multiUpload'])->name('multi_upload');
 
-        Route::group(['prefix' => 'scan-file','as'=>'scan_file.'], function () {
-            Route::get('/', [ScanfileController::class, 'index'])->name('index');
-            Route::get('/multi-upload', [ScanfileController::class, 'multiUpload'])->name('multi_upload');
+        Route::post('/getscanResult', [ScanfileController::class, 'getscanResult'])->name('getscanResult');
+        Route::post('/storefile', [ScanfileController::class, 'storefile'])->name('storefile');
+        Route::post('/store-multi-file', [ScanfileController::class, 'storeMultiFile'])->name('store_multi_file');
+        Route::get('/downloadFile', [ScanfileController::class, 'downloadFile'])->name('downloadFile');
+        Route::post('/delete-file', [ScanfileController::class, 'deleteFile'])->name('deleteFile');
+    });
 
-            Route::post('/getscanResult', [ScanfileController::class,'getscanResult'])->name('getscanResult');
-            Route::post('/storefile', [ScanfileController::class, 'storefile'])->name('storefile');
-            Route::post('/store-multi-file', [ScanfileController::class, 'storeMultiFile'])->name('store_multi_file');
-            Route::get('/downloadFile', [ScanfileController::class, 'downloadFile'])->name('downloadFile');
-            Route::post('/delete-file', [ScanfileController::class, 'deleteFile'])->name('deleteFile');
+    Route::group(['prefix' => 'scan', 'as' => 'scan.'], function () {
 
+        Route::get('/scan_death_file', [ScanfileController::class, 'scan_death_file'])->name('scan_death_file');
+        Route::post('/upload', [ScanfileController::class, 'upload'])->name('upload');
+        Route::post('/savetofile', [ScanfileController::class, 'savetofile'])->name('savetofile');
+    });
+    Route::group(['prefix' => 'born', 'as' => 'born.'], function () {
+        Route::get('/', [BornController::class, 'add_born'])->name('add_born');
+        Route::get('/new_born_search', [BornController::class, 'new_born_search'])->name('new_born_search');
+        Route::get('/born_search', [BornController::class, 'born_search'])->name('born_search');
+        Route::post('/getBornResult', [BornController::class, 'getBornResult'])->name('getBornResult');
+        Route::post('/getBornInfo', [BornController::class, 'getBornInfo'])->name('getBornInfo');
+        Route::post('/is_born_found', [BornController::class, 'is_born_found'])->name('is_born_found');
+        Route::post('/getBornInfoByNo', [BornController::class, 'getBornInfoByNo'])->name('getBornInfoByNo');
+        Route::post('/getBornInfoByCode', [BornController::class, 'getBornInfoByCode'])->name('getBornInfoByCode');
+        Route::post('/getBornInfoByCodeNo', [BornController::class, 'getBornInfoByCodeNo'])->name('getBornInfoByCodeNo');
+        Route::post('/update_born_info', [BornController::class, 'update_born_info'])->name('update_born_info');
 
+        Route::get('/export_excel', [BornController::class, 'export_excel'])->name('export_excel');
+        Route::get('/born_export_excel', [BornController::class, 'born_export_excel'])->name('born_export_excel');
+        Route::post('/save_born_info', [BornController::class, 'save_born_info'])->name('save_born_info');
+        Route::post('/getFatherInfoByIdNo', [BornController::class, 'getFatherInfoByIdNo'])->name('getFatherInfoByIdNo');
+        Route::post('/getMotherInfoByIdNo', [BornController::class, 'getMotherInfoByIdNo'])->name('getMotherInfoByIdNo');
+        Route::post('/ADD_BORN_FATHER_DATA', [BornController::class, 'ADD_BORN_FATHER_DATA'])->name('ADD_BORN_FATHER_DATA');
+        Route::post('/update_father_info', [BornController::class, 'update_father_info'])->name('update_father_info');
+        Route::post('/update_mother_info', [BornController::class, 'update_mother_info'])->name('update_mother_info');
+        Route::post('/ADD_BORN_MOTHER_DATA', [BornController::class, 'ADD_BORN_MOTHER_DATA'])->name('ADD_BORN_MOTHER_DATA');
+        Route::post('/save_born_details_info', [BornController::class, 'save_born_details_info'])->name('save_born_details_info');
+        Route::get('/insert_new_born', [BornController::class, 'insert_new_born'])->name('insert_new_born');
+        Route::get('/GET_BORNS_DATE', [BornController::class, 'GET_BORNS_DATE'])->name('GET_BORNS_DATE');
+        Route::get('/getBorn_Code', [BornController::class, 'getBorn_Code'])->name('getBorn_Code');
+        Route::get('/update_born/{ID_NO}', [BornController::class, 'update_born'])->name('update_born');
+        Route::get('/Daily_Form', [BornController::class, 'Daily_Form'])->name('Daily_Form');
+        Route::post('/check_born_id', [BornController::class, 'check_born_id'])->name('check_born_id');
+        Route::post('/check_born_date', [BornController::class, 'check_born_date'])->name('check_born_date');
+        Route::post('/check_born_count', [BornController::class, 'check_born_count'])->name('check_born_count');
+        Route::get('/add_new_born', [BornController::class, 'add_new_born'])->name('add_new_born');
+        Route::post('/check_record_born', [BornController::class, 'check_record_born'])->name('check_record_born');
 
+        Route::post('/save_all_born_info', [BornController::class, 'save_all_born_info'])->name('save_all_born_info');
+        Route::get('/new_order_quote', [QuoteBornController::class, 'new_order_quote'])->name('new_order_quote');
+        Route::get('/approve_quote_request', [QuoteBornController::class, 'approve_quote_request'])->name('approve_quote_request');
+        Route::get('/release_requests', [QuoteBornController::class, 'release_requests'])->name('release_requests');
+        Route::post('/store', [QuoteBornController::class, 'store'])->name('store');
+        Route::get('/search', [QuoteBornController::class, 'search'])->name('search');
+        Route::post('/approve', [QuoteBornController::class, 'approve'])->name('approve');
+        Route::post('/cancel', [QuoteBornController::class, 'cancel'])->name('cancel');
+        Route::get('/search_release', [QuoteBornController::class, 'search_release'])->name('search_release');
+        Route::post('/release', [QuoteBornController::class, 'release'])->name('release');
 
-        });
+        Route::get('/quote_search', [QuoteBornController::class, 'quote_search'])->name('quote_search');
+        Route::get('/search_quote', [QuoteBornController::class, 'search_quote'])->name('search_quote');
+        Route::get('/quota_export_excel', [QuoteBornController::class, 'quota_export_excel'])->name('quota_export_excel');
+    });
 
-        Route::group(['prefix' => 'scan','as'=>'scan.'], function () {
-
-            Route::get('/scan_death_file', [ScanfileController::class, 'scan_death_file'])->name('scan_death_file');
-            Route::post('/upload', [ScanfileController::class, 'upload'])->name('upload');
-            Route::post('/savetofile', [ScanfileController::class, 'savetofile'])->name('savetofile');
-
-
-
-
-        });
-        Route::group(['prefix' => 'born','as'=>'born.'], function () {
-            Route::get('/', [BornController::class, 'add_born'])->name('add_born');
-            Route::get('/new_born_search', [BornController::class, 'new_born_search'])->name('new_born_search');
-            Route::get('/born_search', [BornController::class, 'born_search'])->name('born_search');
-            Route::post('/getBornResult', [BornController::class,'getBornResult'])->name('getBornResult');
-            Route::post('/getBornInfo', [BornController::class,'getBornInfo'])->name('getBornInfo');
-            Route::post('/is_born_found', [BornController::class,'is_born_found'])->name('is_born_found');
-            Route::post('/getBornInfoByNo', [BornController::class,'getBornInfoByNo'])->name('getBornInfoByNo');
-            Route::post('/getBornInfoByCode', [BornController::class,'getBornInfoByCode'])->name('getBornInfoByCode');
-            Route::post('/getBornInfoByCodeNo', [BornController::class,'getBornInfoByCodeNo'])->name('getBornInfoByCodeNo');
-            Route::post('/update_born_info', [BornController::class, 'update_born_info'])->name('update_born_info');
-
-            Route::get('/export_excel', [BornController::class, 'export_excel'])->name('export_excel');
-            Route::get('/born_export_excel', [BornController::class, 'born_export_excel'])->name('born_export_excel');
-            Route::post('/save_born_info', [BornController::class, 'save_born_info'])->name('save_born_info');
-            Route::post('/getFatherInfoByIdNo', [BornController::class, 'getFatherInfoByIdNo'])->name('getFatherInfoByIdNo');
-            Route::post('/getMotherInfoByIdNo', [BornController::class, 'getMotherInfoByIdNo'])->name('getMotherInfoByIdNo');
-            Route::post('/ADD_BORN_FATHER_DATA', [BornController::class, 'ADD_BORN_FATHER_DATA'])->name('ADD_BORN_FATHER_DATA');
-            Route::post('/update_father_info', [BornController::class, 'update_father_info'])->name('update_father_info');
-            Route::post('/update_mother_info', [BornController::class, 'update_mother_info'])->name('update_mother_info');
-            Route::post('/ADD_BORN_MOTHER_DATA', [BornController::class, 'ADD_BORN_MOTHER_DATA'])->name('ADD_BORN_MOTHER_DATA');
-            Route::post('/save_born_details_info', [BornController::class, 'save_born_details_info'])->name('save_born_details_info');
-            Route::get('/insert_new_born', [BornController::class, 'insert_new_born'])->name('insert_new_born');
-            Route::get('/GET_BORNS_DATE', [BornController::class, 'GET_BORNS_DATE'])->name('GET_BORNS_DATE');
-            Route::get('/getBorn_Code', [BornController::class, 'getBorn_Code'])->name('getBorn_Code');
-            Route::get('/update_born/{ID_NO}', [BornController::class, 'update_born'])->name('update_born');
-            Route::get('/Daily_Form', [BornController::class, 'Daily_Form'])->name('Daily_Form');
-            Route::post('/check_born_id', [BornController::class,'check_born_id'])->name('check_born_id');
-            Route::post('/check_born_date', [BornController::class,'check_born_date'])->name('check_born_date');
-            Route::post('/check_born_count', [BornController::class,'check_born_count'])->name('check_born_count');
-            Route::get('/add_new_born', [BornController::class,'add_new_born'])->name('add_new_born');
-            Route::post('/check_record_born', [BornController::class, 'check_record_born'])->name('check_record_born');
-
-            Route::post('/save_all_born_info', [BornController::class, 'save_all_born_info'])->name('save_all_born_info');
-            Route::get('/new_order_quote', [QuoteBornController::class,'new_order_quote'])->name('new_order_quote');
-            Route::get('/approve_quote_request', [QuoteBornController::class,'approve_quote_request'])->name('approve_quote_request');
-            Route::get('/release_requests', [QuoteBornController::class,'release_requests'])->name('release_requests');
-            Route::post('/store', [QuoteBornController::class, 'store'])->name('store');
-            Route::get('/search', [QuoteBornController::class, 'search'])->name('search');
-            Route::post('/approve', [QuoteBornController::class, 'approve'])->name('approve');
-            Route::post('/cancel', [QuoteBornController::class, 'cancel'])->name('cancel');
-            Route::get('/search_release', [QuoteBornController::class, 'search_release'])->name('search_release');
-            Route::post('/release', [QuoteBornController::class, 'release'])->name('release');
-
-            Route::get('/quote_search', [QuoteBornController::class,'quote_search'])->name('quote_search');
-            Route::get('/search_quote', [QuoteBornController::class, 'search_quote'])->name('search_quote');
-            Route::get('/quota_export_excel', [QuoteBornController::class, 'quota_export_excel'])->name('quota_export_excel');
-
-
-        });
-
-        Route::group(['prefix' => 'print-logs','as'=>'print_logs.'], function () {
-            Route::get('/', [Print_logController::class, 'index'])->name('index');
-            Route::post('/getprintResult', [Print_logController::class,'getprintResult'])->name('getprintResult');
-
-        });
-
+    Route::group(['prefix' => 'print-logs', 'as' => 'print_logs.'], function () {
+        Route::get('/', [Print_logController::class, 'index'])->name('index');
+        Route::post('/getprintResult', [Print_logController::class, 'getprintResult'])->name('getprintResult');
+    });
 });
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
@@ -305,14 +302,8 @@ Route::post('/tab-logout', [LoginController::class, 'tabLogout'])
 
 Route::get('/icd-codes', [ICDCodeController::class, 'index'])->name('icd.index');
 Route::get('/icd-codes/children/{id}', [ICDCodeController::class, 'fetchChildren'])->name('icd.fetchChildren');
-Route::get('/logout-all-users', function() {
+Route::get('/logout-all-users', function () {
     DB::table('SESSIONS')->delete();
     DB::table('USER_TB')->update(['CURRENT_DEVICE_TOKEN' => null]);
     return 'تم تسجيل خروج جميع المستخدمين';
 });
-
-
-
-
-
-

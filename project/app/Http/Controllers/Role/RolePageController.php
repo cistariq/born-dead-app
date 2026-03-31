@@ -42,15 +42,23 @@ class RolePageController extends Controller
             $data['name'] = $request->page_name;
             $data['url'] = $request->p_url;
             $data['follow_to_id'] = $request->follow_to_id;
+            $data['notes'] = '';
+
+
             if($request->page_id){
                 $role_page = RolePage::findOrFail($request->page_id);
+            $data['updated_at'] = now();
                 $role_page->update($data);
             }else{
                 $data['insert_user_id'] = Auth()->id();
+            $data['created_at'] = now();
+            $data['updated_at'] = now();
                 RolePage::create($data);
             }
 
+
         }catch (\Exception $exception){
+           // dd($exception);
             return Response::json(array('success' => false,'results'=>['message' => $exception.'يوجد خطأ في عملية الحفظ']));
         }
         return Response::json(array('success' => true,'results'=>['message' => 'تمت عملية الحفظ بنجاح']));

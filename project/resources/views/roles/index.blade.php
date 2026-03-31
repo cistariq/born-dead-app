@@ -2,6 +2,7 @@
 @section('title', 'شاشات النظام')
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 <!--begin::Card-->
 <div class="card">
@@ -80,6 +81,7 @@
                         <div class="modal-body scroll-y mx-5 mx-xl-15 my-7">
                             <!--begin::Form-->
                             <form id="role_page_form" class="form">
+                                 @csrf
                                 <!--begin::Scroll-->
                                 <div class="d-flex flex-column scroll-y me-n7 pe-7" id="kt_modal_role_page_scroll" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_modal_role_page_header" data-kt-scroll-wrappers="#kt_modal_role_page_scroll" data-kt-scroll-offset="300px">
                                     <!--begin::Input group-->
@@ -298,10 +300,14 @@ $(document).ready(function() {
         var url = "{{route('roles.store')}}";
         $.ajax({
             url: url,
-            type:'json',
+            dataType:'json',
             method: 'post',
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
             data: {'page_name' : page_name,'follow_to_id':follow_to_id, 'p_url':p_url,'page_id':page_id },
         }).done(function (response) {
+            console.log($('meta[name="csrf-token"]').attr('content'));
             console.log(response);
             if(response.success){
                 if(response.success == 1){

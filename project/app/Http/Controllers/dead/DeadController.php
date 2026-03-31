@@ -35,7 +35,10 @@ use App\Http\Traits\DeadDataTrait;
 use App\Http\Traits\DeathDataTrait;
 use App\Http\Traits\SendSmsTrait;
 use App\Http\Traits\CheckDeadTrait;
-
+use Illuminate\Support\Facades\Auth;
+use App\Jobs\CheckExcelFileJob;
+use App\Imports\DeathImport;
+use App\Exports\DeathExport;
 
 
 use Illuminate\Support\Facades\Storage;
@@ -52,6 +55,7 @@ class DeadController extends Controller
 {
     use DeadDataTrait;
     use DeathDataTrait;
+    // use CheckDeathTrait;
 
     use SendSmsTrait;
     use CheckDeadTrait;
@@ -92,6 +96,11 @@ class DeadController extends Controller
     {
 
         return view('dead.citizen_status_search');
+    }
+    public function all_citizen_status_search()
+    {
+
+        return view('dead.all_citizen_status_search');
     }
 
     public function check_citizen_id(Request $request)
@@ -136,8 +145,7 @@ class DeadController extends Controller
 
             $deadDate = Carbon::parse($deathData[0]['DEAD_DOD'])->format('Y-m-d');
             //dd($deadDate);
-             $deathData[0]['DEAD_DOB'] = Carbon::parse($deathData[0]['DEAD_DOB'])->format('Y-m-d');
-
+            $deathData[0]['DEAD_DOB'] = Carbon::parse($deathData[0]['DEAD_DOB'])->format('Y-m-d');
         }
 
         if (!empty($deathData)) {
@@ -158,9 +166,13 @@ class DeadController extends Controller
             ]);
             /************ فحص سجلات الوفاة من المستشفيات ************/
             $check = $this->check_dead_records($fakeRequest)->getData(true);
+            // print_r($check);exit;
+
             $resultOut = $check['data']['data']['RESULT_OUT'] ?? null;
             $hos_name  = $check['data']['data']['RESULT_DEATH_HOS'] ?? null;
+            $death_date  = $check['data']['data']['RESULT_DEATH_DATE'] ?? null;
 
+            //print_r($check);exit;
             switch ($resultOut) {
                 case 0:
                     // ✔ على قيد الحياة
@@ -171,7 +183,7 @@ class DeadController extends Controller
                 case 1:
                     // ✔ متوفي داخل المستشفى ولم يُستكمل الإشعار
                     $status  = 'pending_death';
-                    $message = "المريض متوفي داخل المستشفى ($hos_name) ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+                    $message = "متوفي داخل المستشفى ($hos_name) بتاريخ $death_date ،  ولم يتم استكمال إجراءات التسجيل";
                     break;
 
                 default:
@@ -358,6 +370,7 @@ class DeadController extends Controller
             $check = $this->check_dead_records($request)->getData(true);
             $resultOut = $check['data']['data']['RESULT_OUT'] ?? null;
             $hos_name = $check['data']['data']['RESULT_DEATH_HOS'] ?? null;
+            $death_date  = $check['data']['data']['RESULT_DEATH_DATE'] ?? null;
 
             switch ($resultOut) {
                 case 0:
@@ -367,7 +380,9 @@ class DeadController extends Controller
 
                 case 1:
                     // ✔ متوفي داخل المستشفى ولم يُستكمل الإشعار
-                    $message = "المريض متوفي داخل المستشفى ($hos_name) ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+                    // $message = "المريض متوفي داخل المستشفى ($hos_name) ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+                    $message = "متوفي داخل المستشفى ($hos_name) بتاريخ $death_date ،  ولم يتم استكمال إجراءات التسجيل";
+
                     break;
 
                 default:
@@ -516,6 +531,7 @@ class DeadController extends Controller
             $check = $this->check_dead_records($request)->getData(true);
             $resultOut = $check['data']['data']['RESULT_OUT'] ?? null;
             $hos_name = $check['data']['data']['RESULT_DEATH_HOS'] ?? null;
+            $death_date  = $check['data']['data']['RESULT_DEATH_DATE'] ?? null;
 
             switch ($resultOut) {
                 case 0:
@@ -523,7 +539,9 @@ class DeadController extends Controller
                     break;
 
                 case 1:
-                    $message = "المريض متوفي داخل المستشفى ($hos_name) ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+                    //  $message = "المريض متوفي داخل المستشفى ($hos_name) ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+                    $message = "متوفي داخل المستشفى ($hos_name) بتاريخ $death_date ،  ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+
                     break;
                 default:
                     $message = "حالة غير محددة للبيانات";
@@ -1195,7 +1213,7 @@ class DeadController extends Controller
         }
 
         /* ================= Oracle Returned Data ================= */
-        if (!empty($data) && !empty($data['DEAD_FATHER_NAME_AR'])) {
+        if (!empty($data) && !empty($data['DEAD_FATHER_NAME_AR']) && !empty($data['DEAD_GRANDFATHER_NAME_AR'])) {
 
             $this->logSearch('CITZN_API', $idNo);
 
@@ -1622,5 +1640,486 @@ class DeadController extends Controller
             //$exception->getTraceAsString()
         }
         return Response::json(array('success' => true, 'results' =>  'تمت عملية الحذف بنجاح'));
+    }
+
+    public function check_citizen_id_api(Request $request)
+    {
+        $request->validate([
+            'citizen_id' => 'required|digits:9',
+            'employee_id' => 'required|digits:9',
+        ]);
+
+        // حقن المستخدم مؤقتًا داخل Auth
+        $user = User::where('user_id_no', $request->employee_id)->first();
+
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'رقم الموظف غير موجود'
+            ], 404);
+        }
+
+        Auth::login($user);
+
+        // الآن استدعِ نفس الدالة القديمة بدون أي تعديل
+        return $this->check_citizen_id(new Request([
+            'P_CITIZEN_ID' => $request->citizen_id
+        ]));
+    }
+
+
+    // public function check_excel_file(Request $request)
+    // {
+    //     $request->validate([
+    //         'excel_file' => 'required|file|mimes:xlsx,xls',
+    //     ]);
+
+    //     $rows = Excel::toCollection(null, $request->file('excel_file'))[0];
+
+    //     CheckExcelFileJob::dispatch($rows);
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'تم رفع الملف، جاري الفحص في الخلفية...'
+    //     ]);
+    // }
+    public function check_excel_file(Request $request)
+    {
+        set_time_limit(0);
+        ini_set('memory_limit', '4096M');
+
+        $request->validate([
+            'excel_file' => 'required|file|mimes:xlsx,xls',
+        ]);
+
+        $rows = Excel::toCollection(null, $request->file('excel_file'))[0];
+
+        if ($rows->count() < 1) {
+            return response()->json([
+                'success' => false,
+                'message' => 'الملف فارغ أو غير صالح',
+            ], 422);
+        }
+
+        $results = [];
+
+        foreach ($rows as $index => $row) {
+
+            $citizenId = trim((string) ($row[0] ?? ''));
+            if (($citizenId === '') || ($index === 0)) {
+                continue;
+            }
+            $fullName  = trim((string) ($row[1] ?? ''));
+            //dd($row->toArray());
+            // رقم هوية غير صالح
+            if (!$citizenId || !is_numeric($citizenId) || strlen($citizenId) != 9) {
+                $results[] = [
+                    'CITIZEN_ID'   => $citizenId,
+                    'FULL_NAME'   => $fullName,
+                    'STATUS_TEXT' => 'رقم هوية غير صالح',
+                    'NOTE'        => 'تم تخطي السجل',
+                ];
+                continue;
+            }
+            $idNo = $citizenId;
+
+            /************ فحص صحة رقم الهوية ************/
+            if (DEADS_TB::CHECK_ID($idNo) != 1) {
+                $results[] = [
+                    'CITIZEN_ID'   => $idNo,
+                    'FULL_NAME'   => $fullName,
+                    'STATUS_TEXT' => 'رقم هوية غير صحيح',
+                    'NOTE'        => '',
+                ];
+                continue;
+            }
+
+            /************ البحث في جدول الوفيات ************/
+            $deathData = DEADS_TB::GET_DEAD_INFO_BY_ID($idNo);
+            // dd($deathData);
+            if (!empty($deathData)) {
+
+                $code = $deathData[0]['DEAD_MARTIAL_STATUS_CD'] ?? null;
+                $status = C_MARTIAL_STATUS_TB::where('MS_CODE', $code)->first();
+                $maritalStatus = $status ? $status->ms_name_ar : '';
+
+                $dod = !empty($deathData[0]['DEAD_DOD'])
+                    ? Carbon::parse($deathData[0]['DEAD_DOD'])->format('Y-m-d')
+                    : '';
+
+                $dob = !empty($deathData[0]['DEAD_DOB'])
+                    ? Carbon::parse($deathData[0]['DEAD_DOB'])->format('Y-m-d')
+                    : '';
+
+                $results[] = [
+                    'CITIZEN_ID'     => $idNo,
+                    'FULL_NAME'     => $fullName,
+                    'DEAD_SEX_CD'   => $deathData[0]['DEAD_SEX_CD'] ?? null,
+                    'DOB'           => $dob,
+                    'MARITAL_STATUS' => $maritalStatus,
+                    'STATUS_TEXT'   => 'متوفي بتاريخ ' . $dod,
+                    'BIRTH_PLACE'   => $deathData[0]['DEAD_D_BIRTH_PLACE'] ?? '',
+                    'NOTE'          => '',
+                ];
+                continue;
+            }
+
+            /************ البحث في جدول المواطنين ************/
+            $citizenData = DEADS_TB::GET_DEAD_CITZN_BY_ID($idNo);
+            //   dd($citizenData);
+            if (!empty($citizenData)) {
+
+                $fakeRequest = new Request(['P_ID' => $idNo]);
+                $check = $this->check_dead_records($fakeRequest)->getData(true);
+
+                $resultOut = $check['data']['data']['RESULT_OUT'] ?? null;
+                $hos_name  = $check['data']['data']['RESULT_DEATH_HOS'] ?? null;
+                $death_date  = $check['data']['data']['RESULT_DEATH_DATE'] ?? null;
+
+                switch ($resultOut) {
+                    case 0:
+                        $statusText = 'على قيد الحياة';
+                        break;
+                    case 1:
+                        $statusText = "متوفي داخل المستشفى ($hos_name) بتاريخ $death_date ،  ولم يتم استكمال إجراءات التسجيل";
+                        break;
+                    default:
+                        $statusText = 'حالة غير محددة';
+                }
+
+                $results[] = [
+                    'CITIZEN_ID'     => $citizenId,
+                    'FULL_NAME'     => $fullName,
+                    'DEAD_SEX_CD'   => $citizenData['DEAD_SEX_CD'] ?? null,
+                    'DOB'           => $citizenData['DEAD_DOB'] ?? '',
+                    'MARITAL_STATUS' => $citizenData['DEAD_MARTIAL_STATUS'] ?? '',
+                    'STATUS_TEXT'   => $statusText,
+                    'BIRTH_PLACE'   => $citizenData['DEAD_BIRTH_PLACE'] ?? '',
+                    'NOTE'          => '',
+                ];
+                continue;
+            }
+            /************ غير موجود ************/
+            $results[] = [
+                'CITIZEN_ID'   => $citizenId,
+                'FULL_NAME'   => $fullName,
+                'STATUS_TEXT' => 'لا توجد بيانات لهذا الرقم',
+                'NOTE'        => '',
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'data'    => $results,
+        ], 200);
+    }
+
+    // =========================
+    // 1. عرض شاشة Excel
+    // =========================
+    public function check_excel()
+    {
+        return view('dead.check_dead_excel');
+    }
+
+    // =========================
+    // 2. فحص ملف Excel (AJAX)
+    // =========================
+    public function checkExcel(Request $request)
+    {
+        $data = Excel::toArray([], $request->file('file'));
+
+        $rows = $data[0] ?? [];
+
+        $ids = [];
+
+        // =========================
+        // قراءة Excel
+        // =========================
+        foreach ($rows as $index => $row) {
+
+            $value = $row[0] ?? null;
+
+            if (!$value) continue;
+
+            // ✅ تجاهل أول صف (الهيدر فقط)
+            if ($index === 0) {
+                continue;
+            }
+
+            // 🔥 تنظيف القيمة
+            $value = trim($value);
+
+            // 🔥 تجاهل أي قيمة غير رقمية (أمان إضافي)
+            if (!is_numeric($value)) {
+                continue;
+            }
+
+            $ids[] = (string) $value;
+        }
+
+        $ids = array_values(array_unique($ids));
+
+        if (empty($ids)) {
+            return response()->json(['data' => []]);
+        }
+
+        // =========================
+        // جلب البيانات من Oracle (حل ORA-01795)
+        // =========================
+        $allData = [];
+
+        foreach (array_chunk($ids, 900) as $chunk) {
+
+            $placeholders = implode(',', array_fill(0, count($chunk), '?'));
+
+            $data = DB::connection('oracle')->select("
+            SELECT DEAD_ID, DEAD_DOD, SOURCE
+            FROM DEADS_TB
+            WHERE DEAD_ID IN ($placeholders)
+        ", array_values($chunk));
+
+            foreach ($data as $row) {
+
+                // 🔥 توحيد المفتاح STRING
+                $id = (string)($row->DEAD_ID ?? $row->dead_id);
+
+                $allData[$id] = $row;
+            }
+        }
+
+        // =========================
+        // تجهيز الرد النهائي
+        // =========================
+        $response = [];
+
+        foreach ($ids as $id) {
+
+            if (isset($allData[$id])) {
+
+                $response[] = [
+                    'id'     => $id,
+                    'status' => 'متوفي',
+                    'type'   => $this->mapType($allData[$id]->source ?? null),
+                    'date'   => $allData[$id]->dead_dod ?? '-',
+                ];
+            } else {
+
+                $response[] = [
+                    'id'     => $id,
+                    'status' => 'على قيد الحياة',
+                    'type'   => '-',
+                    'date'   => '-',
+                ];
+            }
+        }
+
+        return response()->json([
+            'data' => $response
+        ]);
+    }
+    // =========================
+    // 3. تصدير النتائج Excel
+    // =========================
+    public function exportExcel(Request $request)
+    {
+        try {
+
+            $request->validate([
+                'file' => 'required|mimes:xlsx,xls'
+            ]);
+
+            $rows = Excel::toArray([], $request->file('file'))[0] ?? [];
+
+            $ids = [];
+
+            foreach ($rows as $index => $row) {
+
+                if ($index === 0) continue;
+
+                $value = $row[0] ?? null;
+
+                if (!$value) continue;
+
+                $ids[] = trim((string) $value);
+            }
+
+            $ids = array_values(array_unique($ids));
+
+            if (empty($ids)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يوجد بيانات'
+                ], 422);
+            }
+
+            $allData = [];
+
+            foreach (array_chunk($ids, 900) as $chunk) {
+
+                $placeholders = implode(',', array_fill(0, count($chunk), '?'));
+
+                $data = DB::connection('oracle')->select("
+                SELECT DEAD_ID, DEAD_DOD, SOURCE
+                FROM DEADS_TB
+                WHERE DEAD_ID IN ($placeholders)
+            ", $chunk);
+
+                foreach ($data as $row) {
+                    $allData[(string)$row->dead_id] = $row;
+                }
+            }
+
+            $finalData = [];
+
+            foreach ($ids as $id) {
+
+                $data = $allData[$id] ?? null;
+
+                if ($data) {
+                    $finalData[] = [
+                        $id,
+                        'متوفي',
+                        $this->mapType($data->source ?? null),
+                        $data->dead_dod ?? '-',
+                    ];
+                } else {
+                    $finalData[] = [
+                        $id,
+                        'على قيد الحياة',
+                        '-',
+                        '-',
+                    ];
+                }
+            }
+
+            return Excel::download(
+                new DeathExport($finalData),
+                'death_results.xlsx'
+            );
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+    private function mapType($type)
+    {
+        switch ((string)$type) {
+
+            case '0':
+                return 'وفاة طبيعية';
+
+            case '1':
+                return 'شهيد';
+
+            case '2':
+                return 'وفاة طبيعية - لجنة';
+
+            case '3':
+                return 'شهيد غير مباشر';
+
+            default:
+                return 'غير معروف';
+        }
+    }
+    public function update_dead_source()
+    {
+        return view('dead.update_dead_source');
+    }
+    public function searchById(Request $request)
+    {
+        $id = $request->P_ID;
+
+        if (!$id) {
+            return response()->json([
+                'data' => [],
+                'message' => 'رقم الهوية مطلوب'
+            ]);
+        }
+
+        $data = DB::table('deads_tb as d')
+            ->leftJoin('C_ICD_CODE_TB as c', 'c.ICD_CODE', '=', 'd.DEAD_ICD4_CD')
+            ->select(
+                'd.DEAD_CODE',
+                'd.DEAD_ID',
+
+                DB::raw("
+    d.DEAD_FIRST_NAME_AR || ' ' ||
+    d.DEAD_FATHER_NAME_AR || ' ' ||
+    d.DEAD_GRANDFATHER_NAME_AR || ' ' ||
+    d.DEAD_LAST_NAME_AR AS FULL_NAME
+"),
+
+                'd.DEAD_DOD',
+                'd.SOURCE',
+
+                // ✅ ICD
+                DB::raw("NVL(c.ICD_CD, '-') as CAUSE_CODE"),
+                DB::raw("NVL(c.ICD_NAME_EN, 'غير معروف') as DEAD_CAUSE"),
+
+                // ✅ اسم المصدر
+                DB::raw("
+                CASE d.SOURCE
+                    WHEN 0 THEN 'وفاة طبيعية'
+                    WHEN 1 THEN 'شهيد'
+                    WHEN 2 THEN 'وفاة طبيعية - لجنة'
+                    WHEN 3 THEN 'شهيد غير مباشر'
+                    ELSE 'غير معروف'
+                END AS SOURCE_NAME
+            "),
+
+                // ✅ صلاحية التعديل
+                DB::raw("
+                CASE
+                    WHEN d.DEAD_DOD < TO_DATE('2023-10-07','YYYY-MM-DD') THEN 1
+                    ELSE 0
+                END AS ALLOW_EDIT
+            ")
+            )
+            ->where('d.DEAD_ID', $id)
+            ->orderBy('d.DEAD_DOD', 'desc')
+            ->get();
+
+        return response()->json([
+            'data' => $data
+        ]);
+    }
+
+    public function updateSource(Request $request)
+    {
+        $dead = DB::table('DEADS_TB')
+            ->where('DEAD_ID', $request->DEAD_ID)
+            ->first();
+
+        if (!$dead) {
+            return response()->json([
+                'success' => false,
+                'message' => 'السجل غير موجود'
+            ]);
+        }
+//dd($dead);
+        // 🔒 التحقق من التاريخ
+        if ($dead->dead_dod >= date('Y-m-d', strtotime('2023-10-07'))) {
+            return response()->json([
+                'success' => false,
+                'message' => 'غير مسموح بالتعديل بعد هذا التاريخ'
+            ]);
+        }
+
+        DB::table('DEADS_TB')
+            ->where('dead_id',$dead->dead_id)
+            ->update([
+                'source' => $request->SOURCE,
+                'update_reason' => $request->REASON,
+                'updated_by' => auth()->id(), // ⭐ المستخدم الحالي
+                'updated_on' => now()
+            ]);
+
+        return response()->json([
+            'success' => true
+        ]);
     }
 }

@@ -5,7 +5,9 @@ namespace App\Http\Controllers\dead;
 use App\Http\Controllers\Controller;
 use App\Models\DEADS_TB;
 use App\Models\BORNS_INFO_TB;
+use App\Models\Quota;
 use App\Models\C_DETAILS_REFERRAL_TB;
+use App\Models\C_HOSPITAL_TB;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +23,7 @@ class DashboardController extends Controller
 
     public function index(Request $request)
     {
+
         $data['hospitals'] = C_DETAILS_REFERRAL_TB::get();
 
         // ==============================
@@ -91,7 +94,7 @@ class DashboardController extends Controller
         $request->merge(["Death_date_frm" =>  date('d/m/Y')]);
         $request->merge(["Death_date_to" =>  date('d/m/Y')]);
         $Deads = DEADS_TB::GET_COUNT_DEAD($request->all());
-       // dd($Deads);
+        // dd($Deads);
         $chart_data = [];
         $region_data = [];
         foreach ($Deads as $Dead) {
@@ -177,8 +180,8 @@ class DashboardController extends Controller
         $data['chart_data'] = $chart_data;
         $data['region_data'] = $region_data;
         $data['city_data'] = $city_data;
-        //dd($data);
-        return view('dashboard', $data);
+        //   dd($data);
+        return view('dashboard.dashboard', $data);
     }
     public function getStatistics(Request $request)
     {
@@ -189,7 +192,7 @@ class DashboardController extends Controller
             'hosNo'    => 'nullable|exists:C_DETAILS_REFERRAL_TB,DREF_CODE', // تحديد العمود
         ];
         $data = $request->validate($rules);
-       // dd( $request->all());
+        // dd( $request->all());
 
         // تعريف المتغيرات المطلوبة
         $dateFrom = $request->input('dateFrom') . ' 00:00';
@@ -289,5 +292,47 @@ class DashboardController extends Controller
 
         //dd(session()->all());
         return view('dead.welcome');
+    }
+
+    public function borns_dashboard(Request $request)
+    {
+
+        $viewData = [];
+
+        $viewData['hospitals'] = C_HOSPITAL_TB::get();
+    
+     // dd($viewData['hospitals']->toArray());
+
+        return view('dashboard.borns_dashboard', $viewData);
+    }
+
+    public function getbirthStatistics(Request $request)
+    {
+        $request->validate([
+            'P_ENTER_FROM'   => 'required|date',
+            'P_ENTER_TO'     => 'required|date',
+            'hos_no'         => 'nullable|numeric',
+            'birth_place_no' => 'nullable|numeric',
+        ]);
+
+        $data = [
+            'dateFrom'     => $request->P_ENTER_FROM,
+            'dateTo'       => $request->P_ENTER_TO,
+            'hosNo'        => $request->hos_no,
+            'birthPlaceNo' => $request->birth_place_no,
+        ];
+        $chart_data = [];
+        $result = Quota::birthStatistics($data);
+        $bornByhos = $result['hospital'];
+        $chart_data = collect($bornByhos)->map(function ($bornByhos) {
+            return [
+                'name'  => $bornByhos['HOSPITAL'],
+                'total' => $bornByhos['TOTAL'],
+            ];
+        })->toArray();
+
+        $result['chart_data']  = $chart_data;
+
+        return response()->json($result);
     }
 }
