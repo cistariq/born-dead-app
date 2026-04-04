@@ -2108,6 +2108,7 @@ class DeadController extends Controller
                 'message' => 'غير مسموح بالتعديل بعد هذا التاريخ'
             ]);
         }
+        $old_value = $dead->source;
 
         DB::table('DEADS_TB')
             ->where('dead_id',$dead->dead_id)
@@ -2117,6 +2118,17 @@ class DeadController extends Controller
                 'updated_by' => auth()->id(), // ⭐ المستخدم الحالي
                 'updated_on' => now()
             ]);
+
+            $data1['user_id'] = Auth()->id();
+            $data1['ip'] = request()->ip();
+            $data1['id_no'] = $dead->dead_id;
+            $data1['table_name'] = 'deaths_tb';
+            $data1['column_name'] = 'SOURCE';
+            $data1['old_value'] = $old_value;
+            $data1['new_value'] = $request->SOURCE;
+            $data1['type_action'] = 'U';
+
+            Log::create($data1);
 
         return response()->json([
             'success' => true
