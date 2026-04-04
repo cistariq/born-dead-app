@@ -1242,6 +1242,7 @@ class ReportController extends Controller
         $result['list_user'] = DEADS_TB::GET_USER_PROFILE();
 
         $result['old_record'] = $request->all();
+       // dd(Auth()->user());
         $result['user_name'] = Auth()->user()->user_full_name;
         $query = DEADS_TB::GET_Scanned_files_rep($request->all());
 
