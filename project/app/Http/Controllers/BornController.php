@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Models\User;
+use App\Http\Controllers\dead\DeadController;
 
 use Illuminate\Http\Request;
 
@@ -48,25 +49,7 @@ class BornController extends Controller
 
         return view('born.add_born', $data);
     }
-    // public function update_born($P_BI_CODE = null)
-    // {
-    //     if ($P_BI_CODE) {
-    //         $data['P_BI_CODE'] = $P_BI_CODE;
-    //         $data['region'] = C_REGION_TB::get();
-    //         $data['city'] = C_CITY_TB::get();
-    //         $data['jobs'] = C_JOB_TB::get();
-    //         $data['religion'] = C_RELEGION_TB::get();
-    //         $data['hospitals'] = C_DETAILS_REFERRAL_TB::get();
 
-    //         $data['marital_status'] = C_MARTIAL_STATUS_TB::get();
-
-    //         $data['HEALTH_CENTER'] = C_DETAILS_REFERRAL_TB::get();
-
-    //         return view('born.update_born', $data);
-
-    //     }
-    //     return abort(404);
-    // }
 
     public function update_born($P_BI_CODE = null)
     {
@@ -190,26 +173,7 @@ class BornController extends Controller
         );
         echo json_encode($json_data);
     }
-    // public function export_excel(Request $request)
-    // {
 
-    //     ini_set('max_execution_time', -1);
-    //     ini_set('memory_limit', -1);
-    //     $data_res = BORNS_INFO_TB::GET_BORN_DATA_BY_ID($request->P_BORN_CODE, $request->P_FATHER_ID, $request->P_MOTHER_ID, $request->P_FIRST_NAME, $request->P_SECOND_NAME, $request->P_THIRD_NAME, $request->P_LAST_NAME, $request->P_DATE_FROM, $request->P_DATE_TO, $request->P_SEX_NO, $request->P_REGION_NO, $request->P_CITY_NO, $request->P_HOS_NO);
-    // dd($data_res);
-    //     $data1['user_id'] = Auth()->id();
-    //     $data1['ip'] = request()->ip();
-    //     $data1['id_no'] = Auth()->id();
-    //     $data1['table_name'] = 'BORN_DETAILS_TB';
-    //     $data1['column_name'] = 'e';
-    //     $data['old_record'] = $request->all();
-    //     $data1['type_action'] = 'DL';
-    //     Log::create($data1);
-    //     $result = Excel::download(new BornExport($data_res), 'born_excel.csv');
-    //     ob_end_clean();
-
-    //     return $result;
-    // }
 
     function save_born_info(Request $request)
     {
@@ -248,14 +212,9 @@ class BornController extends Controller
         try {
             $query = BORNS_INFO_TB::ADD_BORN_DATA($request->all());
 
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = request()->ip();
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'BORNS_INFO_TB';
-            $data1['column_name'] = 'e';
-            $data['old_record'] = $request->all();
-            $data1['type_action'] = 'I';
-            Log::create($data1);
+            $deadController = new DeadController();
+            $deadController->logSearch('BORNS_INFO_TB', $request->P_BI_ID ?: null, 'B_CODE',json_encode($request->all()) , json_encode($query), 'I');
+
         } catch (\Exception $exception) {
             //DB::rollBack();
 
@@ -284,14 +243,7 @@ class BornController extends Controller
         //dd($FLAG);
         if ($FLAG == 0) {
             $data = BORNS_INFO_TB::GET_FATHER_CITZN_BY_ID($request->P_FATHER_NO);
-            // $data1['user_id'] = Auth()->id();
-            // $data1['ip'] = request()->ip();
-            // $data1['id_no'] = Auth()->id();
-            // $data1['table_name'] = 'CITZN_API';
-            // $data1['column_name'] = null;
-            // $data['old_record'] = $request->all();
-            // $data1['type_action'] = 'S';
-            // Log::create($data1);
+
             $result['fname'] = $data['FIRST_NAME_AR'];
             $result['sname'] = $data['FATHER_NAME_AR'];
             $result['tname'] = $data['GRANDFATHER_NAME_AR'];
@@ -308,14 +260,9 @@ class BornController extends Controller
             $result['sex'] = $data['FATHER_SEX_CD'];
         } else {
             $data = BORNS_INFO_TB::GET_FATHER_DATA_BY_ID($request->P_FATHER_NO);
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = request()->ip();
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'BORN_FATHER_TB';
-            $data1['column_name'] = 'e';
-            $data['old_record'] = $request->all();
-            $data1['type_action'] = 'S';
-            Log::create($data1);
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_FATHER_TB', $request->P_FATHER_NO ?: null, 'FATHER_CODE',null , json_encode($data), 'S');
             if (isset($data['P_FATHER_ID']) && $data['P_FATHER_ID'] != '') {
 
                 $result['fname'] = $data['FIRST_NAME_AR'];
@@ -361,14 +308,9 @@ class BornController extends Controller
         //dd($FLAG);
         if ($FLAG == 0) {
             $data = BORNS_INFO_TB::GET_MOTHER_CITZN_BY_ID($request->P_MOTHER_ID);
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = request()->ip();
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'CITZN_API';
-            $data1['column_name'] = 'e';
-            $data['old_record'] = $request->all();
-            $data1['type_action'] = 'S';
-            Log::create($data1);
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE',null , json_encode($data), 'S');
             $result['fname'] = $data['FIRST_NAME_AR'];
             $result['sname'] = $data['FATHER_NAME_AR'];
             $result['tname'] = $data['GRANDFATHER_NAME_AR'];
@@ -389,14 +331,10 @@ class BornController extends Controller
             $result['sex'] = $data['MOTHER_SEX_CD'];
         } else {
             $data = BORNS_INFO_TB::GET_MOTHER_DATA_BY_ID($request->P_MOTHER_ID);
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = request()->ip();
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'BORN_MOTHER_TB';
-            $data1['column_name'] = 'e';
-            $data['old_record'] = $request->all();
-            $data1['type_action'] = 'S';
-            Log::create($data1);
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE',null , json_encode($data), 'S');
+
             if (isset($data['MOTHER_NUMBER']) && $data['MOTHER_NUMBER'] != '') {
 
                 $result['fname'] = $data['FIRST_NAME_AR'];
@@ -460,14 +398,9 @@ class BornController extends Controller
         $request->merge(["P_FATHER_MODIFIED_BY" => Auth()->id()]);
         try {
             $query = BORNS_INFO_TB::UPDATE_FATHER_DATA($request->all());
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = request()->ip();
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'BORN_FATHER_TB';
-            $data1['column_name'] = 'e';
-            $data['old_record'] = $request->all();
-            $data1['type_action'] = 'U';
-            Log::create($data1);
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_FATHER_TB', $request->P_FATHER_ID ?: null, 'FATHER_CODE',json_encode($request->all()) , json_encode($query), 'U');
         } catch (\Exception $exception) {
             //DB::rollBack();
 
@@ -513,14 +446,9 @@ class BornController extends Controller
         $request->merge(["P_MOTHER_MODIFIED_BY" => Auth()->id()]);
         try {
             $query = BORNS_INFO_TB::UPDATE_MOTHER_DATA($request->all());
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = request()->ip();
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'BORN_MOTHER_TB';
-            $data1['column_name'] = 'e';
-            $data['old_record'] = $request->all();
-            $data1['type_action'] = 'U';
-            Log::create($data1);
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE',json_encode($request->all()) , json_encode($query), 'U');
         } catch (\Exception $exception) {
             //DB::rollBack();
 
@@ -564,14 +492,9 @@ class BornController extends Controller
         //$request->merge(["P_FATHER_CREATED_BY" => Auth()->id()]);
         try {
             $query = BORNS_INFO_TB::ADD_BORN_FATHER_DATA($request->all());
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = request()->ip();
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'BORN_FATHER_TB';
-            $data1['column_name'] = 'e';
-            //  $data['old_record'] = $request->all();
-            $data1['type_action'] = 'I';
-            Log::create($data1);
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_FATHER_TB', $request->P_FATHER_ID ?: null, 'FATHER_CODE',json_encode($request->all()) , json_encode($query), 'I');
         } catch (\Exception $exception) {
             //DB::rollBack();
 
@@ -617,14 +540,9 @@ class BornController extends Controller
         //$request->merge(["P_MOTHER_CREATED_BY" => Auth()->id()]);
         try {
             $query = BORNS_INFO_TB::ADD_BORN_MOTHER_DATA($request->all());
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = request()->ip();
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'BORN_MOTHER_TB';
-            $data1['column_name'] = 'e';
-            // $data['old_record'] = $request->all();
-            $data1['type_action'] = 'I';
-            Log::create($data1);
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE',json_encode($request->all()) , json_encode($query), 'I');
         } catch (\Exception $exception) {
             //DB::rollBack();
 
@@ -687,15 +605,9 @@ class BornController extends Controller
         try {
             $query = BORNS_INFO_TB::ADD_BORN_DETAILS_DATA($request->all());
             $result['B_CODE'] = $query['BI_NUMBER'];
-            // dd($result['B_CODE']);
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = request()->ip();
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'BORN_DETAILS_TB';
-            $data1['column_name'] = 'e';
-            $data['old_record'] = $request->all();
-            $data1['type_action'] = 'I';
-            Log::create($data1);
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_DETAILS_TB', $result['B_CODE'] ?: null, 'B_CODE',json_encode($request->all()) , json_encode($query), 'I');
         } catch (\Exception $exception) {
 
             //DB::rollBack();
@@ -715,14 +627,9 @@ class BornController extends Controller
 
         $data = $request->validate($role);
         $query = BORNS_INFO_TB::GET_BORN_DATE_BY_ID($request->all());
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'BORN_DETAILS_TB';
-        $data1['column_name'] = 'e';
-        $data['old_record'] = $request->all();
-        $data1['type_action'] = 'S';
-        Log::create($data1);
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_DETAILS_TB', $request->F_ID ?: $request->M_ID, 'F_CODE',json_encode($request->all()) , json_encode($query), 'S');
         $result['data'] = [];
         if ($query) {
             $action = '';
@@ -842,14 +749,9 @@ class BornController extends Controller
         $data = $request->validate($role);
 
         $query = BORNS_INFO_TB::GET_BORN_DATA2($request->all());
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'BORN_DETAILS_TB';
-        $data1['column_name'] = 'e';
-        $data['old_record'] = $request->all();
-        $data1['type_action'] = 'S';
-        Log::create($data1);
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_DETAILS_TB', $request->P_BORN_CODE ?: null, 'B_CODE',json_encode($request->all()) , json_encode($query), 'S');
         $count = $query['RESULT_COUNT'];
         $totalData = $count;
         $totalFiltered = $totalData;
@@ -902,15 +804,11 @@ class BornController extends Controller
         $request->merge(["start" => null]);
         $request->merge(["limit" => null]);
         $data_res = BORNS_INFO_TB::GET_BORN_DATA($request->all());
-        //  dd($data_res);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'BORNS_INFO_TB';
-        $data1['column_name'] = ' ';
-        $data['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
+
+
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORNS_INFO_TB', $request->P_BORN_CODE ?: null, 'B_CODE',json_encode($request->all()) , json_encode($data_res), 'DL');
         $result = Excel::download(new BornsExport($data_res), 'borns_excel.xlsx');
         ob_end_clean();
         return $result;
@@ -1004,14 +902,10 @@ class BornController extends Controller
         $request->merge(["P_BI_NOTIFICATION_CREATED_ON" => date('d/m/Y h:i')]);
         try {
             $query = BORNS_INFO_TB::UPDATE_BORN_DATA($request->all());
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = request()->ip();
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'BORN_DETAILS_TB';
-            $data1['column_name'] = 'e';
-            $data['old_record'] = $request->all();
-            $data1['type_action'] = 'U';
-            Log::create($data1);
+
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_DETAILS_TB', $request->P_BORN_CODE ?: null, 'B_CODE',json_encode($request->all()) , json_encode($query), 'U');
             // dd($query);
         } catch (\Exception $exception) {
             //DB::rollBack();
@@ -1171,15 +1065,9 @@ class BornController extends Controller
 
             $query1 = BORNS_INFO_TB::ADD_BORN_DATA($request->all());
 
-            // dd($result['B_CODE']);
-            $data1['user_id'] = Auth()->id();
-            $data1['ip'] = request()->ip();
-            $data1['id_no'] = Auth()->id();
-            $data1['table_name'] = 'BORN_DETAILS_TB';
-            $data1['column_name'] = 'e';
-            $data['old_record'] = $request->all();
-            $data1['type_action'] = 'I';
-            Log::create($data1);
+
+            $deadController = new DeadController();
+            $deadController->logSearch('BORN_DETAILS_TB', $result['B_CODE'] ?: null, 'B_CODE',json_encode($request->all()) , json_encode($query), 'I');
         } catch (\Exception $exception) {
 
             //DB::rollBack();

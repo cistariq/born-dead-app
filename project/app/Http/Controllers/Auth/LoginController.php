@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use App\Http\Controllers\dead\DeadController;
 
 class LoginController extends Controller
 {
@@ -87,16 +88,9 @@ class LoginController extends Controller
                 /** ===============================
                  *  Log User Login
                  * =============================== */
-                $logData = [
-                    'user_id'     => $user->id,
-                    'id_no'       => $user->id,
-                    'ip'          => $request->ip(),
-                    'table_name'  => 'user_tb',
-                    'column_name' => 'user_name',
-                    'old_value'   => $user->user_name,
-                    'type_action' => 'I',
-                ];
-                Log::create($logData);
+                $user = User::where('user_id_no', $user->id)->first();
+                $deadController = new DeadController();
+                $deadController->logSearch('user_tb', $user->id ?: null, 'ID', json_encode($user), null, 'I');
 
                 /** ===============================
                  *  Permissions
@@ -204,17 +198,9 @@ class LoginController extends Controller
         /** ===============================
          *  تسجيل الـ Log
          * =============================== */
-        $logData = [
-            'user_id' => $user->id,
-            'id_no' => $user->id,
-            'ip' => request()->ip(), // استخدام helper request() للحصول على IP
-            'table_name' => 'user_tb',
-            'column_name' => 'user_name',
-            'old_value' => $user->user_name,
-            'type_action' => 'I', // I = Insert / Login
-        ];
-        Log::create($logData);
 
+        $deadController = new DeadController();
+        $deadController->logSearch('user_tb', $user->id ?: null, 'ID', json_encode($user), null, 'I');
         /** ===============================
          *  Permissions
          * =============================== */
@@ -224,23 +210,22 @@ class LoginController extends Controller
 
         return redirect()->route('welcome');
     }
-public function tabLogout(Request $request)
-{
-    if (Auth::check()) {
+    public function tabLogout(Request $request)
+    {
+        if (Auth::check()) {
 
-        // حذف التوكن فقط إذا كان يخص هذا الجهاز
-        DB::table('user_tb')
-            ->where('id', Auth::id())
-            ->where('current_device_token', session('device_token'))
-            ->update(['current_device_token' => null]);
+            // حذف التوكن فقط إذا كان يخص هذا الجهاز
+            DB::table('user_tb')
+                ->where('id', Auth::id())
+                ->where('current_device_token', session('device_token'))
+                ->update(['current_device_token' => null]);
 
-        Auth::logout();
+            Auth::logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
+        return response()->noContent();
     }
-
-    return response()->noContent();
-}
-
 }

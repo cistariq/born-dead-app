@@ -20,6 +20,7 @@ use App\Http\Controllers\ScanfileController;
 use App\Http\Controllers\Print_logController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\user\UserController;
+use App\Http\Controllers\LogsController;
 use App\Http\Middleware\Authenticate;
 use App\Models\CitizenData;
 //use App\Models\Log;
@@ -292,6 +293,13 @@ Route::group(['middleware' => [Authenticate::class]], function () {
     Route::group(['prefix' => 'print-logs', 'as' => 'print_logs.'], function () {
         Route::get('/', [Print_logController::class, 'index'])->name('index');
         Route::post('/getprintResult', [Print_logController::class, 'getprintResult'])->name('getprintResult');
+    });
+
+    Route::group(['prefix' => 'logs', 'as' => 'logs.'], function () {
+        Route::get('/', [LogsController::class, 'index'])->name('index');
+    Route::post('/search', [LogsController::class, 'search'])->name('search');
+
+    Route::post('/export', [LogsController::class, 'export'])->name('export');
     });
 });
 

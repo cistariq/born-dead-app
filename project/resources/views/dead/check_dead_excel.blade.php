@@ -111,7 +111,6 @@
 
 @push('scripts')
     <script>
-
         function check_excel_file() {
 
             let file = $('#excel_file')[0].files[0];
@@ -139,14 +138,14 @@
                     $('#excel_result_data').show();
                     $('#exportExcelBtn').show();
 
-                    let table = $('#excel_result_tb tbody');
-                    table.empty();
+                    let tableBody = $('#excel_result_tb tbody');
+                    tableBody.empty();
 
                     res.data.forEach(function(row) {
 
                         let color = (row.status === 'متوفي') ? 'red' : 'green';
 
-                        table.append(`
+                        tableBody.append(`
                     <tr>
                         <td>${row.id}</td>
                         <td style="color:${color}; font-weight:bold">${row.status}</td>
@@ -154,7 +153,29 @@
                         <td>${row.date ?? '-'}</td>
                     </tr>
                 `);
+                    });
 
+                    // 🔥 مهم جداً: إعادة تهيئة DataTable
+                    if ($.fn.DataTable.isDataTable('#excel_result_tb')) {
+                        $('#excel_result_tb').DataTable().destroy();
+                    }
+
+                    $('#excel_result_tb').DataTable({
+                        pageLength: 10,
+                        ordering: true,
+                        searching: true,
+                        lengthChange: true,
+                        language: {
+                            search: "بحث:",
+                            lengthMenu: "عرض _MENU_ سجل",
+                            info: "عرض _START_ إلى _END_ من _TOTAL_",
+                            paginate: {
+                                first: "الأول",
+                                last: "الأخير",
+                                next: "التالي",
+                                previous: "السابق"
+                            }
+                        }
                     });
                 },
 
@@ -167,76 +188,76 @@
 
 
         // ================= تحميل Excel =================
-$('#exportExcelBtn').on('click', function (e) {
+        $('#exportExcelBtn').on('click', function(e) {
 
-    e.preventDefault(); // 🔴 يمنع إعادة تحميل الصفحة
+            e.preventDefault(); // 🔴 يمنع إعادة تحميل الصفحة
 
-    let file = $('#excel_file')[0].files[0];
+            let file = $('#excel_file')[0].files[0];
 
-    if (!file) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'تنبيه',
-            text: 'الرجاء اختيار ملف'
+            if (!file) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'تنبيه',
+                    text: 'الرجاء اختيار ملف'
+                });
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append('file', file);
+
+            fetch("{{ route('dead.exportExcel') }}", {
+                    method: "POST",
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    body: formData
+                })
+                .then(async (response) => {
+
+                    // إذا في خطأ Laravel (422 / 500)
+                    if (!response.ok) {
+
+                        const error = await response.json().catch(() => null);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'خطأ',
+                            text: error?.message || 'حدث خطأ أثناء التصدير'
+                        });
+
+                        throw new Error('Request failed');
+                    }
+
+                    return response.blob();
+                })
+                .then(blob => {
+
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+
+                    a.href = url;
+                    a.download = 'death_results.xlsx';
+
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+
+                    window.URL.revokeObjectURL(url);
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'تم التصدير',
+                        text: 'تم تحميل الملف بنجاح'
+                    });
+
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
         });
-        return;
-    }
-
-    let formData = new FormData();
-    formData.append('file', file);
-
-    fetch("{{ route('dead.exportExcel') }}", {
-        method: "POST",
-        credentials: 'same-origin',
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        body: formData
-    })
-    .then(async (response) => {
-
-        // إذا في خطأ Laravel (422 / 500)
-        if (!response.ok) {
-
-            const error = await response.json().catch(() => null);
-
-            Swal.fire({
-                icon: 'error',
-                title: 'خطأ',
-                text: error?.message || 'حدث خطأ أثناء التصدير'
-            });
-
-            throw new Error('Request failed');
-        }
-
-        return response.blob();
-    })
-    .then(blob => {
-
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-
-        a.href = url;
-        a.download = 'death_results.xlsx';
-
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-
-        window.URL.revokeObjectURL(url);
-
-        Swal.fire({
-            icon: 'success',
-            title: 'تم التصدير',
-            text: 'تم تحميل الملف بنجاح'
-        });
-
-    })
-    .catch(error => {
-        console.error(error);
-    });
-
-});
 
         // ================= تفريغ الشاشة =================
         function clear_excel_form() {
