@@ -4,6 +4,74 @@
 @include('layouts.header')
 <!--end::Head-->
 <!--begin::Body-->
+<style>
+    /* إزالة الفراغ الأبيض */
+    .menu-sub {
+        overflow: hidden;
+        border-radius: 20px;
+        padding: 0 !important;
+        border: none;
+    }
+
+    /* الهيدر البنفسجي */
+    .user-card-header {
+        background: linear-gradient(135deg, #5b2be0, #7a6cff);
+        padding: 30px 20px 20px;
+        text-align: center;
+        color: #fff;
+    }
+
+    /* صورة المستخدم */
+    .user-card-header .symbol {
+        width: 80px;
+        height: 80px;
+        margin: 0 auto 10px;
+        border-radius: 15px;
+        overflow: hidden;
+        background: #ddd;
+    }
+
+    /* الجزء السفلي */
+    .user-card-body {
+        background: #f5f6fa;
+        padding: 20px;
+        text-align: center;
+    }
+
+    /* زر الحساب */
+    .btn-account {
+        background: #e9ecf3;
+        border-radius: 10px;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    /* زر تسجيل الخروج */
+    .btn-logout {
+        background: #ff4d6d;
+        color: #fff;
+        border-radius: 10px;
+        width: 100%;
+    }
+
+    .user-text {
+        font-family: inherit;
+        /* نفس خط النظام */
+        font-size: 14px;
+        /* حجم موحّد */
+        font-weight: 500;
+        /* وزن متناسق */
+        color: #5e6278;
+        /* نفس لون Metronic */
+        display: inline-block;
+        line-height: 1;
+    }
+
+    .symbol img {
+        border-radius: 50%;
+        object-fit: cover;
+    }
+</style>
 
 <body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="false"
     data-kt-app-sidebar-fixed="false" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true"
@@ -294,44 +362,72 @@
                             <!--begin::User menu-->
                             <div class="app-navbar-item ms-1 ms-lg-3" id="kt_header_user_menu_toggle">
                                 <!--begin::Menu wrapper-->
-                                <div class="cursor-pointer symbol symbol-35px symbol-md-40px"
-                                    data-kt-menu-trigger="click" data-kt-menu-attach="parent"
-                                    data-kt-menu-placement="bottom-end">
-                                    <span class="fw-bold fs-5">
-                                        {{ Auth::user()->user_full_name }}
-                                    </span>
+                                <div class="cursor-pointer d-flex align-items-center" data-kt-menu-trigger="click"
+                                    data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
 
-                                    <!-- هنا تضيف السهم -->
-                                    <i class="bi bi-caret-down-fill ms-2"></i>
+
+                                    <!-- النص -->
+                                    <div class="d-flex align-items-center">
+                                        <span class="fw-semibold me-1">
+                                            أهلاً بك:
+                                        </span>
+
+                                        <span class="fw-bold text-primary">
+                                            {{ Auth::user()->user_full_name }}
+                                        </span>
+                                    </div>
+
+                                    <!-- صورة المستخدم -->
+                                    <div class="symbol symbol-35px ms-3">
+                                        <img src="{{ asset('assets/media/avatars/blank.png') }}" alt="user" />
+                                    </div>
+
                                 </div>
                                 <!--begin::User account menu-->
                                 <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold py-4 fs-6 w-275px"
                                     data-kt-menu="true">
+                                    <!-- الكرت العلوي -->
+                                    <div class="bg-primary text-center text-white p-5 rounded-top">
+                                        <div class="symbol symbol-75px mx-auto mb-3">
+                                            <img src="{{ asset('assets/media/avatars/blank.png') }}"
+                                                alt="user" />
+                                        </div>
 
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-5">
-                                        <a href="{{ route('profile.index') }}" class="menu-link px-5">الملف
-                                            الشخصي</a>
+                                        <div class="fw-bold fs-5">
+                                            {{ Auth::user()->user_full_name }}
+                                        </div>
+
+                                        <div class="fs-7">
+                                            رقم الهوية: {{ Auth::user()->user_id_no }}
+                                        </div>
+
+                                        <div class="fs-7">
+                                            الحالة: موظف
+                                        </div>
                                     </div>
-                                    <!--end::Menu item-->
-
-                                    <!--begin::Menu separator-->
-                                    <div class="separator my-2"></div>
-                                    <!--end::Menu separator-->
 
 
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-5">
-                                        <a href="{{ route('logout') }}" class="menu-link px-5"
-                                            onclick="event.preventDefault();
-                                                document.getElementById('logout-form').submit();">تسجيل
-                                            الخروج</a>
+                                    <div class="p-5 bg-light text-center">
+
+                                        <a href="{{ route('profile.index') }}" class="btn btn-light w-100 mb-3">
+                                            <i class="bi bi-person"></i>
+                                            الملف الشخصي
+                                        </a>
+
+                                        <a href="{{ route('logout') }}" class="btn btn-danger w-100"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                            <i class="bi bi-lock"></i>
+                                            تسجيل خروج
+                                        </a>
+
                                         <form id="logout-form" action="{{ route('logout') }}" method="POST"
                                             class="d-none">
                                             @csrf
                                         </form>
+
                                     </div>
-                                    <!--end::Menu item-->
+
+
                                 </div>
                                 <!--end::User account menu-->
                                 <!--end::Menu wrapper-->

@@ -88,7 +88,9 @@ class LoginController extends Controller
                 /** ===============================
                  *  Log User Login
                  * =============================== */
-                $user = User::where('user_id_no', $user->id)->first();
+
+                $user = User::where('id', $user->id)->first();
+
                 $deadController = new DeadController();
                 $deadController->logSearch('user_tb', $user->id ?: null, 'ID', json_encode($user), null, 'I');
 
