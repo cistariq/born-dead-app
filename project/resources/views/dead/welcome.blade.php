@@ -103,16 +103,18 @@
     </style>
 <div class="top-bar">
     <div class="top-bar-container">
-        <!-- زر اليسار -->
-        <a href="https://chat.whatsapp.com/GuBqC7RjTqO9giL4vHwLgJ?mode=gi_t" target="_blank" class="contact-btn">
-            تواصل الآن
-        </a>
 
         <!-- نص اليمين -->
         <div class="whatsapp-support">
             <span class="title">الدعم الفني عبر واتساب</span>
             <span class="sub">في حال وجود أي مشكلة يمكنك التواصل معنا مباشرة</span>
         </div>
+        <!-- زر اليسار -->
+        <a href="https://chat.whatsapp.com/GuBqC7RjTqO9giL4vHwLgJ?mode=gi_t" target="_blank" class="contact-btn">
+            تواصل الآن
+        </a>
+
+
 
     </div>
 </div>
