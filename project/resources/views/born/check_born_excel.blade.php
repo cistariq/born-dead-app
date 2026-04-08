@@ -112,6 +112,11 @@
 
 @push('scripts')
     <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
         function check_excel_file() {
 
             let file = $('#excel_file')[0].files[0];
@@ -144,13 +149,14 @@
 
                     res.data.forEach(function(row) {
 
-                        let color = (row.status === 'متوفي') ? 'red' : 'green';
+                        let color = (row.status === 'متوفر له إشعار ولادة') ? 'red' : 'green';
 
                         tableBody.append(`
                     <tr>
                         <td>${row.id}</td>
-                        <td style="color:${color}; font-weight:bold">${row.status}</td>
-                        <td>${row.type ?? '-'}</td>
+                        <td>${row.name}</td>
+                        <td style="color:${color}; font-weight:bold">${row.type}</td>
+                        <td>${row.hospital ?? '-'}</td>
                         <td>${row.date ?? '-'}</td>
                     </tr>
                 `);
@@ -210,9 +216,6 @@
             fetch("{{ route('born.exportExcel') }}", {
                     method: "POST",
                     credentials: 'same-origin',
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
                     body: formData
                 })
                 .then(async (response) => {
@@ -239,7 +242,7 @@
                     const a = document.createElement('a');
 
                     a.href = url;
-                    a.download = 'death_results.xlsx';
+                    a.download = 'birth_results.xlsx';
 
                     document.body.appendChild(a);
                     a.click();

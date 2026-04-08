@@ -1223,7 +1223,7 @@ LEFT JOIN C_DETAILS_REFERRAL_TB DR
                 ];
             }
         }
-
+dd($response);
         return response()->json([
             'data' => $response
         ]);
