@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 use App\Http\Controllers\dead\DeadController;
+use App\Exports\BirthExport;
 
 use Illuminate\Http\Request;
 
@@ -1076,4 +1077,289 @@ class BornController extends Controller
         }
         return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية الإدخال بنجاح'], $result));
     }
+
+ // =========================
+    // 1. عرض شاشة Excel
+    // =========================
+    public function check_excel()
+    {
+        return view('born.check_born_excel');
+    }
+
+    // =========================
+    // 2. فحص ملف Excel (AJAX)
+    // =========================
+    public function checkExcel(Request $request)
+    {
+        $data = Excel::toArray([], $request->file('file'));
+
+        $rows = $data[0] ?? [];
+
+        $ids = [];
+
+        // =========================
+        // قراءة Excel
+        // =========================
+        foreach ($rows as $index => $row) {
+
+            $value = $row[0] ?? null;
+
+            if (!$value) continue;
+
+            // ✅ تجاهل أول صف (الهيدر فقط)
+            if ($index === 0) {
+                continue;
+            }
+
+            // 🔥 تنظيف القيمة
+            $value = trim($value);
+
+            // 🔥 تجاهل أي قيمة غير رقمية (أمان إضافي)
+            if (!is_numeric($value)) {
+                continue;
+            }
+
+            $ids[] = (string) $value;
+        }
+
+        $ids = array_values(array_unique($ids));
+
+        if (empty($ids)) {
+            return response()->json(['data' => []]);
+        }
+
+        // =========================
+        // جلب البيانات من Oracle (حل ORA-01795)
+        // =========================
+        $allData = [];
+
+        foreach (array_chunk($ids, 900) as $chunk) {
+
+            $placeholders = implode(',', array_fill(0, count($chunk), '?'));
+
+            $data = DB::connection('oracle')->select("
+            SELECT
+    BI.BI_ID,
+    BI.BI_FIRST_NAME,
+    BI.BI_SEX_CD,
+    S.SEX_NAME_AR,
+
+    BD.BORN_DETAILS_BIRTH_PLACE_CD,
+    BD.BORN_DETAILS_DELIVERY_DATE,
+    BD.BORN_DETAILS_FATH_CD,
+    BD.BORN_DETAILS_MOTHER_CD,
+    DR.DREF_NAME_AR
+
+    F.FATHER_ID,
+    F.FATHER_FIRST_NAME_AR,
+    F.FATHER_FATHER_NAME_AR,
+    F.FATHER_LAST_NAME_AR,
+
+    M.MOTHER_ID,
+    M.MOTHER_FIRST_NAME_AR,
+    M.MOTHER_FATHER_NAME_AR,
+    M.MOTHER_GRANDFATHER_NAME_AR,
+    M.MOTHER_LAST_NAME_AR
+
+FROM BORNS_INFO_TB BI
+
+LEFT JOIN BORN_DETAILS_TB BD
+    ON BI.BI_ADMISSION_CD = BD.BORN_DETAILS_CODE
+
+LEFT JOIN BORN_FATHER_TB F
+    ON BD.BORN_DETAILS_FATH_CD = F.FATHER_CODE
+
+LEFT JOIN BORN_MOTHER_TB M
+    ON BD.BORN_DETAILS_MOTHER_CD = M.MOTHER_CODE
+
+LEFT JOIN C_SEX_TB S
+    ON BI.BI_SEX_CD = S.SEX_CODE
+
+LEFT JOIN C_DETAILS_REFERRAL_TB DR
+    ON BI.BORN_DETAILS_BIRTH_PLACE_CD = DR.DREF_CODE
+
+
+            WHERE BI.BI_ID IN ($placeholders)
+        ", array_values($chunk));
+
+            foreach ($data as $row) {
+
+                // 🔥 توحيد المفتاح STRING
+                $id = (string)($row->BI_ID ?? $row->bi_id);
+
+                $allData[$id] = $row;
+            }
+        }
+
+        // =========================
+        // تجهيز الرد النهائي
+        // =========================
+        $response = [];
+
+        foreach ($ids as $id) {
+
+            if (isset($allData[$id])) {
+
+                $response[] = [
+                    'id'     => $id,
+                    'name' => trim(
+                        ($allData[$id]->bi_first_name ?? '') . ' ' .
+                        ($allData[$id]->father_first_name_ar ?? '') . ' ' .
+                        ($allData[$id]->father_father_name_ar ?? '') . ' ' .
+                        ($allData[$id]->father_last_name_ar ?? '')
+                    ),
+                    'type'   => 'متوفر له إشعار ولادة',
+                    'birth_place'   => $allData[$id]->DREF_NAME_AR ?? '-',
+                    'date'   => $allData[$id]->born_details_delivery_date ?? '-',
+                ];
+            } else {
+
+                $response[] = [
+                    'id'     => $id,
+                    'name' => 'غير معروف',
+                    'type'   => '-',
+                    'birth_place'   => '-',
+                    'date'   => '-',
+                ];
+            }
+        }
+
+        return response()->json([
+            'data' => $response
+        ]);
+    }
+    // =========================
+    // 3. تصدير النتائج Excel
+    // =========================
+    public function exportExcel(Request $request)
+    {
+        try {
+
+            $request->validate([
+                'file' => 'required|mimes:xlsx,xls'
+            ]);
+
+            $rows = Excel::toArray([], $request->file('file'))[0] ?? [];
+
+            $ids = [];
+
+            foreach ($rows as $index => $row) {
+
+                if ($index === 0) continue;
+
+                $value = $row[0] ?? null;
+
+                if (!$value) continue;
+
+                $ids[] = trim((string) $value);
+            }
+
+            $ids = array_values(array_unique($ids));
+
+            if (empty($ids)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يوجد بيانات'
+                ], 422);
+            }
+
+            $allData = [];
+
+            foreach (array_chunk($ids, 900) as $chunk) {
+
+                $placeholders = implode(',', array_fill(0, count($chunk), '?'));
+
+                $data = DB::connection('oracle')->select("
+                SELECT BI.BI_ID,
+    BI.BI_FIRST_NAME,
+    BI.BI_SEX_CD,
+    S.SEX_NAME_AR,
+
+    BD.BORN_DETAILS_BIRTH_PLACE_CD,
+    BD.BORN_DETAILS_DELIVERY_DATE,
+    BD.BORN_DETAILS_FATH_CD,
+    BD.BORN_DETAILS_MOTHER_CD,
+    DR.DREF_NAME_AR
+
+    F.FATHER_ID,
+    F.FATHER_FIRST_NAME_AR,
+    F.FATHER_FATHER_NAME_AR,
+    F.FATHER_LAST_NAME_AR,
+
+    M.MOTHER_ID,
+    M.MOTHER_FIRST_NAME_AR,
+    M.MOTHER_FATHER_NAME_AR,
+    M.MOTHER_GRANDFATHER_NAME_AR,
+    M.MOTHER_LAST_NAME_AR
+
+FROM BORNS_INFO_TB BI
+
+LEFT JOIN BORN_DETAILS_TB BD
+    ON BI.BI_ADMISSION_CD = BD.BORN_DETAILS_CODE
+
+LEFT JOIN BORN_FATHER_TB F
+    ON BD.BORN_DETAILS_FATH_CD = F.FATHER_CODE
+
+LEFT JOIN BORN_MOTHER_TB M
+    ON BD.BORN_DETAILS_MOTHER_CD = M.MOTHER_CODE
+
+LEFT JOIN C_SEX_TB S
+    ON BI.BI_SEX_CD = S.SEX_CODE
+
+LEFT JOIN C_DETAILS_REFERRAL_TB DR
+    ON BI.BORN_DETAILS_BIRTH_PLACE_CD = DR.DREF_CODE
+
+
+            WHERE BI.BI_ID IN ($placeholders)
+            ", $chunk);
+
+                foreach ($data as $row) {
+                    $allData[(string)$row->bi_id] = $row;
+                }
+            }
+
+            $finalData = [];
+
+            foreach ($ids as $id) {
+
+                $data = $allData[$id] ?? null;
+
+                if ($data) {
+                    $finalData[] = [
+                        $id,
+                         trim(
+                            ($data->bi_first_name ?? '') . ' ' .
+                            ($data->father_first_name_ar ?? '') . ' ' .
+                            ($data->father_father_name_ar ?? '') . ' ' .
+                            ($data->father_last_name_ar ?? '')
+                        ),
+                        'متوفر له إشعار ولادة',
+                        $data->dref_name_ar ?? '-',
+                        $data->born_details_delivery_date ?? '-',
+                    ];
+                } else {
+                    $finalData[] = [
+                        $id,
+                        'غير معروف',
+                        '-',
+                        '-',
+                        '-',
+                    ];
+                }
+            }
+
+            return Excel::download(
+                new BirthExport($finalData),
+                'born_results.xlsx'
+            );
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
 }

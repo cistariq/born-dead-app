@@ -277,6 +277,11 @@ Route::group(['middleware' => [Authenticate::class]], function () {
         Route::get('/quote_search', [QuoteBornController::class, 'quote_search'])->name('quote_search');
         Route::get('/search_quote', [QuoteBornController::class, 'search_quote'])->name('search_quote');
         Route::get('/quota_export_excel', [QuoteBornController::class, 'quota_export_excel'])->name('quota_export_excel');
+
+
+        Route::get('/check_excel', [BornController::class, 'check_excel'])->name('check_excel');
+        Route::post('/checkExcel', [BornController::class, 'checkExcel'])->name('checkExcel');
+        Route::post('/exportExcel', [BornController::class, 'exportExcel'])->name('exportExcel');
     });
 
     Route::group(['prefix' => 'print-logs', 'as' => 'print_logs.'], function () {
