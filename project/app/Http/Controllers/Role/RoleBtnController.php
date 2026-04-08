@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\dead\DeadController;
 
 class RoleBtnController extends Controller
 {
@@ -73,19 +74,13 @@ class RoleBtnController extends Controller
         $roleBtn = RoleBtnUser::where('user_id',$request->user_id)
             ->where('role_btns_id',$request->role_btn_id)
             ->first();
-        if($roleBtn){
-            $data['column_name'] = 'id';
-            $data['old_value'] = $roleBtn->user_id;
-            $data['new_value'] = $roleBtn->role_btns_id;
-            $data['user_id'] = Auth()->id();
-            $data['id_no'] = $roleBtn->id;
-            $data['ip'] = request()->ip();
-            $data['table_name'] = 'role_btn_users';
-           // $data['old_record'] = $roleBtn;
-            $data['type_action'] = 'D';
+          //  dd($roleBtn);
 
+        if($roleBtn){
+
+                $deadController = new DeadController();
+                $deadController->logSearch('role_btn_users', $roleBtn->id ?: null, 'ID', json_encode($roleBtn->user_id), json_encode($roleBtn->role_btns_id), 'D');
             $roleBtn->delete();
-            Log::create($data);
             return Response::json(array('success' => true,'results'=>'تمت عملية سحب الصلاحية من المستخدم بنجاح'));
         }else{
             $data['user_id']= $request->user_id;
@@ -94,18 +89,10 @@ class RoleBtnController extends Controller
            // dd($data);
             $rolePage = RoleBtnUser::create($data);
            // dd($rolePage);
-            $data = [];
-            $data['column_name'] = 'id';
-            $data['old_value'] = $rolePage->user_id;
-            $data['new_value'] = $rolePage->role_pages_id;
-            $data['user_id'] = Auth()->id();
-            $data['id_no'] = $rolePage->id;
-            $data['ip'] = request()->ip();
-            $data['table_name'] = 'role_btn_users';
-            $data['type_action'] = 'I';
 
-            Log::create($data);
 
+                $deadController = new DeadController();
+                $deadController->logSearch('role_btn_users', $rolePage->id ?: null, 'ID', json_encode($rolePage->user_id), json_encode($rolePage->role_pages_id), 'I');
             return Response::json(array('success' => true,'results'=>'تمت عملية منح الصلاحية من للمستخدم بنجاح'));
         }
     }

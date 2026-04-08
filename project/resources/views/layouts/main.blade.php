@@ -65,11 +65,36 @@
         /* نفس لون Metronic */
         display: inline-block;
         line-height: 1;
+        white-space: nowrap;
+
     }
 
     .symbol img {
         border-radius: 50%;
         object-fit: cover;
+    }
+
+    /* زر التواصل */
+    .contact-btn {
+        background-color: #28a745;
+        color: white;
+        padding: 6px 14px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .contact-btn:hover {
+        background-color: #218838;
+    }
+
+    .whatsapp-support .title {
+        font-size: 13px;
+    }
+
+    .whatsapp-support .sub {
+        font-size: 11px;
     }
 </style>
 
@@ -478,23 +503,7 @@
                                         class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
                                         @yield('title', 'No Tilte')</h1>
                                     <!--end::Title-->
-                                    <!--begin::Breadcrumb-->
-                                    {{-- <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">
-												<a href="{{ route('dead.dashboard') }}" class="text-muted text-hover-primary">Home</a>
-											</li>
-											<!--end::Item-->
-											<!--begin::Item-->
-											<li class="breadcrumb-item">
-												<span class="bullet bg-gray-400 w-5px h-2px"></span>
-											</li>
-											<!--end::Item-->
-											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">Dashboards</li>
-											<!--end::Item-->
-										</ul> --}}
-                                    <!--end::Breadcrumb-->
+
                                 </div>
                                 <!--end::Page title-->
                             </div>
@@ -514,19 +523,33 @@
                     <!--end::Content wrapper-->
                     <!--begin::Footer-->
                     <div id="kt_app_footer" class="app-footer">
-                        <!--begin::Footer container-->
                         <div
                             class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
-                            <!--begin::Copyright-->
+
+                            <!-- اليسار: النص القديم -->
                             <div class="text-dark order-2 order-md-1">
                                 <span class="text-muted fw-semibold me-1">2024&copy;</span>
                                 <a href="" target="_blank"
                                     class="text-gray-800 text-hover-primary">{{ config('app.name') }}</a>
                             </div>
-                            <!--end::Copyright-->
+
+                            <!-- اليمين: الدعم عبر واتساب -->
+                            <div class="d-flex align-items-center gap-3 order-1 order-md-2">
+
+                                <div class="whatsapp-support text-end">
+                                    <span class="title d-block fw-bold">الدعم الفني عبر واتساب</span>
+                                    <span class="sub text-muted small">في حال وجود أي مشكلة يمكنك التواصل معنا
+                                        مباشرة</span>
+                                </div>
+
+                                <a href="https://chat.whatsapp.com/GuBqC7RjTqO9giL4vHwLgJ?mode=gi_t" target="_blank"
+                                    class="contact-btn">
+                                    تواصل الآن
+                                </a>
+
+                            </div>
 
                         </div>
-                        <!--end::Footer container-->
                     </div>
                     <!--end::Footer-->
                 </div>

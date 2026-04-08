@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Response;
+use App\Http\Controllers\dead\DeadController;
 
 class RolePageController extends Controller
 {
@@ -98,34 +99,20 @@ class RolePageController extends Controller
             ->where('role_pages_id',$request->role_id)
             ->first();
         if($rolePage){
-            $data['column_name'] = 'id';
-            $data['old_value'] = $rolePage->user_id;
-            $data['new_value'] = $rolePage->role_pages_id;
-            $data['user_id'] = Auth()->id();
-            $data['id_no'] = $rolePage->id;
-            $data['ip'] = request()->ip();
-            $data['table_name'] = 'role_page_users';
-            $data['type_action'] = 'D';
-           // $data['old_record'] = $rolePage;
+
 
             $rolePage->delete();
-            Log::create($data);
+                $deadController = new DeadController();
+                $deadController->logSearch('role_page_users', $rolePage->id ?: null, 'ID', json_encode($rolePage->user_id), json_encode($rolePage->role_pages_id), 'D');
             return Response::json(array('success' => true,'results'=>'تمت عملية سحب الصلاحية من المستخدم بنجاح'));
         }else{
             $data['user_id']= $request->user_id;
             $data['role_pages_id']= $request->role_id;
             $data['insert_user_id']=Auth()->id();
             $rolePage = RolePageUser::create($data);
-            $data = [];
-            $data['column_name'] = 'id';
-            $data['old_value'] = $rolePage->user_id;
-            $data['new_value'] = $rolePage->role_pages_id;
-            $data['user_id'] = Auth()->id();
-            $data['id_no'] = $rolePage->id;
-            $data['ip'] = request()->ip();
-            $data['table_name'] = 'role_page_users';
-            $data['type_action'] = 'I';
-            Log::create($data);
+
+                $deadController = new DeadController();
+                $deadController->logSearch('role_page_users', $rolePage->id ?: null, 'ID', json_encode($rolePage->user_id), json_encode($rolePage->role_pages_id), 'I');
 
             return Response::json(array('success' => true,'results'=>'تمت عملية منح الصلاحية من للمستخدم بنجاح'));
         }

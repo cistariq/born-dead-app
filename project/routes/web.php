@@ -41,18 +41,7 @@ Route::get('/test', function () {
     //
 });
 
-// Route::get('/test-db', function () {
-//     try {
-//         DB::connection()->getPdo();
-//         return "تم الاتصال بقاعدة البيانات بنجاح!";
-//     } catch (\Exception $e) {
-//         return "خطأ في الاتصال بقاعدة البيانات: " . $e->getMessage();
-//     }
-// });
-// Route::get('/test-log', function () {
-//     Log::channel('citizen')->info('اختبار تسجيل في citizen_log.log');
-//     return 'تم التسجيل!';
-// });
+
 Route::get('/login', [LoginController::class, 'index'])->name('login');
 Route::post('/login', [LoginController::class, 'login'])->name('login.check');
 Route::group(['prefix' => 'login', 'as' => 'login.'], function () {
