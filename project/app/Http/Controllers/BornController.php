@@ -25,6 +25,8 @@ use Illuminate\Validation\Rule;
 use App\Models\User;
 use App\Http\Controllers\dead\DeadController;
 use App\Exports\BirthExport;
+use Illuminate\Support\Facades\DB;
+
 
 use Illuminate\Http\Request;
 
@@ -214,8 +216,7 @@ class BornController extends Controller
             $query = BORNS_INFO_TB::ADD_BORN_DATA($request->all());
 
             $deadController = new DeadController();
-            $deadController->logSearch('BORNS_INFO_TB', $request->P_BI_ID ?: null, 'B_CODE',json_encode($request->all()) , json_encode($query), 'I');
-
+            $deadController->logSearch('BORNS_INFO_TB', $request->P_BI_ID ?: null, 'B_CODE', json_encode($request->all()), json_encode($query), 'I');
         } catch (\Exception $exception) {
             //DB::rollBack();
 
@@ -263,7 +264,7 @@ class BornController extends Controller
             $data = BORNS_INFO_TB::GET_FATHER_DATA_BY_ID($request->P_FATHER_NO);
 
             $deadController = new DeadController();
-            $deadController->logSearch('BORN_FATHER_TB', $request->P_FATHER_NO ?: null, 'FATHER_CODE',null , json_encode($data), 'S');
+            $deadController->logSearch('BORN_FATHER_TB', $request->P_FATHER_NO ?: null, 'FATHER_CODE', null, json_encode($data), 'S');
             if (isset($data['P_FATHER_ID']) && $data['P_FATHER_ID'] != '') {
 
                 $result['fname'] = $data['FIRST_NAME_AR'];
@@ -311,7 +312,7 @@ class BornController extends Controller
             $data = BORNS_INFO_TB::GET_MOTHER_CITZN_BY_ID($request->P_MOTHER_ID);
 
             $deadController = new DeadController();
-            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE',null , json_encode($data), 'S');
+            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE', null, json_encode($data), 'S');
             $result['fname'] = $data['FIRST_NAME_AR'];
             $result['sname'] = $data['FATHER_NAME_AR'];
             $result['tname'] = $data['GRANDFATHER_NAME_AR'];
@@ -334,7 +335,7 @@ class BornController extends Controller
             $data = BORNS_INFO_TB::GET_MOTHER_DATA_BY_ID($request->P_MOTHER_ID);
 
             $deadController = new DeadController();
-            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE',null , json_encode($data), 'S');
+            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE', null, json_encode($data), 'S');
 
             if (isset($data['MOTHER_NUMBER']) && $data['MOTHER_NUMBER'] != '') {
 
@@ -401,7 +402,7 @@ class BornController extends Controller
             $query = BORNS_INFO_TB::UPDATE_FATHER_DATA($request->all());
 
             $deadController = new DeadController();
-            $deadController->logSearch('BORN_FATHER_TB', $request->P_FATHER_ID ?: null, 'FATHER_CODE',json_encode($request->all()) , json_encode($query), 'U');
+            $deadController->logSearch('BORN_FATHER_TB', $request->P_FATHER_ID ?: null, 'FATHER_CODE', json_encode($request->all()), json_encode($query), 'U');
         } catch (\Exception $exception) {
             //DB::rollBack();
 
@@ -449,7 +450,7 @@ class BornController extends Controller
             $query = BORNS_INFO_TB::UPDATE_MOTHER_DATA($request->all());
 
             $deadController = new DeadController();
-            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE',json_encode($request->all()) , json_encode($query), 'U');
+            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE', json_encode($request->all()), json_encode($query), 'U');
         } catch (\Exception $exception) {
             //DB::rollBack();
 
@@ -495,7 +496,7 @@ class BornController extends Controller
             $query = BORNS_INFO_TB::ADD_BORN_FATHER_DATA($request->all());
 
             $deadController = new DeadController();
-            $deadController->logSearch('BORN_FATHER_TB', $request->P_FATHER_ID ?: null, 'FATHER_CODE',json_encode($request->all()) , json_encode($query), 'I');
+            $deadController->logSearch('BORN_FATHER_TB', $request->P_FATHER_ID ?: null, 'FATHER_CODE', json_encode($request->all()), json_encode($query), 'I');
         } catch (\Exception $exception) {
             //DB::rollBack();
 
@@ -543,7 +544,7 @@ class BornController extends Controller
             $query = BORNS_INFO_TB::ADD_BORN_MOTHER_DATA($request->all());
 
             $deadController = new DeadController();
-            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE',json_encode($request->all()) , json_encode($query), 'I');
+            $deadController->logSearch('BORN_MOTHER_TB', $request->P_MOTHER_ID ?: null, 'MOTHER_CODE', json_encode($request->all()), json_encode($query), 'I');
         } catch (\Exception $exception) {
             //DB::rollBack();
 
@@ -608,7 +609,7 @@ class BornController extends Controller
             $result['B_CODE'] = $query['BI_NUMBER'];
 
             $deadController = new DeadController();
-            $deadController->logSearch('BORN_DETAILS_TB', $result['B_CODE'] ?: null, 'B_CODE',json_encode($request->all()) , json_encode($query), 'I');
+            $deadController->logSearch('BORN_DETAILS_TB', $result['B_CODE'] ?: null, 'B_CODE', json_encode($request->all()), json_encode($query), 'I');
         } catch (\Exception $exception) {
 
             //DB::rollBack();
@@ -629,8 +630,8 @@ class BornController extends Controller
         $data = $request->validate($role);
         $query = BORNS_INFO_TB::GET_BORN_DATE_BY_ID($request->all());
 
-            $deadController = new DeadController();
-            $deadController->logSearch('BORN_DETAILS_TB', $request->F_ID ?: $request->M_ID, 'F_CODE',json_encode($request->all()) , json_encode($query), 'S');
+        $deadController = new DeadController();
+        $deadController->logSearch('BORN_DETAILS_TB', $request->F_ID ?: $request->M_ID, 'F_CODE', json_encode($request->all()), json_encode($query), 'S');
         $result['data'] = [];
         if ($query) {
             $action = '';
@@ -751,8 +752,8 @@ class BornController extends Controller
 
         $query = BORNS_INFO_TB::GET_BORN_DATA2($request->all());
 
-            $deadController = new DeadController();
-            $deadController->logSearch('BORN_DETAILS_TB', $request->P_BORN_CODE ?: null, 'B_CODE',json_encode($request->all()) , json_encode($query), 'S');
+        $deadController = new DeadController();
+        $deadController->logSearch('BORN_DETAILS_TB', $request->P_BORN_CODE ?: null, 'B_CODE', json_encode($request->all()), json_encode($query), 'S');
         $count = $query['RESULT_COUNT'];
         $totalData = $count;
         $totalFiltered = $totalData;
@@ -808,8 +809,8 @@ class BornController extends Controller
 
 
 
-            $deadController = new DeadController();
-            $deadController->logSearch('BORNS_INFO_TB', $request->P_BORN_CODE ?: null, 'B_CODE',json_encode($request->all()) , json_encode($data_res), 'DL');
+        $deadController = new DeadController();
+        $deadController->logSearch('BORNS_INFO_TB', $request->P_BORN_CODE ?: null, 'B_CODE', json_encode($request->all()), json_encode($data_res), 'DL');
         $result = Excel::download(new BornsExport($data_res), 'borns_excel.xlsx');
         ob_end_clean();
         return $result;
@@ -906,7 +907,7 @@ class BornController extends Controller
 
 
             $deadController = new DeadController();
-            $deadController->logSearch('BORN_DETAILS_TB', $request->P_BORN_CODE ?: null, 'B_CODE',json_encode($request->all()) , json_encode($query), 'U');
+            $deadController->logSearch('BORN_DETAILS_TB', $request->P_BORN_CODE ?: null, 'B_CODE', json_encode($request->all()), json_encode($query), 'U');
             // dd($query);
         } catch (\Exception $exception) {
             //DB::rollBack();
@@ -1068,7 +1069,7 @@ class BornController extends Controller
 
 
             $deadController = new DeadController();
-            $deadController->logSearch('BORN_DETAILS_TB', $result['B_CODE'] ?: null, 'B_CODE',json_encode($request->all()) , json_encode($query), 'I');
+            $deadController->logSearch('BORN_DETAILS_TB', $result['B_CODE'] ?: null, 'B_CODE', json_encode($request->all()), json_encode($query), 'I');
         } catch (\Exception $exception) {
 
             //DB::rollBack();
@@ -1078,7 +1079,7 @@ class BornController extends Controller
         return Response::json(array('success' => true, 'results' => ['message' => 'تمت عملية الإدخال بنجاح'], $result));
     }
 
- // =========================
+    // =========================
     // 1. عرض شاشة Excel
     // =========================
     public function check_excel()
@@ -1089,150 +1090,121 @@ class BornController extends Controller
     // =========================
     // 2. فحص ملف Excel (AJAX)
     // =========================
-    public function checkExcel(Request $request)
-    {
-        $data = Excel::toArray([], $request->file('file'));
+   public function checkExcel(Request $request)
+{
+    ini_set('memory_limit', '2048M');
+    set_time_limit(300);
 
-        $rows = $data[0] ?? [];
+    // =========================
+    // قراءة Excel (أخف)
+    // =========================
+    $collection = Excel::toCollection(null, $request->file('file'));
+    $rows = $collection[0] ?? collect();
 
-        $ids = [];
+    $ids = [];
 
-        // =========================
-        // قراءة Excel
-        // =========================
-        foreach ($rows as $index => $row) {
+    foreach ($rows as $index => $row) {
 
-            $value = $row[0] ?? null;
+        // تجاهل الهيدر
+        if ($index === 0) continue;
 
-            if (!$value) continue;
+        $value = isset($row[0]) ? trim($row[0]) : null;
 
-            // ✅ تجاهل أول صف (الهيدر فقط)
-            if ($index === 0) {
-                continue;
-            }
+        if (!$value || !is_numeric($value)) continue;
 
-            // 🔥 تنظيف القيمة
-            $value = trim($value);
+        $ids[] = (string)$value;
+    }
 
-            // 🔥 تجاهل أي قيمة غير رقمية (أمان إضافي)
-            if (!is_numeric($value)) {
-                continue;
-            }
+    // إزالة التكرار
+    $ids = array_values(array_unique($ids));
 
-            $ids[] = (string) $value;
-        }
+    if (empty($ids)) {
+        return response()->json(['data' => []]);
+    }
 
-        $ids = array_values(array_unique($ids));
+    // =========================
+    // جلب البيانات من Oracle (محسن)
+    // =========================
+    $allData = [];
 
-        if (empty($ids)) {
-            return response()->json(['data' => []]);
-        }
+    foreach (array_chunk($ids, 900) as $chunk) {
 
-        // =========================
-        // جلب البيانات من Oracle (حل ORA-01795)
-        // =========================
-        $allData = [];
+        $placeholders = implode(',', array_fill(0, count($chunk), '?'));
 
-        foreach (array_chunk($ids, 900) as $chunk) {
-
-            $placeholders = implode(',', array_fill(0, count($chunk), '?'));
-
-            $data = DB::connection('oracle')->select("
+        $results = DB::connection('oracle')->select("
             SELECT
-    BI.BI_ID,
-    BI.BI_FIRST_NAME,
-    BI.BI_SEX_CD,
-    S.SEX_NAME_AR,
+                BI.BI_ID,
+                BI.BI_FIRST_NAME,
+                BD.BORN_DETAILS_DELIVERY_DATE,
+                DR.DREF_NAME_AR,
+                F.FATHER_FIRST_NAME_AR,
+                F.FATHER_FATHER_NAME_AR,
+                F.FATHER_LAST_NAME_AR
+            FROM BORNS_INFO_TB BI
 
-    BD.BORN_DETAILS_BIRTH_PLACE_CD,
-    BD.BORN_DETAILS_DELIVERY_DATE,
-    BD.BORN_DETAILS_FATH_CD,
-    BD.BORN_DETAILS_MOTHER_CD,
-    DR.DREF_NAME_AR
+            LEFT JOIN BORN_DETAILS_TB BD
+                ON BI.BI_ADMISSION_CD = BD.BORN_DETAILS_CODE
 
-    F.FATHER_ID,
-    F.FATHER_FIRST_NAME_AR,
-    F.FATHER_FATHER_NAME_AR,
-    F.FATHER_LAST_NAME_AR,
+            LEFT JOIN BORN_FATHER_TB F
+                ON BD.BORN_DETAILS_FATH_CD = F.FATHER_CODE
 
-    M.MOTHER_ID,
-    M.MOTHER_FIRST_NAME_AR,
-    M.MOTHER_FATHER_NAME_AR,
-    M.MOTHER_GRANDFATHER_NAME_AR,
-    M.MOTHER_LAST_NAME_AR
-
-FROM BORNS_INFO_TB BI
-
-LEFT JOIN BORN_DETAILS_TB BD
-    ON BI.BI_ADMISSION_CD = BD.BORN_DETAILS_CODE
-
-LEFT JOIN BORN_FATHER_TB F
-    ON BD.BORN_DETAILS_FATH_CD = F.FATHER_CODE
-
-LEFT JOIN BORN_MOTHER_TB M
-    ON BD.BORN_DETAILS_MOTHER_CD = M.MOTHER_CODE
-
-LEFT JOIN C_SEX_TB S
-    ON BI.BI_SEX_CD = S.SEX_CODE
-
-LEFT JOIN C_DETAILS_REFERRAL_TB DR
-    ON BI.BORN_DETAILS_BIRTH_PLACE_CD = DR.DREF_CODE
-
+            LEFT JOIN C_DETAILS_REFERRAL_TB DR
+                ON BD.BORN_DETAILS_BIRTH_PLACE_CD = DR.DREF_CODE
 
             WHERE BI.BI_ID IN ($placeholders)
-        ", array_values($chunk));
+        ", $chunk);
 
-            foreach ($data as $row) {
+        foreach ($results as $row) {
+            $id = (string)$row->bi_id;
 
-                // 🔥 توحيد المفتاح STRING
-                $id = (string)($row->BI_ID ?? $row->bi_id);
-
-                $allData[$id] = $row;
-            }
+            $allData[$id] = [
+                'name' => trim(
+                    ($row->bi_first_name ?? '') . ' ' .
+                    ($row->father_first_name_ar ?? '') . ' ' .
+                    ($row->father_father_name_ar ?? '') . ' ' .
+                    ($row->father_last_name_ar ?? '')
+                ),
+                'birth_place' => $row->dref_name_ar ?? '-',
+                'date' => $row->born_details_delivery_date ?? '-',
+            ];
         }
-
-        // =========================
-        // تجهيز الرد النهائي
-        // =========================
-        $response = [];
-
-        foreach ($ids as $id) {
-
-            if (isset($allData[$id])) {
-
-                $response[] = [
-                    'id'     => $id,
-                    'name' => trim(
-                        ($allData[$id]->bi_first_name ?? '') . ' ' .
-                        ($allData[$id]->father_first_name_ar ?? '') . ' ' .
-                        ($allData[$id]->father_father_name_ar ?? '') . ' ' .
-                        ($allData[$id]->father_last_name_ar ?? '')
-                    ),
-                    'type'   => 'متوفر له إشعار ولادة',
-                    'birth_place'   => $allData[$id]->DREF_NAME_AR ?? '-',
-                    'date'   => $allData[$id]->born_details_delivery_date ?? '-',
-                ];
-            } else {
-
-                $response[] = [
-                    'id'     => $id,
-                    'name' => 'غير معروف',
-                    'type'   => '-',
-                    'birth_place'   => '-',
-                    'date'   => '-',
-                ];
-            }
-        }
-dd($response);
-        return response()->json([
-            'data' => $response
-        ]);
     }
+
+    // =========================
+    // تجهيز النتيجة (أسرع)
+    // =========================
+    $response = array_map(function ($id) use ($allData) {
+
+        if (isset($allData[$id])) {
+            return [
+                'id' => $id,
+                'name' => $allData[$id]['name'],
+                'type' => 'متوفر له إشعار ولادة',
+                'birth_place' => $allData[$id]['birth_place'],
+                'date' => $allData[$id]['date'],
+            ];
+        }
+
+        return [
+            'id' => $id,
+            'name' => 'غير معروف',
+            'type' => '-',
+            'birth_place' => '-',
+            'date' => '-',
+        ];
+
+    }, $ids);
+
+    return response()->json([
+        'data' => $response
+    ]);
+}
     // =========================
     // 3. تصدير النتائج Excel
     // =========================
     public function exportExcel(Request $request)
     {
+        ini_set('memory_limit', '2048M');
         try {
 
             $request->validate([
@@ -1279,7 +1251,7 @@ dd($response);
     BD.BORN_DETAILS_DELIVERY_DATE,
     BD.BORN_DETAILS_FATH_CD,
     BD.BORN_DETAILS_MOTHER_CD,
-    DR.DREF_NAME_AR
+    DR.DREF_NAME_AR,
 
     F.FATHER_ID,
     F.FATHER_FIRST_NAME_AR,
@@ -1307,7 +1279,7 @@ LEFT JOIN C_SEX_TB S
     ON BI.BI_SEX_CD = S.SEX_CODE
 
 LEFT JOIN C_DETAILS_REFERRAL_TB DR
-    ON BI.BORN_DETAILS_BIRTH_PLACE_CD = DR.DREF_CODE
+    ON BD.BORN_DETAILS_BIRTH_PLACE_CD = DR.DREF_CODE
 
 
             WHERE BI.BI_ID IN ($placeholders)
@@ -1327,11 +1299,11 @@ LEFT JOIN C_DETAILS_REFERRAL_TB DR
                 if ($data) {
                     $finalData[] = [
                         $id,
-                         trim(
+                        trim(
                             ($data->bi_first_name ?? '') . ' ' .
-                            ($data->father_first_name_ar ?? '') . ' ' .
-                            ($data->father_father_name_ar ?? '') . ' ' .
-                            ($data->father_last_name_ar ?? '')
+                                ($data->father_first_name_ar ?? '') . ' ' .
+                                ($data->father_father_name_ar ?? '') . ' ' .
+                                ($data->father_last_name_ar ?? '')
                         ),
                         'متوفر له إشعار ولادة',
                         $data->dref_name_ar ?? '-',
@@ -1360,6 +1332,4 @@ LEFT JOIN C_DETAILS_REFERRAL_TB DR
             ], 500);
         }
     }
-
-
 }

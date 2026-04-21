@@ -329,33 +329,10 @@ class DeadController extends Controller
     {
         ini_set('memory_limit', '1536M');
 
-        // $role = [
-        //     'P_DEAD_CODE' => 'numeric',
-        //     'P_ID' => 'numeric|digits:9',
-        //     'P_FIRST_NAME' => 'string|nullable',
-        //     'P_SECOND_NAME' => 'string|nullable',
-        //     'P_THIRD_NAME' => 'string|nullable',
-        //     'P_LAST_NAME' => 'string|nullable',
-        //     'P_DATE_FROM' => 'nullable|date_format:d/m/Y',
-        //     'P_DATE_TO' => 'nullable|date_format:d/m/Y',
-        //     'P_ENTER_FROM' => 'nullable|date_format:d/m/Y',
-        //     'P_ENTER_TO' => 'nullable|date_format:d/m/Y',
-        //     'P_SEX_NO' => 'numeric|nullable',
-        //     'P_REGION_NO' => 'numeric|nullable',
-        //     'P_CITY_NO' => 'numeric|nullable',
-        //     'P_HOS_NO' => 'numeric|nullable',
-        //     'DIAG1_NAME' => 'numeric|nullable',
-        //     'DIAG4_NAME' => 'numeric|nullable',
-        //     'P_DEATH_PLACE' => 'numeric|nullable',
-        //     'P_ENTRY_POINT' => 'numeric|nullable',
-        //     'P_ENTRY_EMPLOYEE' => 'numeric|nullable',
-        // ];
-
-        //  $data = $request->validate($role);
 
         $query = DEADS_TB::GET_DEAD_DATA_BY_ID($request->all());
 
-        $this->logSearch('DEADS_TB', $request->P_ID, 'ID_NO',  json_encode($request->all()), json_encode($query['data']), 'S');
+        $this->logSearch('DEADS_TB', $request->P_ID ?? null, 'ID_NO',  json_encode($request->all()), json_encode($query['data']), 'S');
 
         $count = $query['RESULT_COUNT'] ?? 0;
         $totalData = $count;
@@ -407,34 +384,36 @@ class DeadController extends Controller
             }
         } else {
             // حالة عدم وجود بيانات، استخدام الـ API لتحديد السبب
-            $check = $this->check_dead_records($request)->getData(true);
-            $resultOut = $check['data']['data']['RESULT_OUT'] ?? null;
-            $hos_name = $check['data']['data']['RESULT_DEATH_HOS'] ?? null;
-            $death_date  = $check['data']['data']['RESULT_DEATH_DATE'] ?? null;
+            if (!empty($request->P_ID)) {
+                $check = $this->check_dead_records($request)->getData(true);
+                $resultOut = $check['data']['data']['RESULT_OUT'] ?? null;
+                $hos_name = $check['data']['data']['RESULT_DEATH_HOS'] ?? null;
+                $death_date  = $check['data']['data']['RESULT_DEATH_DATE'] ?? null;
 
-            switch ($resultOut) {
-                case 0:
-                    $message = "لا يوجد بيانات في سجلات الوفيات أو سجلات المستشفيات";
-                    break;
+                switch ($resultOut) {
+                    case 0:
+                        $message = "لا يوجد بيانات في سجلات الوفيات أو سجلات المستشفيات";
+                        break;
 
-                case 1:
-                    //  $message = "المريض متوفي داخل المستشفى ($hos_name) ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
-                    $message = "متوفي داخل المستشفى ($hos_name) بتاريخ $death_date ،  ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+                    case 1:
+                        //  $message = "المريض متوفي داخل المستشفى ($hos_name) ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+                        $message = "متوفي داخل المستشفى ($hos_name) بتاريخ $death_date ،  ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
 
-                    break;
-                default:
-                    $message = "حالة غير محددة للبيانات";
+                        break;
+                    default:
+                        $message = "حالة غير محددة للبيانات";
+                }
+
+
+                return response()->json([
+                    "draw" => intval($request->draw),
+                    "recordsTotal" => 0,
+                    "recordsFiltered" => 0,
+                    "data" => [],
+                    "results" => $message
+                ]);
             }
-
-            return response()->json([
-                "draw" => intval($request->draw),
-                "recordsTotal" => 0,
-                "recordsFiltered" => 0,
-                "data" => [],
-                "results" => $message
-            ]);
         }
-
         return response()->json([
             "draw" => intval($request->draw),
             "recordsTotal" => intval($totalData),

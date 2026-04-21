@@ -522,150 +522,163 @@
         }
 
         function get_dead_data() {
-            if (($('#P_reg_no').val() == null || $('#P_reg_no').val() == undefined || $('#P_reg_no').val() == '') &&
-                ($('#P_ID').val() == null || $('#P_ID').val() == undefined || $('#P_ID').val() == '') &&
-                ($('#P_FIRST_NAME').val() == null || $('#P_FIRST_NAME').val() == undefined || $('#P_FIRST_NAME').val() ==
-                    '') &&
-                ($('#P_SECOND_NAME').val() == null || $('#P_SECOND_NAME').val() == undefined || $('#P_SECOND_NAME').val() ==
-                    '') &&
-                ($('#P_THIRD_NAME').val() == null || $('#P_THIRD_NAME').val() == undefined || $('#P_THIRD_NAME').val() ==
-                    '') &&
-                ($('#P_LAST_NAME').val() == null || $('#P_LAST_NAME').val() == undefined || $('#P_LAST_NAME').val() ==
-                '') &&
-                ($('#P_DATE_FROM').val() == null || $('#P_DATE_FROM').val() == undefined || $('#P_DATE_FROM').val() ==
-                '') &&
-                ($('#P_DATE_TO').val() == null || $('#P_DATE_TO').val() == undefined || $('#P_DATE_TO').val() == '') &&
-                ($('#P_SEX_NO').val() == null || $('#P_SEX_NO').val() == undefined || $('#P_SEX_NO').val() == '') &&
-                ($('#P_Region_NO').val() == null || $('#P_Region_NO').val() == undefined || $('#P_Region_NO').val() ==
-                '') &&
-                ($('#P_CITY_NO').val() == null || $('#P_CITY_NO').val() == undefined || $('#P_CITY_NO').val() == '') &&
-                ($('#P_HOS_NO').val() == null || $('#P_HOS_NO').val() == undefined || $('#P_HOS_NO').val() == '') &&
-                ($('#DIAG1_NAME').val() == null || $('#DIAG1_NAME').val() == undefined || $('#DIAG1_NAME').val() == '') &&
-                ($('#DIAG4_NAME').val() == null || $('#DIAG4_NAME').val() == undefined || $('#DIAG4_NAME').val() == '') &&
-                ($('#P_Death_Place').val() == null || $('#P_Death_Place').val() == undefined || $('#P_Death_Place').val() ==
-                    '') &&
-                ($('#P_Entry_point').val() == null || $('#P_Entry_point').val() == undefined || $('#P_Entry_point').val() ==
-                    '') &&
-                ($('#P_ENTER_FROM').val() == null || $('#P_ENTER_FROM').val() == undefined || $('#P_ENTER_FROM').val() ==
-                    '') &&
-                ($('#P_ENTER_TO').val() == null || $('#P_ENTER_TO').val() == undefined || $('#P_ENTER_TO').val() == '') &&
-                ($('#P_Entry_employee').val() == null || $('#P_Entry_employee').val() == undefined || $('#P_Entry_employee')
-                    .val() == '')
-            ) {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'تنبيه',
-                    text: 'يجب إدخال أحد الحقول',
-                });
-            } else if (
-                (($('#P_FIRST_NAME').val() == null || $('#P_FIRST_NAME').val() == undefined || $('#P_FIRST_NAME').val() ==
-                        '') ||
-                    ($('#P_LAST_NAME').val() == null || $('#P_LAST_NAME').val() == undefined || $('#P_LAST_NAME').val() ==
-                        '')) &&
-                (($('#P_reg_no').val() == null || $('#P_reg_no').val() == undefined || $('#P_reg_no').val() == '') &&
-                    ($('#P_ID').val() == null || $('#P_ID').val() == undefined || $('#P_ID').val() == '') &&
-                    ($('#P_DATE_FROM').val() == null || $('#P_DATE_FROM').val() == undefined || $('#P_DATE_FROM').val() ==
-                        '') &&
-                    ($('#P_DATE_TO').val() == null || $('#P_DATE_TO').val() == undefined || $('#P_DATE_TO').val() == '') &&
-                    ($('#P_SEX_NO').val() == null || $('#P_SEX_NO').val() == undefined || $('#P_SEX_NO').val() == '') &&
-                    ($('#P_Region_NO').val() == null || $('#P_Region_NO').val() == undefined || $('#P_Region_NO').val() ==
-                        '') &&
-                    ($('#P_CITY_NO').val() == null || $('#P_CITY_NO').val() == undefined || $('#P_CITY_NO').val() == '') &&
-                    ($('#P_HOS_NO').val() == null || $('#P_HOS_NO').val() == undefined || $('#P_HOS_NO').val() == '') &&
-                    ($('#DIAG1_NAME').val() == null || $('#DIAG1_NAME').val() == undefined || $('#DIAG1_NAME').val() ==
-                    '') &&
-                    ($('#DIAG4_NAME').val() == null || $('#DIAG4_NAME').val() == undefined || $('#DIAG4_NAME').val() ==
-                    '') &&
-                    ($('#P_Death_Place').val() == null || $('#P_Death_Place').val() == undefined || $('#P_Death_Place')
-                    .val() == '') &&
-                    ($('#P_Entry_point').val() == null || $('#P_Entry_point').val() == undefined || $('#P_Entry_point')
-                    .val() == '') &&
-                    ($('#P_ENTER_FROM').val() == null || $('#P_ENTER_FROM').val() == undefined || $('#P_ENTER_FROM')
-                    .val() == '') &&
-                    ($('#P_ENTER_TO').val() == null || $('#P_ENTER_TO').val() == undefined || $('#P_ENTER_TO').val() ==
-                    '') &&
-                    ($('#P_Entry_employee').val() == null || $('#P_Entry_employee').val() == undefined || $(
-                        '#P_Entry_employee').val() == '')
-                )
-            ) {
-                Swal.fire({
-                    icon: 'info',
-                    title: 'تنبيه',
-                    text: 'يجب إدخال الاسم الأول والأخير',
-                });
-            } else {
-                // جمع القيم
-                var formData = {
-                    P_DEAD_CODE: $('#P_reg_no').val(),
-                    P_ID: $('#P_ID').val(),
-                    P_FIRST_NAME: $('#P_FIRST_NAME').val(),
-                    P_SECOND_NAME: $('#P_SECOND_NAME').val(),
-                    P_THIRD_NAME: $('#P_THIRD_NAME').val(),
-                    P_LAST_NAME: $('#P_LAST_NAME').val(),
-                    P_DATE_FROM: $('#P_DATE_FROM').val(),
-                    P_DATE_TO: $('#P_DATE_TO').val(),
-                    P_SEX_NO: $('#P_SEX_NO').val(),
-                    P_REGION_NO: $('#P_Region_NO').val(),
-                    P_CITY_NO: $('#P_CITY_NO').val(),
-                    P_HOS_NO: $('#P_HOS_NO').val(),
-                    DIAG1_NAME: $('#DIAG1_NAME').val(),
-                    DIAG4_NAME: $('#DIAG4_NAME').val(),
-                    P_DEATH_PLACE: $('#P_Death_Place').val(),
-                    P_ENTRY_POINT: $('#P_Entry_point').val(),
-                    P_ENTER_FROM: $('#P_ENTER_FROM').val(),
-                    P_ENTER_TO: $('#P_ENTER_TO').val(),
-                    P_ENTRY_EMPLOYEE: $('#P_Entry_employee').val(),
-                    _token: $('meta[name="csrf-token"]').attr('content')
-                };
+            const fields = {
+                P_reg_no: '#P_reg_no',
+                P_ID: '#P_ID',
+                P_FIRST_NAME: '#P_FIRST_NAME',
+                P_SECOND_NAME: '#P_SECOND_NAME',
+                P_THIRD_NAME: '#P_THIRD_NAME',
+                P_LAST_NAME: '#P_LAST_NAME',
+                P_DATE_FROM: '#P_DATE_FROM',
+                P_DATE_TO: '#P_DATE_TO',
+                P_SEX_NO: '#P_SEX_NO',
+                P_Region_NO: '#P_Region_NO',
+                P_CITY_NO: '#P_CITY_NO',
+                P_HOS_NO: '#P_HOS_NO',
+                DIAG1_NAME: '#DIAG1_NAME',
+                DIAG4_NAME: '#DIAG4_NAME',
+                P_Death_Place: '#P_Death_Place',
+                P_Entry_point: '#P_Entry_point',
+                P_ENTER_FROM: '#P_ENTER_FROM',
+                P_ENTER_TO: '#P_ENTER_TO',
+                P_Entry_employee: '#P_Entry_employee'
+            };
 
+            function getValue(selector) {
+                return $(selector).val();
+            }
+
+            function isEmpty(selector) {
+                const value = getValue(selector);
+                return value === null || value === undefined || value === '';
+            }
+
+            function allEmpty(selectors) {
+                return selectors.every(isEmpty);
+            }
+
+            const allSelectors = Object.values(fields);
+
+            const nonNameSelectors = [
+                fields.P_reg_no,
+                fields.P_ID,
+                fields.P_DATE_FROM,
+                fields.P_DATE_TO,
+                fields.P_SEX_NO,
+                fields.P_Region_NO,
+                fields.P_CITY_NO,
+                fields.P_HOS_NO,
+                fields.DIAG1_NAME,
+                fields.DIAG4_NAME,
+                fields.P_Death_Place,
+                fields.P_Entry_point,
+                fields.P_ENTER_FROM,
+                fields.P_ENTER_TO,
+                fields.P_Entry_employee
+            ];
+
+            const firstNameEmpty = isEmpty(fields.P_FIRST_NAME);
+            const lastNameEmpty = isEmpty(fields.P_LAST_NAME);
+
+            if (allEmpty(allSelectors)) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'تنبيه',
+                    text: 'يجب إدخال أحد الحقول'
+                });
+                return;
+            }
+
+            if ((firstNameEmpty || lastNameEmpty) && allEmpty(nonNameSelectors)) {
+                Swal.fire({
+                    icon: 'info',
+                    title: 'تنبيه',
+                    text: 'يجب إدخال الاسم الأول والأخير'
+                });
+                return;
+            }
+
+            const formData = {
+                P_DEAD_CODE: getValue(fields.P_reg_no),
+                P_ID: getValue(fields.P_ID),
+                P_FIRST_NAME: getValue(fields.P_FIRST_NAME),
+                P_SECOND_NAME: getValue(fields.P_SECOND_NAME),
+                P_THIRD_NAME: getValue(fields.P_THIRD_NAME),
+                P_LAST_NAME: getValue(fields.P_LAST_NAME),
+                P_DATE_FROM: getValue(fields.P_DATE_FROM),
+                P_DATE_TO: getValue(fields.P_DATE_TO),
+                P_SEX_NO: getValue(fields.P_SEX_NO),
+                P_REGION_NO: getValue(fields.P_Region_NO),
+                P_CITY_NO: getValue(fields.P_CITY_NO),
+                P_HOS_NO: getValue(fields.P_HOS_NO),
+                DIAG1_NAME: getValue(fields.DIAG1_NAME),
+                DIAG4_NAME: getValue(fields.DIAG4_NAME),
+                P_DEATH_PLACE: getValue(fields.P_Death_Place),
+                P_ENTRY_POINT: getValue(fields.P_Entry_point),
+                P_ENTER_FROM: getValue(fields.P_ENTER_FROM),
+                P_ENTER_TO: getValue(fields.P_ENTER_TO),
+                P_ENTRY_EMPLOYEE: getValue(fields.P_Entry_employee),
+                _token: $('meta[name="csrf-token"]').attr('content')
+            };
+
+            if ($.fn.DataTable.isDataTable('#result_tb')) {
                 $('#result_tb').DataTable().destroy();
-                $.fn.dataTable.ext.errMode = 'none';
-                $('#result_tb').on('error.dt', function(e, settings, techNote, message) {
-                    console.log('An error has been reported by DataTables: ', message);
-                });
+            }
 
-                block_search_dead.block(); // تفعيل block قبل الطلب
+            $('#result_tb tbody').empty();
+            $.fn.dataTable.ext.errMode = 'none';
 
-                var table = $('#result_tb').DataTable({
-                    processing: true,
-                    serverSide: true,
-                    paging: true,
-                    ordering: false,
-                    ajax: {
-                        url: "{{ route('dead.getDeadResult') }}",
-                        type: "POST",
-                        data: formData,
-                        dataSrc: function(json) {
-                            block_search_dead.release(); // تحرير block فور وصول الرد
+            $('#result_tb').off('error.dt').on('error.dt', function(e, settings, techNote, message) {
+                console.log('An error has been reported by DataTables:', message);
+                block_search_dead.release();
+            });
 
-                            // زر Excel
-                            if (json.data && json.data.length > 0) {
-                                $("#excel_btn").show();
-                            } else {
-                                $("#excel_btn").hide();
-                            }
+            block_search_dead.block();
 
-                            return json.data || [];
+            $('#result_tb').DataTable({
+                processing: true,
+                serverSide: true,
+                paging: true,
+                ordering: false,
+                ajax: {
+                    url: "{{ route('dead.getDeadResult') }}",
+                    type: "POST",
+                    data: formData,
+                    dataSrc: function(json) {
+                        block_search_dead.release();
+
+                        if (json.data && json.data.length > 0) {
+                            $('#excel_btn').show();
+                        } else {
+                            $('#excel_btn').hide();
                         }
-                    },
-                    language: {
-                        emptyTable: ""
-                    }
-                });
 
-                // عرض رسالة الكنترولر عند عدم وجود بيانات
-                $('#result_tb').on('draw.dt', function(e, settings) {
-                    var api = new $.fn.dataTable.Api(settings);
-                    var json = api.ajax.json();
-                    if (json && json.results && (!json.data || json.data.length === 0)) {
-                        $('.dataTables_empty').html(
-                            '<div class="alert-signal alert-danger m-2 text-center">⚠️ ' + json.results +
+                        return json.data || [];
+                    },
+                    error: function() {
+                        block_search_dead.release();
+                        $('#excel_btn').hide();
+                    }
+                },
+                language: {
+                    emptyTable: '',
+                    zeroRecords: ''
+                },
+                drawCallback: function() {
+                    const api = this.api();
+                    const json = api.ajax.json();
+
+                    if (json && (!json.data || json.data.length === 0)) {
+                        $('#result_tb tbody td.dataTables_empty').html(
+                            '<div class="alert alert-danger alert-signal m-2 text-center">' +
+                            '⚠️ ' + (json.results || 'لم يعثر على أية سجلات') +
                             '</div>'
                         );
                     }
-                });
-            }
+                }
+            });
         }
+
 
         /***************************************************************************************************************************/
         function exports_excel() {

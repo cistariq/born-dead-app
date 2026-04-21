@@ -3,6 +3,9 @@
 @section('title', 'فحص حالات الولادة من ملف Excel')
 
 @section('content')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 
     <style>
         td {
@@ -27,7 +30,6 @@
         }
     </style>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <!-- ================= رفع الملف ================= -->
     <form id="excel_upload_form" enctype="multipart/form-data">
@@ -111,12 +113,15 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+
     <script>
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
         function check_excel_file() {
 
             let file = $('#excel_file')[0].files[0];
@@ -156,19 +161,22 @@
                         <td>${row.id}</td>
                         <td>${row.name}</td>
                         <td style="color:${color}; font-weight:bold">${row.type}</td>
-                        <td>${row.hospital ?? '-'}</td>
+                        <td>${row.birth_place ?? '-'}</td>
                         <td>${row.date ?? '-'}</td>
                     </tr>
                 `);
                     });
 
                     // 🔥 مهم جداً: إعادة تهيئة DataTable
-                    if ($.fn.DataTable.isDataTable('#excel_result_tb')) {
-                        $('#excel_result_tb').DataTable().destroy();
-                    }
+                    $('#excel_result_tb').DataTable().destroy();
+                    $.fn.dataTable.ext.errMode = 'none';
+                    $('#excel_result_tb').on('error.dt', function(e, settings, techNote, message) {
+                        console.log('An error has been reported by DataTables: ', message);
+                    });
 
                     $('#excel_result_tb').DataTable({
                         pageLength: 10,
+                        paging: true,
                         ordering: true,
                         searching: true,
                         lengthChange: true,
@@ -196,11 +204,9 @@
 
         // ================= تحميل Excel =================
         $('#exportExcelBtn').on('click', function(e) {
-
-            e.preventDefault(); // 🔴 يمنع إعادة تحميل الصفحة
+            e.preventDefault();
 
             let file = $('#excel_file')[0].files[0];
-
             if (!file) {
                 Swal.fire({
                     icon: 'warning',
@@ -216,38 +222,31 @@
             fetch("{{ route('born.exportExcel') }}", {
                     method: "POST",
                     credentials: 'same-origin',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // ← هذا مهم
+                    },
                     body: formData
                 })
                 .then(async (response) => {
-
-                    // إذا في خطأ Laravel (422 / 500)
                     if (!response.ok) {
-
                         const error = await response.json().catch(() => null);
-
                         Swal.fire({
                             icon: 'error',
                             title: 'خطأ',
                             text: error?.message || 'حدث خطأ أثناء التصدير'
                         });
-
                         throw new Error('Request failed');
                     }
-
                     return response.blob();
                 })
                 .then(blob => {
-
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
-
                     a.href = url;
                     a.download = 'birth_results.xlsx';
-
                     document.body.appendChild(a);
                     a.click();
                     a.remove();
-
                     window.URL.revokeObjectURL(url);
 
                     Swal.fire({
@@ -255,12 +254,8 @@
                         title: 'تم التصدير',
                         text: 'تم تحميل الملف بنجاح'
                     });
-
                 })
-                .catch(error => {
-                    console.error(error);
-                });
-
+                .catch(error => console.error(error));
         });
 
         // ================= تفريغ الشاشة =================
