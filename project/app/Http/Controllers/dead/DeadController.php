@@ -496,7 +496,7 @@ class DeadController extends Controller
             'P_SEEING_CORPSE_DATE' => 'nullable',
             'P_CORPSE_DISSECTION_CD' => 'nullable',
             'P_CORPSE_DESSECTION_DATE' => 'nullable',
-            'P_REPORT_SUBMITTED_ID' => 'required',
+            'P_REPORT_SUBMITTED_ID' => 'nullable',
             'P_REPORT_SUBMITTED_BY' => 'nullable',
             'P_REPORTER_SEX_CD' => 'nullable',
             'P_REPORTER_NATIONALITY_CD' => 'nullable',
