@@ -2,6 +2,7 @@
 @section('title', 'استعلام اشعارات الوفاة')
 
 @section('content')
+    <link href="{{ asset('assets/plugins/custom/datatables/datatables.bundle.css') }}" rel="stylesheet" type="text/css" />
 
     <style>
         td {
@@ -462,6 +463,8 @@
 
 
 @push('scripts')
+    <script src="{{ asset('assets/plugins/custom/datatables/datatables.bundle.js') }}"></script>
+
     <script>
         var block_search_dead = document.querySelector("#dead_form");
         var block_search_dead = new KTBlockUI(block_search_dead);

@@ -32,6 +32,7 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
+
         try {
             DB::connection()->getPdo();
 
@@ -54,6 +55,7 @@ class LoginController extends Controller
             ])) {
 
                 $user = Auth::user();
+               // dd($user);
 
                 // تحقق من حالة الحساب
                 if ($user->status == 0) {
@@ -74,6 +76,7 @@ class LoginController extends Controller
 
                 // 🔴 2) إنشاء توكن جديد للجهاز الحالي
                 $deviceToken = Str::uuid()->toString();
+              //  dd($deviceToken);
 
                 // 🔴 3) تخزين التوكن في الجلسة
                 session(['device_token' => $deviceToken]);
@@ -91,8 +94,8 @@ class LoginController extends Controller
 
                 $user = User::where('id', $user->id)->first();
 
-                $deadController = new DeadController();
-                $deadController->logSearch('user_tb', $user->id ?: null, 'ID', json_encode($user), null, 'I');
+                 $deadController = new DeadController();
+                 $deadController->logSearch('user_tb', $user->id ?: null, 'ID', json_encode($user), null, 'I');
 
                 /** ===============================
                  *  Permissions

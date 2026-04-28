@@ -145,6 +145,7 @@
                 $.ajax({
                     url: "{{ route('logs.search') }}",
                     type: "POST",
+                    dataType: "json",
                     data: formData,
                     beforeSend: function() {
                         $('#result_tb tbody').html(`
@@ -171,8 +172,8 @@
                             <td class="text-center">${row.TYPE_ACTION ?? ''}</td>
                             <td class="text-center">${row.TABLE_NAME ?? ''}</td>
                             <td class="text-center">${row.COLUMN_NAME ?? ''}</td>
-                            <td class="text-center">${row.OLD_VALUE ?? ''}</td>
-                            <td class="text-center">${row.NEW_VALUE ?? ''}</td>
+                            <td class="text-center">${formatJson(row.OLD_VALUE)}</td>
+                            <td class="text-center">${formatJson(row.NEW_VALUE)}</td>
                             <td class="text-center">${row.UPDATE_REASON ?? ''}</td>
                         </tr>
                     `;
@@ -276,5 +277,27 @@
                     text: 'تم تحميل الملف بنجاح'
                 });
             });
+
+            function formatJson(data) {
+                if (!data) return '';
+
+                // إذا كانت string (أحياناً ترجع string)
+                if (typeof data === 'string') {
+                    try {
+                        data = JSON.parse(data);
+                    } catch (e) {
+                        return data;
+                    }
+                }
+
+                // إذا object → نحوله لعرض مرتب
+                let html = '<div style="text-align:right">';
+                for (let key in data) {
+                    html += `<div><b>${key}</b>: ${data[key] ?? ''}</div>`;
+                }
+                html += '</div>';
+
+                return html;
+            }
         </script>
     @endpush

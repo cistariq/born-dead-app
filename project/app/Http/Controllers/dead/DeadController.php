@@ -500,7 +500,7 @@ class DeadController extends Controller
             'P_REPORT_SUBMITTED_BY' => 'nullable',
             'P_REPORTER_SEX_CD' => 'nullable',
             'P_REPORTER_NATIONALITY_CD' => 'nullable',
-            'P_RELATIONSHIP' => 'required|nullable',
+            'P_RELATIONSHIP' => 'nullable',
             'P_REPORTER_ADDRESS' => 'nullable',
             'P_REPORTER_MOBILE' => ['nullable', 'numeric', 'digits:10', new StartWith('059', '056')],
             'P_DATE_OF_REPORT' => 'required|date_format:d/m/Y H:i|after_or_equal:P_DATE_DEATH',
@@ -526,6 +526,15 @@ class DeadController extends Controller
         $request->merge(["P_REPORT_CREATED_BY_CD" => Auth()->id()]);
         $request->merge(["P_QR_CD" => $otp]);
         // dd($request->all());
+        if (
+            $request->P_RELATIONSHIP != null || $request->P_REPORTER_MOBILE != null || $request->P_REPORTER_NATIONALITY_CD != null ||
+            $request->P_REPORTER_ADDRESS != null || $request->P_REPORTER_SEX_CD != null || $request->P_REPORT_SUBMITTED_ID != null ||
+            $request->P_REPORT_SUBMITTED_BY != null
+        ) {
+            $request->merge(["P_IS_COMPLETE" => 1]);
+        } else {
+            $request->merge(["P_IS_COMPLETE" => 0]);
+        }
 
         try {
             $query = DEADS_TB::ADD_DEAD_DATA($request->all());

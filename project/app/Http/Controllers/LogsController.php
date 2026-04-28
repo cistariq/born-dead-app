@@ -26,7 +26,6 @@ class LogsController extends Controller
 
         $totalData = $query['RESULT_COUNT'] ?? 0;
         $totalFiltered = $totalData;
-//dd($query);
         $data = [];
 
         if (!empty($query) && is_array($query)) {
@@ -38,18 +37,22 @@ class LogsController extends Controller
                     'TYPE_ACTION' => $value['TYPE_ACTION'] ?? null,
                     'TABLE_NAME' => $value['TABLE_NAME'] ?? null,
                     'COLUMN_NAME' => $value['COLUMN_NAME'] ?? null,
-                    'OLD_VALUE' => $value['OLD_VALUE'] ?? null,
-                    'NEW_VALUE' => $value['NEW_VALUE'] ?? null,
+                    'OLD_VALUE' => isset($value['OLD_VALUE'])
+                        ? json_decode($value['OLD_VALUE'], true)
+                        : null,
+                    'NEW_VALUE' => isset($value['NEW_VALUE'])
+                        ? json_decode($value['NEW_VALUE'], true)
+                        : null,
                     'UPDATE_REASON' => $value['UPDATE_REASON'] ?? null,
                 ];
             }
         }
 
 
-                $deadController = new DeadController();
-                $deadController->logSearch('LOGS',$request->P_ID?:null,'ID',json_encode($request->all()),json_encode($data),'S');
+        $deadController = new DeadController();
+        $deadController->logSearch('LOGS', $request->P_ID ?: null, 'ID', json_encode($request->all()), json_encode($data), 'S');
 
-//dd($data);
+        //dd($data);
         return response()->json([
             "draw" => intval($request->draw),
             "recordsTotal" => intval($totalData),
