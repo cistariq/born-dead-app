@@ -18,6 +18,8 @@ use App\Exports\DeadExport;
 use Maatwebsite\Excel\Facades\Excel;
 use Spatie\LaravelPdf\Facades\Pdf;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\dead\DeadController;
+
 
 class ReportController extends Controller
 {
@@ -93,25 +95,14 @@ class ReportController extends Controller
         // ini_set('memory_limit',-1);
 
         $query = DEADS_TB::GET_DEADS_DEATH_PLACE($request->all());
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
+
         //  dd(Auth());
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         $result['data'] = $query;
 
         $result['old_record'] = $request->all();
         $result['user_name'] = Auth()->user()->user_full_name;
-        // dd($result['old_record']);
-        // $respdf= Pdf::view('Report.Distribution_Death_Place', $result)
-        // ->format('a4')
-        // ->name('Distribution_Death_Place.pdf');
-        // return $respdf;
 
         return view('Report.Distribution_Death_Place', $result);
     }
@@ -121,14 +112,8 @@ class ReportController extends Controller
         $result['old_record'] = $request->all();
         $result['user_name'] = Auth()->user()->user_full_name;
 
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         //  dd(Auth());
         $request->merge([
             'Age_From' => 0,
@@ -319,14 +304,9 @@ class ReportController extends Controller
         // ini_set('max_execution_time', -1);
         // ini_set('memory_limit',-1);
         $query = DEADS_TB::GET_Distribution_Death_Place_Kids($request->all());
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
+
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         //  dd(Auth());
         $result['data'] = $query;
         $result['old_record'] = $request->all();
@@ -370,18 +350,8 @@ class ReportController extends Controller
         $result['data6'] = DEADS_TB::GET_Distribution_Region_Kids($request->all());
         $result['data7'] = DEADS_TB::GET_DEADS_REGION_TOTAL_KIDS($request->all());
 
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
-        //  dd(Auth());
-
-
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         // dd($result['old_record']);
         return view('Report.Distribution_Region_Kids', $result);
     }
@@ -433,15 +403,8 @@ class ReportController extends Controller
         $result['data10'] = DEADS_TB::GET_Distribution_Region_Ages1($request->all());
         $result['data11'] = DEADS_TB::GET_DEADS_REGION_TOTAL($request->all());
 
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
-
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         return view('Report.Distribution_Region_Ages1', $result);
     }
     //----------------------------------------------------------------------------
@@ -486,18 +449,9 @@ class ReportController extends Controller
         ]);
         $result['data8'] = DEADS_TB::GET_Distribution_Region_Ages2($request->all());
         $result['data9'] = DEADS_TB::GET_DEADS_REGION_TOTAL($request->all());
-
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
         //  dd(Auth());
-
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         // dd($result['old_record']);
         return view('Report.Distribution_Region_Ages2', $result);
     }
@@ -506,22 +460,19 @@ class ReportController extends Controller
     {
         // ini_set('max_execution_time', -1);
         // ini_set('memory_limit',-1);
+
         $result['old_record'] = $request->all();
         $result['user_name'] = Auth()->user()->user_full_name;
         $request->merge([
             'Age_From' => 0,
             'Age_To' => 1500,
         ]);
+
+
         $query = DEADS_TB::GET_Distribution_Death_Hosp($request->all());
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
+
+        // $deadController = new DeadController();
+        // $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         //  dd(Auth());
         $result['data'] = $query;
 
@@ -541,17 +492,10 @@ class ReportController extends Controller
         ]);
         $result['data'] = DEADS_TB::GET_Distribution_Region_Ages3($request->all());
         $result['data1'] = DEADS_TB::GET_DEADS_REGION_TOTAL($request->all());
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
-        //  dd(Auth());
 
+        //  dd(Auth());
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
 
         // dd($result['old_record']);
         return view('Report.Distribution_Region_Ages3', $result);
@@ -568,17 +512,9 @@ class ReportController extends Controller
             'Age_To' => 1,
         ]);
         $result['data'] = DEADS_TB::GET_Distribution_Death_Hos_Kids($request->all());
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
-        //  dd(Auth());
 
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
 
         // dd($result['old_record']);
         return view('Report.Distribution_Death_Hos_Kids', $result);
@@ -604,18 +540,8 @@ class ReportController extends Controller
         $result['data2'] = DEADS_TB::GET_Distribution_sex_D($request->all());
         $result['data3'] = DEADS_TB::GET_DEADS_BY_SEX_TOTAL($request->all());
 
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
-        //  dd(Auth());
-
-
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         // dd($result['old_record']);
         return view('Report.Distribution_sex_D', $result);
     }
@@ -629,16 +555,8 @@ class ReportController extends Controller
         $result['list_user'] = DEADS_TB::GET_USER_PROFILE();
         //dd($result['list_user']);
 
-        // $query = DEADS_TB::GET_Daily_Dead_Rep_2($request->all());
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         //  dd(Auth());
         $result['old_record'] = $request->all();
         $result['user_name'] = Auth()->user()->user_full_name;
@@ -670,16 +588,9 @@ class ReportController extends Controller
         $data = $request->validate($role);
 
         $query = DEADS_TB::GET_Daily_Dead_Rep_2($request->all());
-        //dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        $data['old_record'] = $request->all();
-        $data1['type_action'] = 'S';
-        Log::create($data1);
 
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'S');
         $count = $query['RESULT_COUNT'];
         $totalData = $count;
         $totalFiltered = $totalData;
@@ -742,14 +653,9 @@ class ReportController extends Controller
         $data = $request->validate($role);
 
         $query = DEADS_TB::GET_Daily_Report_D($request->all());
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        $data['old_record'] = $request->all();
-        $data1['type_action'] = 'S';
-        Log::create($data1);
+
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'S');
 
         $count = $query['RESULT_COUNT'];
         $totalData = $count;
@@ -794,15 +700,9 @@ class ReportController extends Controller
         $result['entry_reg_place'] = C_DETAILS_REFERRAL_TB::whereIn('DREF_M_CD', [2, 3])->orwhereIn('DREF_CODE', [134, 125, 146])->get();
         $result['list_user'] = DEADS_TB::GET_USER_PROFILE();
 
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
         //  dd(Auth());
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         $result['old_record'] = $request->all();
         $result['user_name'] = Auth()->user()->user_full_name;
         // dd($result['old_record']);
@@ -816,17 +716,9 @@ class ReportController extends Controller
         $result['old_record'] = $request->all();
         $result['user_name'] = Auth()->user()->user_full_name;
         $result['data'] = DEADS_TB::GET_Distribution_Diagnosis($request->all());
-        //dd($result['data']);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = 'P';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'P';
-        Log::create($data1);
         //  dd(Auth());
-
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'P');
 
         // dd($result['old_record']);
         return view('Report.Distribution_Diagnosis', $result);
@@ -891,17 +783,10 @@ class ReportController extends Controller
         $result['user_name'] = Auth()->user()->user_full_name;
 
         $result['data'] = DEADS_TB::GET_Total_In_Diagnosis($request->all());
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
-        //  dd(Auth());
 
+        //  dd(Auth());
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         // dd($result['old_record']);
         return view('Report.Total_In_Diagnosis', $result);
     }
@@ -1145,14 +1030,8 @@ class ReportController extends Controller
         $result['data42'] = DEADS_TB::GET_Distribution_ICD_Ages($request->all());
         $result['data43'] = DEADS_TB::GET_Distribution_ICD_Ages_Total($request->all());
 
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
 
         return view('Report.Distribution_ICD_Ages', $result);
     }
@@ -1167,18 +1046,9 @@ class ReportController extends Controller
         $result['data'] = DEADS_TB::GET_Distribution_MS_D($request->all());
         $result['data1'] = DEADS_TB::GET_DEADS_BY_MS_TOTAL($request->all());
 
-
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
         //  dd(Auth());
-
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
 
         // dd($result['old_record']);
         return view('Report.Distribution_MS_D', $result);
@@ -1193,21 +1063,11 @@ class ReportController extends Controller
         $result['user_name'] = Auth()->user()->user_full_name;
 
         $result['data'] = DEADS_TB::GET_ICD_CODE($request->all());
-        //dd($result['data']);
-        // $result['data2'] = DEADS_TB::GET_DEADS_REGION_TOTAL2($request->all());
 
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
         //  dd(Auth());
 
-
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         // dd($result['old_record']);
         return view('Report.Distribution_ICD_Ages_sample2', $result);
     }
@@ -1220,16 +1080,8 @@ class ReportController extends Controller
         $result['old_record'] = $request->all();
         $result['user_name'] = Auth()->user()->user_full_name;
 
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
-
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         return view('Report.Scanned_files_rep', $result);
     }
     //----------------------------------------------------------------------------
@@ -1246,15 +1098,9 @@ class ReportController extends Controller
         $result['user_name'] = Auth()->user()->user_full_name;
         $query = DEADS_TB::GET_Scanned_files_rep($request->all());
 
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        $data['old_record'] = $request->all();
-        $data1['type_action'] = 'S';
-        Log::create($data1);
 
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'S');
         $count = $query['RESULT_COUNT'];
         $totalData = $count;
         $totalFiltered = $totalData;
@@ -1294,17 +1140,9 @@ class ReportController extends Controller
 
         $result['list_user'] = DEADS_TB::GET_USER_PROFILE();
 
-        //$query = DEADS_TB::GET_Death_updated_rep($request->all());
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
         //  dd(Auth());
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         $result['old_record'] = $request->all();
         $result['user_name'] = Auth()->user()->user_full_name;
         // dd($result['old_record']);
@@ -1323,15 +1161,8 @@ class ReportController extends Controller
         $result['user_name'] = Auth()->user()->user_full_name;
         $query = DEADS_TB::GET_Death_updated_rep($request->all());
 
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        $data['old_record'] = $request->all();
-        $data1['type_action'] = 'S';
-        Log::create($data1);
-
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'S');
         $count = $query['RESULT_COUNT'];
         $totalData = $count;
         $totalFiltered = $totalData;
@@ -1373,15 +1204,9 @@ class ReportController extends Controller
 
         $result['list_user'] = DEADS_TB::GET_USER_PROFILE();
 
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
         //  dd(Auth());
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         $result['old_record'] = $request->all();
         $result['user_name'] = Auth()->user()->user_full_name;
         // dd($result['old_record']);
@@ -1399,15 +1224,9 @@ class ReportController extends Controller
         $result['user_name'] = Auth()->user()->user_full_name;
         $query = DEADS_TB::GET_NotScanned_files_rep($request->all());
 
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'DEADS_TB';
-        $data1['column_name'] = ' ';
-        $data['old_record'] = $request->all();
-        $data1['type_action'] = 'S';
-        Log::create($data1);
 
+        $deadController = new DeadController();
+        $deadController->logSearch('DEADS_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'S');
         $count = $query['RESULT_COUNT'];
         $totalData = $count;
         $totalFiltered = $totalData;
@@ -1520,17 +1339,9 @@ class ReportController extends Controller
 
         $result['list_born'] = BORNS_INFO_TB::GET_PLACE_BORNS($request->all());
 
-        // dd($query);
-        $data1['user_id'] = Auth()->id();
-        $data1['ip'] = request()->ip();
-        $data1['id_no'] = Auth()->id();
-        $data1['table_name'] = 'BORN_INFO_TB';
-        $data1['column_name'] = ' ';
-        // $data1['old_record'] = $request->all();
-        $data1['type_action'] = 'DL';
-        Log::create($data1);
         //  dd(Auth());
-
+        $deadController = new DeadController();
+        $deadController->logSearch('BORN_INFO_TB', Auth()->id() ?: null, 'ID', json_encode($request->all()), NULL, 'DL');
         return view('Report.Daily_Report_Birth_Place', $result);
     }
     //----------------------------------------------------------------------------

@@ -299,7 +299,7 @@ Route::group(['middleware' => [Authenticate::class]], function () {
 
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::post('/tab-logout', [LoginController::class, 'tabLogout'])
+Route::post('/tabLogout', [LoginController::class, 'tabLogout'])
     ->name('tab.logout');
 
 Route::get('/icd-codes', [ICDCodeController::class, 'index'])->name('icd.index');

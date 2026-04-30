@@ -605,7 +605,7 @@ class DeadController extends Controller
             'P_DEATH_CITY_PLACE' => 'required',
             'P_ICD_1' => 'required',
             'P_ICD_4' => 'required',
-            'P_REPORT_SUBMITTED_ID' => 'required',
+            'P_REPORT_SUBMITTED_ID' => 'nullable',
             'P_DATE_DEATH' => 'required|date_format:d/m/Y H:i',
             'P_DATE_OF_REPORT' => 'required|date_format:d/m/Y H:i|after_or_equal:P_DATE_DEATH',
             'P_REGISTER_PLACE_CD' => 'required',
@@ -641,6 +641,15 @@ class DeadController extends Controller
                 } else {
                     $request->merge(["P_QR_CD" => $dead->qr_code]);
                 }
+        if (
+            $request->P_RELATIONSHIP != null || $request->P_REPORTER_MOBILE != null || $request->P_REPORTER_NATIONALITY_CD != null ||
+            $request->P_REPORTER_ADDRESS != null || $request->P_REPORTER_SEX_CD != null || $request->P_REPORT_SUBMITTED_ID != null ||
+            $request->P_REPORT_SUBMITTED_BY != null
+        ) {
+            $request->merge(["P_IS_COMPLETE" => 1]);
+        } else {
+            $request->merge(["P_IS_COMPLETE" => 0]);
+        }
 
                 // 🔹 تحديث باقي الحقول من الطلب
                 $query = DEADS_TB::UPDATE_DEAD_DATA($request->all());
