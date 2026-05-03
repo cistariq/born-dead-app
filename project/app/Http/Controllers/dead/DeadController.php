@@ -217,7 +217,27 @@ class DeadController extends Controller
 
         return view('dead.insert_dead', $data);
     }
+    public function add_dead()
+    {
+        $user_id = Auth()->id();
+        $data['hos_no'] = User::where('id', $user_id)->value('user_dref_cd');
+        $data['hospitals'] = DEADS_TB::ALL_HOS_DREF();
+        // dd($data['hospitals']);
+        $data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::get();
+        $data['marital_status'] = C_MARTIAL_STATUS_TB::get();
+        $data['entry_detail'] = C_DEATH_CAUSE_TB::get();
+        $data['jobs'] = C_JOB_TB::get();
+        $data['nationality'] = C_NATIONALITY_TB::get();
+        $data['religion'] = C_RELEGION_TB::get();
+        $data['region'] = C_REGION_TB::get();
+        $data['city'] = C_CITY_TB::get();
+        // $data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::get();
+        //$data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::whereIn('DREF_M_CD', [2, 3])->orwhereIn('DREF_CODE', [134, 125, 146])->get();
+        $data['entry_reg_place'] = C_DETAILS_REFERRAL_TB::get();
 
+
+        return view('dead.dead_mccd_search', $data);
+    }
 
     public function dashboard()
     {
@@ -1695,6 +1715,87 @@ class DeadController extends Controller
 
         return response()->json([
             'success' => true
+        ]);
+    }
+
+
+// ========================= Mccd dead create by tariq at 03-05-2026 =========================
+ public function getDeadMccdResult(Request $request)
+    {
+        ini_set('memory_limit', '1536M');
+
+
+        $query = DEADS_TB::GET_DEAD_MCCD_DATA($request->all());
+
+        $this->logSearch('DEADS_TB', $request->P_ID ?? null, 'ID_NO',  json_encode($request->all()), json_encode($query['data']), 'S');
+
+        $count = $query['RESULT_COUNT'] ?? 0;
+        $totalData = $count;
+        $totalFiltered = $totalData;
+        $result['data'] = [];
+
+
+        if (!empty($query['data']) && is_array($query['data'])) {
+            foreach ($query['data'] as $key => $value) {
+                $action = '<div class="d-flex justify-content-center gap-1">';
+
+                    $action .= '<button type="button" class="btn btn-icon btn-active-color-warning"
+                    onclick="add_dead(' . $value['DEAD_ID'] . ');" title="إدخال اشعار الوفاة">
+                    <i class="fa-solid fa-pen-to-square fs-3"></i>
+                </button>';
+
+                $action .= '</div>';
+
+                $result['data'][] = [
+                    $key + 1,
+                    $value['DEAD_ID'],
+                    $value['DEAD_DOB'],
+                    $value['DEAD_DOD'],
+                    $value['SEX_NAME_AR'],
+                    $value['DEAD_FIRST_NAME_AR'] . ' ' . $value['DEAD_FATHER_NAME_AR'] . ' ' . $value['DEAD_GRANDFATHER_NAME_AR'] . ' ' . $value['DEAD_LAST_NAME_AR'],
+                    $value['DREF_NAME_AR'],
+                    $value['DEAD_ICD4'],
+                    $value['ICD4_NAME'],
+                    $action,
+                ];
+            }
+        } else {
+            // حالة عدم وجود بيانات، استخدام الـ API لتحديد السبب
+            if (!empty($request->P_ID)) {
+                $check = $this->check_dead_records($request)->getData(true);
+                $resultOut = $check['data']['data']['RESULT_OUT'] ?? null;
+                $hos_name = $check['data']['data']['RESULT_DEATH_HOS'] ?? null;
+                $death_date  = $check['data']['data']['RESULT_DEATH_DATE'] ?? null;
+
+                switch ($resultOut) {
+                    case 0:
+                        $message = "لا يوجد بيانات في سجلات الوفيات أو سجلات المستشفيات";
+                        break;
+
+                    case 1:
+                        //  $message = "المريض متوفي داخل المستشفى ($hos_name) ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+                        $message = "متوفي داخل المستشفى ($hos_name) بتاريخ $death_date ،  ولم يتم استكمال اجراءات تسجيل اشعار الوفاة";
+
+                        break;
+                    default:
+                        $message = "حالة غير محددة للبيانات";
+                }
+
+
+                return response()->json([
+                    "draw" => intval($request->draw),
+                    "recordsTotal" => 0,
+                    "recordsFiltered" => 0,
+                    "data" => [],
+                    "results" => $message
+                ]);
+            }
+        }
+        return response()->json([
+            "draw" => intval($request->draw),
+            "recordsTotal" => intval($totalData),
+            "recordsFiltered" => intval($totalFiltered),
+            "data" => $result['data']
         ]);
     }
 }

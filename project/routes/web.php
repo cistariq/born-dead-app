@@ -76,7 +76,9 @@ Route::group(['middleware' => [Authenticate::class]], function () {
     Route::group(['prefix' => 'dead', 'as' => 'dead.'], function () {
         //Route::get('/', [DeadController::class, 'index'])->name('index');
         Route::post('/getDataResult', [DeadController::class, 'getDataResult'])->name('getDataResult');
+        Route::post('/getDeadMccdResult', [DeadController::class, 'getDeadMccdResult'])->name('getDeadMccdResult');
         Route::get('/insert_dead', [DeadController::class, 'insert_dead'])->name('insert_dead');
+        Route::get('/add_dead', [DeadController::class, 'add_dead'])->name('add_dead');
         Route::get('/update_dead/{ID_NO}', [DeadController::class, 'update_dead'])->name('update_dead');
         Route::get('/print_dead_notic/{ID_NO}', [DeadController::class, 'print_dead_notic'])->name('print_dead_notic');
         Route::get('/dead_search', [DeadController::class, 'dead_search'])->name('dead_search');
