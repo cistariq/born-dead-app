@@ -1742,7 +1742,7 @@ class DeadController extends Controller
                 $action = '<div class="d-flex justify-content-center gap-1">';
 
                 $action .= '<button type="button" class="btn btn-icon btn-active-color-warning"
-                    onclick="add_dead(' . $value['DEAD_ID'] . ');" title="إدخال اشعار الوفاة">
+                    onclick="update_crt_dead(' . $value['DEAD_CODE'] . ');" title="إدخال اشعار الوفاة">
                     <i class="fa-solid fa-pen-to-square fs-3"></i>
                 </button>';
 
