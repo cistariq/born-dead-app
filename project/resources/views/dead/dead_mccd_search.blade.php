@@ -121,7 +121,8 @@
                 <!--end::Input group-->
                 <!--begin::Input group-->
                 <div id="loading-spinner" style="display: none; text-align: center; margin: 10px;">
-<div style="
+                    <div
+                        style="
     position: fixed;
     top: 0;
     left: 0;
@@ -135,8 +136,8 @@
     z-index: 9999;
 ">
 
-    <div class="spinner"
-        style="
+                        <div class="spinner"
+                            style="
             border: 10px solid #f3f3f3;
             border-top: 10px solid #3498db;
             border-radius: 50%;
@@ -144,13 +145,13 @@
             height: 70px;
             animation: spin 1s linear infinite;
         ">
-    </div>
+                        </div>
 
-    <div style="margin-top: 10px; font-size: 18px;">
-        الرجاء الانتظار...
-    </div>
+                        <div style="margin-top: 10px; font-size: 18px;">
+                            الرجاء الانتظار...
+                        </div>
 
-</div>
+                    </div>
                 </div>
 
                 <style>
@@ -179,8 +180,8 @@
                     @csrf --}}
 
                 <div class="float-right">
-                    <button class="btn btn-success" type="button" onclick="dead_exports_excel();" style="display: none" id="excel_btn"><i
-                            class="fa fa-file"></i>تحميل
+                    <button class="btn btn-success" type="button" onclick="dead_exports_excel();" style="display: none"
+                        id="excel_btn"><i class="fa fa-file"></i>تحميل
                         ملف اكسل</button>
                 </div>
                 {{-- </form> --}}
@@ -377,7 +378,7 @@
                 P_ID: $('#P_ID').val(),
                 P_DATE_FROM: $('#P_DATE_FROM').val(),
                 P_DATE_TO: $('#P_DATE_TO').val(),
-                }
+            }
             var base_url = "{{ URL::to('dead/dead_exports_excel') }}?" + $.param(query)
 
             window.location = base_url;

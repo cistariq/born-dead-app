@@ -1882,5 +1882,4 @@ class DEADS_TB extends Model
             return $result;
         });
     }
-
 }

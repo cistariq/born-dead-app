@@ -663,15 +663,15 @@ class DeadController extends Controller
                 } else {
                     $request->merge(["P_QR_CD" => $dead->qr_code]);
                 }
-        if (
-            $request->P_RELATIONSHIP != null || $request->P_REPORTER_MOBILE != null || $request->P_REPORTER_NATIONALITY_CD != null ||
-            $request->P_REPORTER_ADDRESS != null || $request->P_REPORTER_SEX_CD != null || $request->P_REPORT_SUBMITTED_ID != null ||
-            $request->P_REPORT_SUBMITTED_BY != null
-        ) {
-            $request->merge(["P_IS_COMPLETE" => 1]);
-        } else {
-            $request->merge(["P_IS_COMPLETE" => 0]);
-        }
+                if (
+                    $request->P_RELATIONSHIP != null || $request->P_REPORTER_MOBILE != null || $request->P_REPORTER_NATIONALITY_CD != null ||
+                    $request->P_REPORTER_ADDRESS != null || $request->P_REPORTER_SEX_CD != null || $request->P_REPORT_SUBMITTED_ID != null ||
+                    $request->P_REPORT_SUBMITTED_BY != null
+                ) {
+                    $request->merge(["P_IS_COMPLETE" => 1]);
+                } else {
+                    $request->merge(["P_IS_COMPLETE" => 0]);
+                }
 
                 // 🔹 تحديث باقي الحقول من الطلب
                 $query = DEADS_TB::UPDATE_DEAD_DATA($request->all());
@@ -1721,8 +1721,8 @@ class DeadController extends Controller
     }
 
 
-// ========================= Mccd dead create by tariq at 03-05-2026 =========================
- public function getDeadMccdResult(Request $request)
+    // ========================= Mccd dead create by tariq at 03-05-2026 =========================
+    public function getDeadMccdResult(Request $request)
     {
         ini_set('memory_limit', '1536M');
 
@@ -1741,7 +1741,7 @@ class DeadController extends Controller
             foreach ($query['data'] as $key => $value) {
                 $action = '<div class="d-flex justify-content-center gap-1">';
 
-                    $action .= '<button type="button" class="btn btn-icon btn-active-color-warning"
+                $action .= '<button type="button" class="btn btn-icon btn-active-color-warning"
                     onclick="add_dead(' . $value['DEAD_ID'] . ');" title="إدخال اشعار الوفاة">
                     <i class="fa-solid fa-pen-to-square fs-3"></i>
                 </button>';
@@ -1809,7 +1809,7 @@ class DeadController extends Controller
         $request->merge(["limit" => null]);
         $data_res = DEADS_TB::GET_DEAD_MCCD_DATA($request->all());
 
-      //  $this->logSearch('DEADS_TB', null, null,  json_encode($request->all()), null, 'DL');
+        //  $this->logSearch('DEADS_TB', null, null,  json_encode($request->all()), null, 'DL');
         $result = Excel::download(new MccdDeadExport($data_res), 'dead_excel.xlsx');
         ob_end_clean();
         return $result;
