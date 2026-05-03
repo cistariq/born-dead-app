@@ -71,7 +71,7 @@
                                         class="path1"></span><span class="path2"></span></i>
                                 <input type="text" class="form-control form-control ps-10" name="search" id="P_ID"
                                     value="" placeholder="رقم الهوية" maxLength="9"
-                                    oninput="this.value=this.value.slice(0,this.maxLength)" onchange="">
+                                    oninput="this.value=this.value.slice(0,this.maxLength)" onchange="get_dead_data();">
 
                             </div>
                         </div>
@@ -113,11 +113,9 @@
                 <!--begin::Input group-->
 
                 <div class="float-end">
-                    @if (IsPermissionBtn(21))
-                        <button type="button" class="btn btn-primary me-5" onclick="();">استعلام</button>
-                    @endif
+                    <button type="button" class="btn btn-primary me-5" onclick="get_dead_data();">استعلام</button>
 
-                    <button type="button" class="btn btn-outline-dark me-5" onclick="">جديد</button>
+                    <button type="button" class="btn btn-outline-dark me-5" onclick="reset_form();">جديد</button>
 
                 </div>
                 <!--end::Input group-->
@@ -138,12 +136,9 @@
                     @csrf --}}
 
                 <div class="float-right">
-                    @if (IsPermissionBtn(22))
                         <button class="btn btn-success" type="button" onclick="" style="display: none"
                             id="excel_btn"><i class="fa fa-file"></i>تحميل
                             ملف اكسل</button>
-                    @endif
-
                 </div>
                 {{-- </form> --}}
                 <table id="result_tb" class="table table-striped table-responsive" style="width:100%">
@@ -209,6 +204,11 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+
+        $(document).ready(function() {
+            get_dead_data();
+
         });
 
         function get_dead_data() {
@@ -315,6 +315,17 @@
             });
         }
 
+        /**************************************************************************************************************************************************************************************************/
+        function reset_form() {
+            $('#dead_form')[0].reset();
+            document.getElementById("excel_btn").style.display = 'none';
+
+            $('#result_tb').DataTable().destroy();
+            $('#result_tb tbody').empty();
+            //$('#out_records_num').empty();
+          //  $('#dead_form .form-select').val(' ').trigger('change');
+            block_search_dead.release();
+        }
 
     </script>
 @endpush

@@ -2641,7 +2641,9 @@
         function generate_number() {
             if ($('#P_ID_TYPE').val() == 2) {
                 $('#P_ID_NO').val('');
-                // var random_num = Math.floor(100000000 + Math.random() * 999999999);
+                var random_num = Math.floor(100000000 + Math.random() * 999999999);
+                $('#P_ID_NO').val(random_num);
+                $('#P_SOURSE').val(0);
                 document.getElementById('P_ID_NO').readOnly = true;
                 document.getElementById('P_FIRST_NAME').readOnly = false;
                 document.getElementById('P_FATHER_NAME').readOnly = false;

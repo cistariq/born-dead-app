@@ -1856,6 +1856,31 @@ class DEADS_TB extends Model
             return $data;
         });
     }
+    public static function GET_DEAD_MCCD_DATA($data)
+    {
 
+        $sql = "begin MCCD_PKG.SHOW_MCCD_PRC (:P_ID_NO,:P_DATE_FROM,:P_DATE_TO,:P_START,:P_LIMIT,:RESULT_COUNT,:OUT_MCCD); end;";
+
+        return DB::transaction(function ($conn) use ($sql, $data) {
+            $lista = [];
+            $RESULT_COUNT = 0;
+            $pdo = $conn->getPdo();
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':P_ID_NO', $data['P_ID']);
+            $stmt->bindParam(':P_DATE_FROM', $data['P_DATE_FROM']);
+            $stmt->bindParam(':P_DATE_TO', $data['P_DATE_TO']);
+            $stmt->bindParam(':P_START', $data['start']);
+            $stmt->bindParam(':P_LIMIT', $data['length']);
+            $stmt->bindParam(':RESULT_COUNT', $RESULT_COUNT, PDO::PARAM_INT, 11);
+            $stmt->bindParam(':OUT_MCCD', $lista, PDO::PARAM_STMT);
+            $stmt->execute();
+            oci_execute($lista, OCI_DEFAULT);
+            oci_fetch_all($lista, $array, 0, -1, OCI_FETCHSTATEMENT_BY_ROW + OCI_ASSOC);
+            oci_free_cursor($lista);
+            $result['data'] = $array;
+            $result['RESULT_COUNT'] = $RESULT_COUNT;
+            return $result;
+        });
+    }
 
 }

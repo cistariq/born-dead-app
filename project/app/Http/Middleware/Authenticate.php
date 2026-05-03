@@ -24,10 +24,14 @@ class Authenticate
             'url' => $request->url(),
         ]);
 
+        // if (!Auth::check()) {
+        //     return $next($request);
+        // }
         if (!Auth::check()) {
-            return $next($request);
+            return redirect()->route('login');
         }
 
+        return $next($request);
         $user = Auth::user();
 
         // إذا ما في device_token في السيشن → عبّيها
