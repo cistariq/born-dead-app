@@ -89,16 +89,16 @@
                             <label class="control-label col-md-2" style="margin-top: 20px;">ت.الوفاة من</label>
                             <div class="col-lg-4">
 
-                                <input type="text" class="form-control text-center form-control-lg mb-3"
-                                    id="P_DATE_FROM" name="P_DATE_FROM">
+                                <input type="text" class="form-control text-center form-control-lg mb-3" id="P_DATE_FROM"
+                                    name="P_DATE_FROM">
                             </div>
                             <div class="input-group-prepend">
 
                                 <span class="input-group-text">إلى</span>
                             </div>
                             <div class="col-lg-4">
-                                <input type="text" class="form-control text-center form-control-lg mb-3"
-                                    id="P_DATE_TO" name="P_DATE_TO">
+                                <input type="text" class="form-control text-center form-control-lg mb-3" id="P_DATE_TO"
+                                    name="P_DATE_TO">
                             </div>
                         </div>
                     </div>
@@ -120,7 +120,50 @@
                 </div>
                 <!--end::Input group-->
                 <!--begin::Input group-->
+                <div id="loading-spinner" style="display: none; text-align: center; margin: 10px;">
+<div style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    background: rgba(255,255,255,0.8);
+    z-index: 9999;
+">
 
+    <div class="spinner"
+        style="
+            border: 10px solid #f3f3f3;
+            border-top: 10px solid #3498db;
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            animation: spin 1s linear infinite;
+        ">
+    </div>
+
+    <div style="margin-top: 10px; font-size: 18px;">
+        الرجاء الانتظار...
+    </div>
+
+</div>
+                </div>
+
+                <style>
+                    @keyframes spin {
+                        0% {
+                            transform: rotate(0deg);
+                        }
+
+                        100% {
+                            transform: rotate(360deg);
+                        }
+                    }
+                </style>
             </div>
         </div>
     </form>
@@ -136,9 +179,9 @@
                     @csrf --}}
 
                 <div class="float-right">
-                        <button class="btn btn-success" type="button" onclick="" style="display: none"
-                            id="excel_btn"><i class="fa fa-file"></i>تحميل
-                            ملف اكسل</button>
+                    <button class="btn btn-success" type="button" onclick="dead_exports_excel();" style="display: none" id="excel_btn"><i
+                            class="fa fa-file"></i>تحميل
+                        ملف اكسل</button>
                 </div>
                 {{-- </form> --}}
                 <table id="result_tb" class="table table-striped table-responsive" style="width:100%">
@@ -206,10 +249,10 @@
             }
         });
 
-        $(document).ready(function() {
-            get_dead_data();
+        // $(document).ready(function() {
+        //     get_dead_data();
 
-        });
+        // });
 
         function get_dead_data() {
             const fields = {
@@ -270,9 +313,9 @@
             });
 
             block_search_dead.block();
-
+            $('#loading-spinner').show();
             $('#result_tb').DataTable({
-                processing: true,
+                processing: false,
                 serverSide: true,
                 paging: true,
                 ordering: false,
@@ -281,6 +324,7 @@
                     type: "POST",
                     data: formData,
                     dataSrc: function(json) {
+                        $('#loading-spinner').hide();
                         block_search_dead.release();
 
                         if (json.data && json.data.length > 0) {
@@ -292,6 +336,7 @@
                         return json.data || [];
                     },
                     error: function() {
+                        $('#loading-spinner').hide();
                         block_search_dead.release();
                         $('#excel_btn').hide();
                     }
@@ -323,9 +368,19 @@
             $('#result_tb').DataTable().destroy();
             $('#result_tb tbody').empty();
             //$('#out_records_num').empty();
-          //  $('#dead_form .form-select').val(' ').trigger('change');
+            //  $('#dead_form .form-select').val(' ').trigger('change');
             block_search_dead.release();
         }
+        /***************************************************************************************************************************/
+        function dead_exports_excel() {
+            var query = {
+                P_ID: $('#P_ID').val(),
+                P_DATE_FROM: $('#P_DATE_FROM').val(),
+                P_DATE_TO: $('#P_DATE_TO').val(),
+                }
+            var base_url = "{{ URL::to('dead/dead_exports_excel') }}?" + $.param(query)
 
+            window.location = base_url;
+        }
     </script>
 @endpush

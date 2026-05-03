@@ -39,6 +39,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Jobs\CheckExcelFileJob;
 use App\Imports\DeathImport;
 use App\Exports\DeathExport;
+use App\Exports\MccdDeadExport;
+
 
 
 use Illuminate\Support\Facades\Storage;
@@ -1749,13 +1751,13 @@ class DeadController extends Controller
                 $result['data'][] = [
                     $key + 1,
                     $value['DEAD_ID'],
-                    $value['DEAD_DOB'],
-                    $value['DEAD_DOD'],
+                    $value['BIRTH_DATE'],
+                    $value['DEAD_DATE'],
                     $value['SEX_NAME_AR'],
-                    $value['DEAD_FIRST_NAME_AR'] . ' ' . $value['DEAD_FATHER_NAME_AR'] . ' ' . $value['DEAD_GRANDFATHER_NAME_AR'] . ' ' . $value['DEAD_LAST_NAME_AR'],
+                    $value['FULL_NAME'],
                     $value['DREF_NAME_AR'],
-                    $value['DEAD_ICD4'],
-                    $value['ICD4_NAME'],
+                    $value['UNDERLYING_CAUSE_DEATH'],
+                    $value['TITLE'],
                     $action,
                 ];
             }
@@ -1797,5 +1799,19 @@ class DeadController extends Controller
             "recordsFiltered" => intval($totalFiltered),
             "data" => $result['data']
         ]);
+    }
+
+    public function dead_exports_excel(Request $request)
+    {
+        ini_set('max_execution_time', -1);
+        ini_set('memory_limit', -1);
+        $request->merge(["start" => null]);
+        $request->merge(["limit" => null]);
+        $data_res = DEADS_TB::GET_DEAD_MCCD_DATA($request->all());
+
+      //  $this->logSearch('DEADS_TB', null, null,  json_encode($request->all()), null, 'DL');
+        $result = Excel::download(new MccdDeadExport($data_res), 'dead_excel.xlsx');
+        ob_end_clean();
+        return $result;
     }
 }

@@ -86,6 +86,7 @@ Route::group(['middleware' => [Authenticate::class]], function () {
         Route::get('/all_citizen_status_search', [DeadController::class, 'all_citizen_status_search'])->name('all_citizen_status_search');
         Route::post('/getDeadResult', [DeadController::class, 'getDeadResult'])->name('getDeadResult');
         Route::get('/export_excel', [DeadController::class, 'export_excel'])->name('export_excel');
+        Route::get('/dead_exports_excel', [DeadController::class, 'dead_exports_excel'])->name('dead_exports_excel');
         Route::post('/save_dead_info', [DeadController::class, 'save_dead_info'])->name('save_dead_info');
         Route::post('/update_dead_info', [DeadController::class, 'update_dead_info'])->name('update_dead_info');
         Route::post('/getDeadIcd_name', [DeadController::class, 'getDeadIcd_name'])->name('getDeadIcd_name');
